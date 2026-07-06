@@ -11,6 +11,7 @@ import vn.edu.nlu.fit.be.model.Account;
 import vn.edu.nlu.fit.be.model.Order;
 import vn.edu.nlu.fit.be.model.OrderDetail;
 import vn.edu.nlu.fit.be.model.OrderStatus;
+import vn.edu.nlu.fit.be.service.AdminSignService;
 import vn.edu.nlu.fit.be.service.OrdersService;
 import vn.edu.nlu.fit.be.service.StockProductService;
 
@@ -25,6 +26,7 @@ import java.util.List;
 public class AdminOrderController extends HttpServlet {
 
     private final OrdersService service = new OrdersService();
+    private final AdminSignService adminSignService = new AdminSignService();
     private final StockProductService stockService = new StockProductService();
     private final OrderDetailDao orderDetailDao = new OrderDetailDao();
 
@@ -53,6 +55,12 @@ public class AdminOrderController extends HttpServlet {
             try {
                 int id = Integer.parseInt(req.getParameter("id"));
                 OrderStatus newStatus = OrderStatus.valueOf(req.getParameter("status"));
+
+                if (adminSignService.markTamperedIfCurrentDataChanged(id)) {
+                    resp.setContentType("text/plain;charset=UTF-8");
+                    resp.getWriter().write("TAMPERED: Dữ liệu đơn hàng đã bị thay đổi so với bản đã ký. Không thể cập nhật trạng thái.");
+                    return;
+                }
 
                 // Cập nhật trạng thái đơn hàng trước
                 boolean statusUpdated = service.updateStatus(id, newStatus);
@@ -114,6 +122,8 @@ public class AdminOrderController extends HttpServlet {
             try {
                 int id = Integer.parseInt(req.getParameter("id"));
 
+                boolean tamperedDetected = adminSignService.markTamperedIfCurrentDataChanged(id);
+
                 Order order = service.getById(id);
                 if (order == null) {
                     resp.sendRedirect(req.getContextPath() + "/admin/orders");
@@ -124,6 +134,7 @@ public class AdminOrderController extends HttpServlet {
 
                 req.setAttribute("order", order);
                 req.setAttribute("orderDetails", orderDetails);
+                req.setAttribute("tamperedDetected", tamperedDetected);
 
                 req.getRequestDispatcher("/admin_order_detail.jsp").forward(req, resp);
             } catch (Exception e) {
@@ -134,7 +145,9 @@ public class AdminOrderController extends HttpServlet {
 
         // ===== LOAD ORDER LIST =====
         List<Order> orders = service.getAll();
+        List<Integer> tamperedOrderIds = adminSignService.findAndMarkTamperedOrders(orders);
         req.setAttribute("orders", orders);
+        req.setAttribute("tamperedOrderIds", tamperedOrderIds);
 
         req.getRequestDispatcher("/admin_orders.jsp").forward(req, resp);
     }

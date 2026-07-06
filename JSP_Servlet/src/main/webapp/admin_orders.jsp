@@ -16,6 +16,23 @@
 
     <!-- JS LIB -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        .tampered-row {
+            background: #fff1f2;
+        }
+
+        .tampered-warning {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 6px;
+            color: #dc2626;
+            font-size: 12px;
+            font-weight: 700;
+        }
+    </style>
 </head>
 
 <body>
@@ -81,6 +98,13 @@
     <main class="main">
         <h2>Quản lý đơn hàng</h2>
 
+        <c:if test="${not empty tamperedOrderIds}">
+            <div style="background:#fee2e2;color:#991b1b;border:1px solid #fecaca;border-radius:10px;padding:12px 14px;margin-bottom:16px;font-weight:700;">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                Phát hiện đơn hàng có dữ liệu bị thay đổi so với bản đã ký. Hệ thống đã chuyển sang trạng thái lỗi.
+            </div>
+        </c:if>
+
         <table class="data-table">
             <thead>
             <tr>
@@ -96,7 +120,7 @@
 
             <tbody>
             <c:forEach var="order" items="${orders}">
-                <tr>
+                <tr class="${order.statusOrder eq 'TAMPERED' ? 'tampered-row' : ''}">
                     <td>#${order.orderId}</td>
 
                     <td>${order.username}</td>
@@ -111,7 +135,7 @@
                         <select class="status-select ${order.statusOrder}"
                                 data-id="${order.orderId}" data-previous="${order.statusOrder}"
                                 onchange="updateStatus(this)" ${order.statusOrder eq 'CANCELLED' ||
-                                order.statusOrder eq 'DONE' ? 'disabled' : '' }>
+                                order.statusOrder eq 'DONE' || order.statusOrder eq 'TAMPERED' ? 'disabled' : '' }>
 
                             <option value="WAITING_SIGNATURE" ${order.statusOrder eq 'WAITING_SIGNATURE' ? 'selected'
                                     : '' }>
@@ -125,12 +149,12 @@
 
                             <option value="TAMPERED" ${order.statusOrder eq 'TAMPERED' ? 'selected'
                                     : '' }>
-                                Chữ ký điện tử bị sửa đổi
+                                Dữ liệu đơn hàng bị thay đổi
                             </option>
 
                             <option value="VERIFIED" ${order.statusOrder eq 'VERIFIED' ? 'selected'
                                     : '' }>
-                                Ch&#7919; k&#253; &#273;i&#7879;n t&#7917; h&#7907;p l&#7879;
+                                Chữ ký điện tử hợp lệ
                             </option>
                             <option value="DONE" ${order.statusOrder eq 'DONE' ? 'selected' : '' }>
                                 Xác nhận thành công
@@ -141,6 +165,13 @@
                                 Đã hủy
                             </option>
                         </select>
+
+                        <c:if test="${order.statusOrder eq 'TAMPERED'}">
+                            <div class="tampered-warning">
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                                Dữ liệu DB khác với bản đã ký
+                            </div>
+                        </c:if>
                     </td>
                     <td>
                         <a class="btn-small btn-on"
@@ -171,6 +202,21 @@
 
 </body>
 <script>
+    window.addEventListener('load', function () {
+        const hasTamperedOrders = ${not empty tamperedOrderIds ? 'true' : 'false'};
+
+        if (hasTamperedOrders) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Phát hiện dữ liệu đơn hàng bị thay đổi',
+                text: 'Có đơn hàng có dữ liệu trong DB khác với dữ liệu đã được ký. Hệ thống đã chuyển đơn hàng sang trạng thái lỗi.',
+                confirmButtonText: 'Đã hiểu',
+                allowOutsideClick: false,
+                allowEscapeKey: false
+            });
+        }
+    });
+
     async function updateStatus(select) {
         const id = select.getAttribute('data-id');
         const status = select.value;
@@ -209,7 +255,7 @@
                     select.setAttribute('data-previous', status);
                     select.className = 'status-select ' + status;
 
-                    if (status === 'CANCELLED' || status === 'DONE') {
+                    if (status === 'CANCELLED' || status === 'DONE' || status === 'TAMPERED') {
                         select.disabled = true;
                     }
 
@@ -224,7 +270,7 @@
                     select.setAttribute('data-previous', status);
                     select.className = 'status-select ' + status;
 
-                    if (status === 'CANCELLED' || status === 'DONE') {
+                    if (status === 'CANCELLED' || status === 'DONE' || status === 'TAMPERED') {
                         select.disabled = true;
                     }
 
@@ -232,6 +278,18 @@
                         icon: 'warning',
                         title: 'Trạng thái đã cập nhật',
                         text: 'Nhưng có lỗi khi xử lý kho hàng.'
+                    });
+
+                } else if (txt.startsWith('TAMPERED:')) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Dữ liệu đơn hàng đã bị thay đổi',
+                        text: txt.replace('TAMPERED:', '').trim(),
+                        confirmButtonText: 'Tải lại trang',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false
+                    }).then(function () {
+                        window.location.reload();
                     });
 
                 } else {
@@ -255,6 +313,5 @@
             });
     }
 </script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </html>

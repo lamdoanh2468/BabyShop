@@ -9,6 +9,7 @@ import vn.edu.nlu.fit.be.dto.SignedOrderReq;
 import vn.edu.nlu.fit.be.model.*;
 import vn.edu.nlu.fit.be.dto.SignVerifyResult;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -21,6 +22,7 @@ public class AdminSignService {
     private final SignatureAuditDao auditDao = new SignatureAuditDao();
     private final OrderSignatureDao signatureDao = new OrderSignatureDao();
     private final SignVerifyService verifyService = new SignVerifyService();
+    private final OrderSigningService orderSigningService = new OrderSigningService();
 
     public OrderSign getOrderSignByOrderId(int orderId) {
         return orderSignDao.findByOrderId(orderId);
@@ -47,12 +49,63 @@ public class AdminSignService {
     }
 
     public List<Order> getTamperedOrders() {
-        List<OrderSign> signs = orderSignDao.findByStatus("FAIL_HASH_MISMATCH");
+        List<OrderSign> signs = orderSignDao.findByStatus("TAMPERED");
         return mapSignsToOrders(signs);
     }
 
     public List<Certificate> getRecentRevokedCerts() {
         return certificateDao.findRecentRevoked(20);
+    }
+
+    public boolean markTamperedIfCurrentDataChanged(int orderId) {
+        OrderSign sign = orderSignDao.findByOrderId(orderId);
+        if (sign == null) {
+            return false;
+        }
+
+        Order order = ordersDao.getOrderById(orderId);
+        if (order == null || order.getStatusOrder() == OrderStatus.CANCELLED) {
+            return false;
+        }
+
+        if (order.getStatusOrder() == OrderStatus.TAMPERED || "TAMPERED".equalsIgnoreCase(sign.getStatus())) {
+            return true;
+        }
+
+        String currentHash = orderSigningService.calculateCurrentOrderHash(
+                (int) sign.getOrderId(),
+                (int) sign.getAccountId(),
+                sign.getSnapshotJson()
+        );
+
+        if (Objects.equals(sign.getOrderHash(), currentHash)) {
+            return false;
+        }
+
+        orderSignDao.updateStatus(sign.getOrderSignId(), "TAMPERED");
+        ordersDao.updateStatus(orderId, OrderStatus.TAMPERED);
+        return true;
+    }
+
+    public List<Integer> findAndMarkTamperedOrders(List<Order> orders) {
+        List<Integer> tamperedOrderIds = new ArrayList<>();
+        if (orders == null || orders.isEmpty()) {
+            return tamperedOrderIds;
+        }
+
+        for (Order order : orders) {
+            if (order == null) {
+                continue;
+            }
+
+            boolean tampered = markTamperedIfCurrentDataChanged(order.getOrderId());
+            if (tampered) {
+                order.setStatusOrder(OrderStatus.TAMPERED);
+                tamperedOrderIds.add(order.getOrderId());
+            }
+        }
+
+        return tamperedOrderIds;
     }
 
     public void reverifyOrder(int orderId) throws Exception {
