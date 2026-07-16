@@ -286,7 +286,7 @@
             showCancelButton: true,
             confirmButtonText: 'Xác nhận tạo mới',
             cancelButtonText: 'Hủy',
-            confirmButtonColor: '#6366f1',
+            confirmButtonColor: '#007BA8',
             cancelButtonColor: '#64748b'
         }).then((result) => {
             if (result.isConfirmed) {
@@ -334,7 +334,7 @@
             showCancelButton: true,
             confirmButtonText: 'Tải ngay',
             cancelButtonText: 'Hủy',
-            confirmButtonColor: '#6366f1',
+            confirmButtonColor: '#007BA8',
             cancelButtonColor: '#64748b'
         }).then(async (result) => {
             if (!result.isConfirmed) {
@@ -394,7 +394,7 @@
                     text: 'Trang sẽ được làm mới để cập nhật trạng thái.',
                     icon: 'success',
                     confirmButtonText: 'OK',
-                    confirmButtonColor: '#6366f1',
+                    confirmButtonColor: '#007BA8',
                     timer: 1500,
                     timerProgressBar: true
                 });

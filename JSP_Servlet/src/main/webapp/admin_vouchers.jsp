@@ -16,61 +16,10 @@
 <div class="dashboard">
 
     <!-- SIDEBAR -->
-    <aside class="sidebar">
-        <nav class="menu">
-            <a href="${pageContext.request.contextPath}/admin/overview">
-                <i class="fa-solid fa-house"></i>
-                <span>Dashboard</span>
-            </a>
 
-            <a href="${pageContext.request.contextPath}/admin/accounts">
-                <i class="fa-solid fa-user"></i>
-                <span>Tài khoản</span>
-            </a>
+                    <jsp:include page="admin_sidebar.jsp"/>
 
-            <a href="${pageContext.request.contextPath}/admin/orders">
-                <i class="fa-solid fa-box"></i>
-                <span>Đơn hàng</span>
-            </a>
-
-            <a href="${pageContext.request.contextPath}/admin/products">
-                <i class="fa-solid fa-cubes"></i>
-                <span>Sản phẩm</span>
-            </a>
-
-            <a href="${pageContext.request.contextPath}/admin/categories">
-                <i class="fa-solid fa-layer-group"></i>
-                <span>Danh mục sản phẩm</span>
-            </a>
-
-            <a href="${pageContext.request.contextPath}/admin/brands">
-                <i class="fa-solid fa-tags"></i>
-                <span>Thương hiệu</span>
-            </a>
-
-            <a href="${pageContext.request.contextPath}/admin/contacts">
-                <i class="fa-solid fa-envelope"></i>
-                <span>Liên hệ</span>
-            </a>
-
-            <a href="${pageContext.request.contextPath}/admin/stocks">
-                <i class="fa-solid fa-warehouse"></i>
-                <span>Kho hàng</span>
-            </a>
-
-            <a href="${pageContext.request.contextPath}/admin/vouchers" class="active">
-                <i class="fa-solid fa-ticket"></i>
-                <span>Vouchers</span>
-            </a>
-
-            <a href="${pageContext.request.contextPath}/admin/settings">
-                <i class="fa-solid fa-gear"></i>
-                <span>Cài đặt</span>
-            </a>
-        </nav>
-    </aside>
-
-    <!-- CONTENT -->
+<!-- CONTENT -->
     <div class="content-wrapper">
 
         <!-- MAIN -->

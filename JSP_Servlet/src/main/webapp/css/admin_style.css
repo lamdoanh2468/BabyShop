@@ -2,21 +2,40 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "Poppins", sans-serif;
 }
 
+/* Noto Sans khớp với dashboard (admin_sidebar.jsp nạp sẵn font này).
+   Poppins trước đây không hề được nạp ở đâu nên vẫn rơi về sans-serif. */
 body {
-    background: #F7F8FF;
-    color: #333;
+    background: #FEF7FF;
+    color: #49454F;
+    font-family: 'Noto Sans', sans-serif;
 }
+
+/* Form control không tự kế thừa font — khai báo tường minh thay cho quy tắc `*` cũ. */
+input, select, textarea, button {
+    font: inherit;
+}
+
+/* Flex thay cho grid 220px/1fr/320px: sidebar dùng chung (w-60) tự quyết bề rộng,
+   và trang không có .right-panel được dùng trọn chiều ngang. */
 .dashboard {
-    display: grid;
-    grid-template-columns: 220px 1fr 320px;
-    height: 100vh;
+    display: flex;
+    min-height: 100vh;
+}
+
+.content-wrapper,
+.dashboard > .main {
+    flex: 1;
+    min-width: 0;
+}
+
+.right-panel {
+    flex: 0 0 320px;
 }
 .sidebar {
     padding: 20px;
-    background: linear-gradient(45deg, #4d7cff, #FFB4D3, #A9F3E3);
+    background: linear-gradient(45deg, #008BC6, #FFB4D3, #A9F3E3);
     background-size: 200%;
     animation: gradientMove 12s ease infinite;
     display: flex;
@@ -32,7 +51,7 @@ body {
     padding: 0 14px;
     border-radius: 14px;
     background: rgba(255,255,255,0.35);
-    color: #00114d;
+    color: #013E58;
     text-decoration: none;
     font-weight: 500;
     backdrop-filter: blur(4px);
@@ -42,8 +61,8 @@ body {
 .sidebar .menu a:hover,
 .sidebar .menu a.active {
     background: #fff;
-    color: #0031da;
-    box-shadow: 0 4px 12px rgba(108, 99, 255, 0.25);
+    color: #007BA8;
+    box-shadow: 0 4px 12px rgba(0, 139, 198, 0.25);
 }
 
 .sidebar .menu a i {
@@ -63,7 +82,7 @@ body {
 
 .bottom-btn:hover {
     background: white;
-    box-shadow: 0 4px 12px rgba(108, 99, 255, 0.25);
+    box-shadow: 0 4px 12px rgba(0, 139, 198, 0.25);
 }
 .main {
     padding: 30px;
@@ -73,7 +92,7 @@ body {
 .main h2 {
     font-size: 24px;
     font-weight: 600;
-    color: #002299;
+    color: #00658F;
     margin-bottom: 20px;
 }
 .dashboard-cards {
@@ -91,7 +110,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border: 1px solid #ECEBFF;
+    border: 1px solid #ECF8FD;
     position: relative;
     overflow: hidden;
     transition: 0.25s ease;
@@ -108,7 +127,7 @@ body {
 
 .card-large:hover, .card-small:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 20px rgba(108, 99, 255, 0.18);
+    box-shadow: 0 8px 20px rgba(0, 139, 198, 0.18);
 }
 
 .card-large::before,
@@ -119,7 +138,7 @@ body {
     top: -18px;
     width: 80px;
     height: 80px;
-    background: #ECEBFF;
+    background: #ECF8FD;
     opacity: 0.45;
     border-radius: 50%;
 }
@@ -151,7 +170,7 @@ body {
     border-radius: 22px;
     padding: 25px;
     box-shadow: 0 6px 16px rgba(0,0,0,0.05);
-    border: 1px solid #ECEBFF;
+    border: 1px solid #ECF8FD;
     transition: 0.25s ease;
 }
 
@@ -168,8 +187,8 @@ body {
 .chart-header select {
     padding: 6px 10px;
     border-radius: 8px;
-    border: 1px solid #D9D6FF;
-    background: #F3F2FF;
+    border: 1px solid #CDEDF9;
+    background: #ECF8FD;
 }
 .data-table {
     width: 100%;
@@ -178,25 +197,25 @@ body {
     border-radius: 20px;
     overflow: hidden;
     box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    border: 1px solid #ECEBFF;
+    border: 1px solid #ECF8FD;
 }
 
 .data-table th {
     padding: 14px 16px;
-    background: #ECEBFF;
-    color: #0039e6;
+    background: #ECF8FD;
+    color: #00658F;
     font-weight: 600;
     text-align: center;
 }
 
 .data-table td {
     padding: 14px 16px;
-    border-bottom: 1px solid #F4F3FF;
+    border-bottom: 1px solid #ECF8FD;
     text-align: center;
 }
 
 .data-table tr:hover {
-    background: #F7F6FF;
+    background: #FEF7FF;
 }
 .status {
     padding: 4px 10px;
@@ -233,9 +252,9 @@ body {
     color: #FF6B6B;
 }
 .right-panel {
-    background: #FAF9FF;
+    background: #FEF7FF;
     padding: 30px 20px;
-    border-left: 2px solid #ECEBFF;
+    border-left: 2px solid #ECF8FD;
     display: flex;
     flex-direction: column;
 }
@@ -253,12 +272,12 @@ body {
     display: flex;
     gap: 10px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    border-left: 4px solid #4d7cff;
+    border-left: 4px solid #008BC6;
 }
 
 .task-time {
     font-weight: 600;
-    color: #0031da;
+    color: #007BA8;
 }
 
 .add-btn {
@@ -266,12 +285,12 @@ body {
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background: #0031da;
+    background: #007BA8;
     border: none;
     color: white;
     font-size: 24px;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(108, 99, 255, 0.25);
+    box-shadow: 0 4px 12px rgba(0, 139, 198, 0.25);
     transition: 0.25s;
 }
 
@@ -307,13 +326,13 @@ body {
     padding: 25px;
     margin-top: 25px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-    border: 1px solid #ECEBFF;
+    border: 1px solid #ECF8FD;
 }
 
 /* Tiêu đề trong form/list */
 .voucher-form h3,
 .voucher-list h3 {
-    color: #0039e6;
+    color: #007BA8;
     font-size: 18px;
     margin-bottom: 15px;
 }
@@ -328,7 +347,7 @@ body {
 /* Form item */
 .form-item label {
     font-weight: 600;
-    color: #002299;
+    color: #00658F;
     margin-bottom: 6px;
 }
 
@@ -336,21 +355,21 @@ body {
 .form-item select {
     padding: 10px 12px;
     border-radius: 10px;
-    border: 1px solid #D7D5FF;
-    background: #fafaff;
+    border: 1px solid #CDEDF9;
+    background: #FEF7FF;
     transition: 0.2s ease;
 }
 
 .form-item input:focus,
 .form-item select:focus {
-    border-color: #4d7cff;
+    border-color: #008BC6;
     background: #fff;
-    box-shadow: 0 0 0 3px rgba(166,150,255,0.25);
+    box-shadow: 0 0 0 3px rgba(155,219,243,0.25);
 }
 
 /* Button primary (voucher, category, warehouse) */
 .btn-primary {
-    background: linear-gradient(135deg, #4d7cff, #C8B8FF);
+    background: linear-gradient(135deg, #007BA8, #00658F);
     padding: 12px;
     border-radius: 12px;
     border: none;
@@ -362,7 +381,7 @@ body {
 
 .btn-primary:hover {
     transform: translateY(-3px);
-    box-shadow: 0 4px 12px rgba(166,150,255,0.35);
+    box-shadow: 0 4px 12px rgba(155,219,243,0.35);
 }
 
 /* Data table fix cho các trang này */
@@ -393,48 +412,48 @@ body {
 }
 /* Tabs pastel */
 .settings-tabs {
-    border-bottom: 2px solid #ECEBFF;
+    border-bottom: 2px solid #ECF8FD;
 }
 
 .settings-tab {
-    color: #7A76B8;
+    color: #6E6779;
     transition: 0.25s;
 }
 
 .settings-tab:hover {
-    color: #0031da;
+    color: #007BA8;
 }
 
 .settings-tab.active {
-    color: #0031da !important;
+    color: #007BA8 !important;
 }
 
 /* Gạch dưới tab */
 .settings-tab.active::after {
-    background: #4d7cff !important;
+    background: #008BC6 !important;
 }
 
 /* Content card đồng bộ */
 .settings-container {
-    border: 1px solid #ECEBFF;
+    border: 1px solid #ECF8FD;
     border-radius: 22px;
 }
 
 /* Form trong settings */
 .tab-content .form-grid .form-item input,
 .tab-content .form-grid .form-item select {
-    background: #fafaff;
-    border-color: #D7D5FF;
+    background: #FEF7FF;
+    border-color: #CDEDF9;
 }
 
 .tab-content .form-item input:focus,
 .tab-content .form-item select:focus {
-    border-color: #4d7cff;
+    border-color: #008BC6;
 }
 
 /* Button trong settings */
 .settings-container .btn-primary {
-    background: linear-gradient(135deg, #4d7cff, #C8B8FF) !important;
+    background: linear-gradient(135deg, #007BA8, #00658F) !important;
 }
 
 /* Logout button trong settings */
@@ -456,16 +475,16 @@ body {
     width: 100%;
     padding: 10px 38px 10px 14px;
     border-radius: 12px;
-    border: 1px solid #D7D5FF;
-    background: #fafaff;
+    border: 1px solid #CDEDF9;
+    background: #FEF7FF;
     font-size: 14px;
     transition: 0.25s;
 }
 
 .search-box input:focus {
-    border-color: #4d7cff;
+    border-color: #008BC6;
     background: #fff;
-    box-shadow: 0 0 0 3px rgba(166,150,255,0.25);
+    box-shadow: 0 0 0 3px rgba(155,219,243,0.25);
 }
 
 .search-box i {
@@ -478,18 +497,18 @@ body {
 .status-select {
     padding: 8px 10px;
     border-radius: 10px;
-    border: 1px solid #D9D6FF;
-    background: #F4F3FF;
-    color: #00114d;
+    border: 1px solid #CDEDF9;
+    background: #ECF8FD;
+    color: #013E58;
     font-size: 14px;
     cursor: pointer;
     transition: 0.25s;
 }
 
 .status-select:focus {
-    border-color: #4d7cff;
+    border-color: #008BC6;
     background: #fff;
-    box-shadow: 0 0 0 3px rgba(166,150,255,0.25);
+    box-shadow: 0 0 0 3px rgba(155,219,243,0.25);
 }
 .status-select.processing {
     background: #FFF6D9;
@@ -498,9 +517,9 @@ body {
 }
 
 .status-select.shipping {
-    background: #E4F1FF;
-    border-color: #A7D0FF;
-    color: #2E7CD9;
+    background: #ECF8FD;
+    border-color: #9BDBF3;
+    color: #00658F;
 }
 
 .status-select.success {
@@ -570,17 +589,17 @@ body {
     width: 100%;
     padding: 12px;
     border-radius: 10px;
-    border: 1px solid #D7D5FF;
-    background: #fafaff;
+    border: 1px solid #CDEDF9;
+    background: #FEF7FF;
     transition: 0.2s ease;
     resize: vertical;
     min-height: 120px;
 }
 
 .form-item textarea:focus {
-    border-color: #4d7cff;
+    border-color: #008BC6;
     background: #fff;
-    box-shadow: 0 0 0 3px rgba(166,150,255,0.25);
+    box-shadow: 0 0 0 3px rgba(155,219,243,0.25);
 }
 .product-overlay {
     position: fixed;
@@ -598,7 +617,7 @@ body {
     width: 650px;
     border-radius: 22px;
     padding: 25px 30px;
-    border: 1px solid #ECEBFF;
+    border: 1px solid #ECF8FD;
     box-shadow: 0 6px 20px rgba(0,0,0,0.12);
     animation: fadeIn 0.25s ease;
 }
@@ -622,7 +641,7 @@ body {
     width: 780px;             /* rộng hơn cho cân đối */
     border-radius: 22px;
     padding: 30px;
-    border: 1px solid #ECEBFF;
+    border: 1px solid #ECF8FD;
     box-shadow: 0 6px 20px rgba(0,0,0,0.12);
     animation: fadeIn 0.25s ease;
 }
@@ -637,7 +656,7 @@ body {
 /* Label */
 .product-modal .form-item label {
     font-weight: 600;
-    color: #002299;
+    color: #00658F;
     margin-bottom: 6px;
     display: block;
 }
@@ -649,8 +668,8 @@ body {
     width: 100%;
     padding: 12px;
     border-radius: 10px;
-    border: 1px solid #D7D5FF;
-    background: #fafaff;
+    border: 1px solid #CDEDF9;
+    background: #FEF7FF;
     transition: 0.2s ease;
     font-size: 14px;
 }
@@ -659,9 +678,9 @@ body {
 .product-modal .form-item input:focus,
 .product-modal .form-item select:focus,
 .product-modal .form-item textarea:focus {
-    border-color: #4d7cff;
+    border-color: #008BC6;
     background: #fff;
-    box-shadow: 0 0 0 3px rgba(166,150,255,0.25);
+    box-shadow: 0 0 0 3px rgba(155,219,243,0.25);
 }
 
 /* Textarea mô tả – full width */
@@ -709,14 +728,14 @@ body {
      align-items: center;
      gap: 8px;
      padding: 12px 20px;
-     background: linear-gradient(135deg, #0031da, #4d7cff);
+     background: linear-gradient(135deg, #007BA8, #00658F);
      color: #fff;
      font-weight: 600;
      font-size: 14px;
      border-radius: 12px;
      text-decoration: none;
      transition: 0.3s ease, transform 0.2s;
-     box-shadow: 0 4px 12px rgba(108, 99, 255, 0.25);
+     box-shadow: 0 4px 12px rgba(0, 139, 198, 0.25);
  }
 
 .btn-add i {
@@ -726,14 +745,14 @@ body {
 /* Hover */
 .btn-add:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(108, 99, 255, 0.35);
-    background: linear-gradient(135deg, #002299, #0031da);
+    box-shadow: 0 6px 16px rgba(0, 139, 198, 0.35);
+    background: linear-gradient(135deg, #00658F, #007BA8);
 }
 
 /* Active click */
 .btn-add:active {
     transform: translateY(1px);
-    box-shadow: 0 3px 8px rgba(108, 99, 255, 0.25);
+    box-shadow: 0 3px 8px rgba(0, 139, 198, 0.25);
 }
 
 .product-form-shell {
@@ -765,8 +784,8 @@ body {
     align-items: center;
     padding: 7px 12px;
     border-radius: 999px;
-    background: rgba(108, 99, 255, 0.1);
-    color: #0031da;
+    background: rgba(0, 139, 198, 0.1);
+    color: #007BA8;
     font-size: 12px;
     font-weight: 700;
     letter-spacing: 0.08em;
@@ -779,7 +798,7 @@ body {
 }
 
 .product-form-copy p {
-    color: #6e6a92;
+    color: #6E6779;
     line-height: 1.6;
     max-width: 560px;
 }
@@ -791,17 +810,17 @@ body {
     padding: 12px 18px;
     border-radius: 14px;
     background: #fff;
-    border: 1px solid #dddafc;
+    border: 1px solid #CDEDF9;
     text-decoration: none;
-    color: #00114d;
+    color: #013E58;
     font-weight: 600;
     transition: 0.25s ease;
 }
 
 .product-back-link:hover {
     transform: translateY(-2px);
-    border-color: #80aaff;
-    box-shadow: 0 8px 18px rgba(108, 99, 255, 0.12);
+    border-color: #9BDBF3;
+    box-shadow: 0 8px 18px rgba(0, 139, 198, 0.12);
 }
 
 .product-form-layout {
@@ -814,9 +833,9 @@ body {
 .product-form-card,
 .product-preview-card {
     background: #fff;
-    border: 1px solid #ebe8ff;
+    border: 1px solid #ECF8FD;
     border-radius: 24px;
-    box-shadow: 0 10px 24px rgba(34, 28, 85, 0.06);
+    box-shadow: 0 10px 24px rgba(1, 62, 88, 0.06);
 }
 
 .product-form-card {
@@ -832,13 +851,13 @@ body {
 }
 
 .product-form-card-head h3 {
-    color: #002299;
+    color: #00658F;
     font-size: 20px;
     margin-bottom: 6px;
 }
 
 .product-form-card-head p {
-    color: #7a76a6;
+    color: #6E6779;
     line-height: 1.5;
 }
 
@@ -848,8 +867,8 @@ body {
     gap: 10px;
     padding: 10px 14px;
     border-radius: 14px;
-    background: #f6f3ff;
-    color: #0031da;
+    background: #FEF7FF;
+    color: #007BA8;
     font-weight: 600;
     white-space: nowrap;
 }
@@ -882,17 +901,17 @@ body {
     min-height: 46px;
     padding: 0 18px;
     border-radius: 12px;
-    border: 1px solid #dddafc;
+    border: 1px solid #CDEDF9;
     background: #fff;
-    color: #00114d;
+    color: #013E58;
     text-decoration: none;
     font-weight: 600;
     transition: 0.25s ease;
 }
 
 .product-cancel-link:hover {
-    border-color: #80aaff;
-    background: #faf9ff;
+    border-color: #9BDBF3;
+    background: #FEF7FF;
 }
 
 .product-submit-btn {
@@ -909,11 +928,11 @@ body {
 
 .product-preview-media {
     height: 240px;
-    background: linear-gradient(145deg, #f2efff, #fff6fb);
+    background: linear-gradient(145deg, #ECF8FD, #fff6fb);
     display: flex;
     align-items: center;
     justify-content: center;
-    border-bottom: 1px solid #efecff;
+    border-bottom: 1px solid #ECF8FD;
 }
 
 .product-preview-media img {
@@ -926,8 +945,8 @@ body {
     width: 92px;
     height: 92px;
     border-radius: 28px;
-    background: rgba(108, 99, 255, 0.1);
-    color: #3366ff;
+    background: rgba(0, 139, 198, 0.1);
+    color: #008BC6;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -942,15 +961,15 @@ body {
     display: inline-flex;
     padding: 6px 10px;
     border-radius: 999px;
-    background: #edf7ff;
-    color: #2e7cd9;
+    background: #ECF8FD;
+    color: #00658F;
     font-size: 12px;
     font-weight: 700;
     margin-bottom: 14px;
 }
 
 .product-preview-body h3 {
-    color: #000c33;
+    color: #013E58;
     font-size: 22px;
     line-height: 1.35;
     margin-bottom: 10px;
@@ -971,8 +990,8 @@ body {
 .product-preview-meta div {
     padding: 14px;
     border-radius: 16px;
-    background: #faf9ff;
-    border: 1px solid #efecff;
+    background: #FEF7FF;
+    border: 1px solid #ECF8FD;
 }
 
 .product-preview-meta span {
@@ -983,7 +1002,7 @@ body {
 }
 
 .product-preview-meta strong {
-    color: #001966;
+    color: #013E58;
     font-size: 16px;
 }
 
@@ -1012,10 +1031,13 @@ body {
 
 
 :root {
-    --baby-blue: #2c73d2;
-    --baby-blue-hover: #0081cf;
-    --baby-bg: #F7F8FF;
-    --baby-border: #E6E9F2;
+    --baby-blue: #007BA8;
+    --baby-blue-hover: #008BC6;
+    --baby-bg: #FEF7FF;
+    --baby-border: #E7E0EC;
+    /* Sidebar is darker than the button blue so light nav text clears AA on it.
+       Matches bg-primary-700 on the dashboard sidebar (admin_sidebar.jsp). */
+    --baby-sidebar: #00658F;
 }
 
 /* Nền tổng giống ảnh */
@@ -1025,7 +1047,7 @@ body {
 
 /* Thay gradient sidebar bằng xanh đặc giống thanh top trong ảnh */
 .sidebar {
-    background: var(--baby-blue);
+    background: var(--baby-sidebar);
     background-size: auto;
     animation: none;
     border-right: 1px solid var(--baby-border);
@@ -1042,7 +1064,7 @@ body {
 .sidebar .menu a.active {
     background: #ffffff;
     color: var(--baby-blue);
-    box-shadow: 0 4px 12px rgba(0, 49, 218, 0.22);
+    box-shadow: 0 4px 12px rgba(0, 123, 168, 0.22);
 }
 
 .bottom-btn {
@@ -1052,7 +1074,7 @@ body {
 
 .bottom-btn:hover {
     background: #ffffff;
-    color: var(--baby-blue);
+    color: var(--baby-sidebar);
 }
 
 /* Thay gradient button thành xanh đặc */
@@ -1066,7 +1088,7 @@ body {
 .btn-primary:hover,
 .btn-add:hover {
     background: var(--baby-blue-hover) !important;
-    box-shadow: 0 6px 16px rgba(0, 49, 218, 0.25);
+    box-shadow: 0 6px 16px rgba(0, 123, 168, 0.25);
 }
 
 /* Thay các nền gradient pastel thành trắng/xám giống ảnh */
@@ -1086,22 +1108,57 @@ body {
     gap: 10px;
 }
 
-/* Menu mặc định không còn nền mờ */
+/* Menu mặc định không còn nền mờ.
+   Chữ sáng trên nền sidebar tối — cùng công thức với admin_sidebar.jsp (text-white/80). */
 .sidebar .menu a {
     background: transparent;
-    color: #b0a8b9;
+    color: rgba(255, 255, 255, 0.8);
     backdrop-filter: none;
     border-radius: 12px;
 }
 
 /* Chỉ hover hoặc active mới hiện nền */
-.sidebar .menu a:hover,
-.sidebar .menu a.active {
-    background: var(--baby-blue);
+.sidebar .menu a:hover {
+    background: rgba(255, 255, 255, 0.1);
     color: #ffffff;
-    box-shadow: 0 4px 12px rgba(0, 49, 218, 0.18);
+    box-shadow: none;
+}
+
+.sidebar .menu a.active {
+    background: #ffffff;
+    color: var(--baby-sidebar);
+    box-shadow: 0 4px 12px rgba(0, 101, 143, 0.18);
 }
 
 .sidebar .menu a i {
     color: inherit;
+}
+/* ------------------------------------------------------------------ */
+/*  Vá Tailwind preflight                                              */
+/*  admin_sidebar.jsp nạp Tailwind CDN, kéo theo preflight — bộ reset   */
+/*  xoá nền/viền mặc định của <button> và đổi <img> sang display:block. */
+/*  Các phần tử dưới đây trước kia dựa vào mặc định trình duyệt nên     */
+/*  phải khai báo lại tường minh.                                       */
+/* ------------------------------------------------------------------ */
+
+/* Nút không có class (vd. admin_brands.jsp) — preflight làm nền trong suốt */
+.main button:not([class]) {
+    background: #ECF8FD;
+    border: 1px solid #CDEDF9;
+    border-radius: 8px;
+    padding: 8px 14px;
+    color: #00658F;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.main button:not([class]):hover {
+    background: #CDEDF9;
+}
+
+/* preflight đặt img{display:block} → ảnh trong bảng hết căn giữa được
+   bằng text-align. Trả lại inline-block để .data-table td giữ căn giữa. */
+.data-table td img {
+    display: inline-block;
 }

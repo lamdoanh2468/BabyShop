@@ -24,7 +24,7 @@ body {
 /* Set base font for cart page */
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-    background-color: #f5f5f7;
+    background-color: #FEF7FF;
     color: #333;
     font-size: 14px;
     /* Base size cho cart content */
@@ -62,7 +62,7 @@ iframe {
 }
 
 .breadcrumb-nav a:hover {
-    color: #007bff;
+    color: #007BA8;
 }
 
 .dot {
@@ -296,7 +296,7 @@ iframe {
     margin-left: auto;
     font-size: 14px;
     font-weight: 550;
-    color: #7545f2;
+    color: #007BA8;
 }
 
 .promo-icon {
@@ -335,8 +335,8 @@ iframe {
 
 .promo-input-group .promo-form input[type="text"]:focus,
 .promo-form input.promo-input:focus {
-    border-color: #7545f2;
-    box-shadow: 0 0 0 4px rgba(117, 69, 242, 0.1);
+    border-color: #008BC6;
+    box-shadow: 0 0 0 4px rgba(0, 139, 198, 0.1);
     position: relative;
     z-index: 1;
 }
@@ -375,8 +375,8 @@ iframe {
 
 .promo-btn {
     padding: 0.75rem 1.5rem;
-    background: #eae3fd;
-    color: #7545f2;
+    background: #CDEDF9;
+    color: #00658F;
     border: none;
     border-radius: 6px;
     cursor: pointer;
@@ -385,7 +385,7 @@ iframe {
 }
 
 .promo-btn:hover {
-    background: #7545f2;
+    background: #007BA8;
     color: #ffffff;
     transition: 0.5s ease-out;
 }
@@ -465,7 +465,7 @@ iframe {
 
 .submit-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(230, 57, 70, 0.4);
+    box-shadow: 0 4px 12px rgba(0, 123, 168, 0.4);
 }
 
 @media (max-width: 1024px) {
@@ -728,7 +728,7 @@ iframe {
 }
 
 .form-section-header i {
-    color: #7545f2;
+    color: #008BC6;
     font-size: 1rem;
 }
 
@@ -753,7 +753,7 @@ iframe {
 }
 
 .form-label i {
-    color: #7545f2;
+    color: #008BC6;
     font-size: 0.85rem;
 }
 
@@ -776,8 +776,8 @@ iframe {
 }
 
 .form-input:focus {
-    border-color: #7545f2;
-    box-shadow: 0 0 0 4px rgba(117, 69, 242, 0.1);
+    border-color: #008BC6;
+    box-shadow: 0 0 0 4px rgba(0, 139, 198, 0.1);
 }
 
 .form-input:hover:not(:focus) {
@@ -807,8 +807,8 @@ iframe {
 }
 
 .form-select:focus {
-    border-color: #7545f2;
-    box-shadow: 0 0 0 4px rgba(117, 69, 242, 0.1);
+    border-color: #008BC6;
+    box-shadow: 0 0 0 4px rgba(0, 139, 198, 0.1);
 }
 
 .form-select:hover:not(:focus) {
@@ -820,7 +820,7 @@ iframe {
     right: 1rem;
     top: 50%;
     transform: translateY(-50%);
-    color: #7545f2;
+    color: #008BC6;
     font-size: 0.75rem;
     pointer-events: none;
     transition: transform 0.3s ease;
@@ -933,8 +933,8 @@ iframe {
 
 /* Voucher section container */
 .voucher-section {
-    background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
-    border: 1px solid #e9d5ff;
+    background: linear-gradient(135deg, #FEF7FF 0%, #ECF8FD 100%);
+    border: 1px solid #CDEDF9;
 }
 
 /* Voucher input wrapper - input + button inline */
@@ -962,8 +962,8 @@ iframe {
 }
 
 .voucher-input:focus {
-    border-color: #7545f2;
-    box-shadow: inset 0 0 0 1px #7545f2;
+    border-color: #008BC6;
+    box-shadow: inset 0 0 0 1px #008BC6;
 }
 
 .voucher-input::placeholder {
@@ -974,9 +974,9 @@ iframe {
     height: 46px;
     min-width: 90px;
     padding: 0 1.25rem;
-    background: linear-gradient(135deg, #7545f2 0%, #5f3dc4 100%);
+    background: linear-gradient(135deg, #008BC6 0%, #00658F 100%);
     color: white;
-    border: 2px solid #7545f2;
+    border: 2px solid #008BC6;
     border-radius: 0 10px 10px 0;
     font-size: 0.9rem;
     font-weight: 600;
@@ -988,9 +988,9 @@ iframe {
 }
 
 .voucher-apply-btn:hover {
-    background: linear-gradient(135deg, #5f3dc4 0%, #4c2fa0 100%);
-    border-color: #5f3dc4;
-    box-shadow: 0 4px 12px rgba(117, 69, 242, 0.35);
+    background: linear-gradient(135deg, #007BA8 0%, #00658F 100%);
+    border-color: #00658F;
+    box-shadow: 0 4px 12px rgba(0, 139, 198, 0.35);
 }
 
 /* Applied voucher state */
@@ -1124,15 +1124,15 @@ iframe {
 .sign-popup-hash {
     margin: 1rem 0;
     padding: 0.9rem;
-    border: 1px solid #dbeafe;
+    border: 1px solid #CDEDF9;
     border-radius: 8px;
-    background: #eff6ff;
+    background: #ECF8FD;
 }
 
 .sign-popup-hash span {
     display: block;
     margin-bottom: 0.45rem;
-    color: #1e40af;
+    color: #00658F;
     font-size: 0.8rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -1177,8 +1177,8 @@ iframe {
 }
 
 .sign-popup-btn.primary {
-    border-color: #2563eb;
-    background: #2563eb;
+    border-color: #007BA8;
+    background: #007BA8;
     color: #ffffff;
 }
 
@@ -1313,8 +1313,8 @@ iframe {
 }
 
 .sign-step-card.primary {
-    border-color: #2563eb;
-    background: #eff6ff;
+    border-color: #007BA8;
+    background: #ECF8FD;
 }
 
 .sign-step-card.success {
@@ -1336,7 +1336,7 @@ iframe {
 }
 
 .sign-step-card.primary .sign-step-icon {
-    background: #2563eb;
+    background: #007BA8;
     color: #ffffff;
 }
 
@@ -1497,11 +1497,11 @@ iframe {
 }
 
 .voucher-apply-btn {
-    background: #7545f2;
+    background: #007BA8;
 }
 
 .voucher-apply-btn:hover {
-    background: #5f3dc4;
+    background: #00658F;
 }
 
 .voucher-applied {

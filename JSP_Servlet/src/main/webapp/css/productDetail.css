@@ -4,7 +4,7 @@
 body {
     font-family: Arial, sans-serif;
     margin: 0;
-    background-color: #f8f9fa;
+    background-color: #FEF7FF;
     color: #333;
 }
 
@@ -61,7 +61,7 @@ h2 {
 }
 
 nav a:hover {
-    color: #007bff;
+    color: #007BA8;
 }
 
 .product-wrapper {
@@ -80,11 +80,11 @@ nav a:hover {
 }
 
 .nav-tabs .nav-link:hover {
-    color: #007bff; /* Màu khi hover */
+    color: #007BA8; /* Màu khi hover */
 }
 
 .nav-tabs .nav-link.active {
-    background-color: #0031da; /* Màu nền khi active */
+    background-color: #007BA8; /* Màu nền khi active */
     color: #fff; /* Màu chữ khi active */
     border-radius: 5px;
 }
@@ -131,7 +131,7 @@ nav a:hover {
 
 /* ====== Giá, mô tả, trạng thái ====== */
 /*.price {*/
-/*    color: #e60000;*/
+/*    color: #00658F;*/
 /*    font-size: 20px;*/
 /*    font-weight: bold;*/
 /*}*/
@@ -153,7 +153,7 @@ nav a:hover {
 }
 
 .reviews {
-    color: #0066cc;
+    color: #007BA8;
     text-decoration: none;
 }
 
@@ -298,7 +298,7 @@ input#quantity {
 }
 
 .buy-btn {
-    background: #f14d35;
+    background: #007BA8;
     font-weight: 550;
     color: #fff;
     padding: 20px 95px;
@@ -313,7 +313,7 @@ input#quantity {
 }
 
 .add-btn {
-    background: #003dd4;
+    background: #007BA8;
     font-weight: 550;
     color: #fff;
     padding: 20px 95px;
@@ -323,7 +323,7 @@ input#quantity {
 
 .add-btn:hover {
     transition: 0.5s ease;
-    background: #002a9c;
+    background: #00658F;
     color: #fff;
 }
 
@@ -443,7 +443,7 @@ button:hover {
     margin: 10px;
     box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
     width: 30%;
-    background: #f4f7ff;
+    background: #FEF7FF;
 }
 
 .product-detail textarea {
@@ -452,7 +452,7 @@ button:hover {
 }
 
 .product-detail button {
-    /*background: #003dd4;*/
+    /*background: #007BA8;*/
     background: gray;
     font-weight: 550;
     color: #fff;
@@ -465,14 +465,14 @@ button:hover {
 }
 
 .product-detail button.focused {
-    background: #003dd4;
+    background: #007BA8;
     color: #fff;
 }
 
 .product-detail button:hover {
     transition: 0.5s ease;
     background: #fff;
-    color: #002a9c;
+    color: #00658F;
 }
 
 .comment .comment-content {
@@ -489,7 +489,7 @@ button:hover {
     bottom: 40px;
     right: 40px;
     font-size: 20px;
-    background: #003dd4;
+    background: #007BA8;
     color: white;
     border: none;
     border-radius: 50%;
@@ -564,7 +564,7 @@ button:hover {
 
 .qty-btn:hover {
     background: #e9ecef;
-    color: #0031da;
+    color: #00658F;
 }
 
 .product-info .nav-tabs {
@@ -583,7 +583,7 @@ button:hover {
 }
 
 .product-info .nav-tabs .nav-link.active {
-    color: #003dd4;
+    color: #007BA8;
 }
 
 .product-info .nav-tabs .nav-link.active::after {
@@ -593,7 +593,7 @@ button:hover {
     left: 0;
     width: 100%;
     height: 3px;
-    background: #003dd4;
+    background: #007BA8;
     border-radius: 2px;
 }
 
@@ -635,13 +635,13 @@ button:hover {
 }
 
 #feedback-input:focus {
-    border-color: #003dd4;
-    box-shadow: 0 0 0 2px rgba(0, 61, 212, 0.1);
+    border-color: #007BA8;
+    box-shadow: 0 0 0 2px rgba(0, 139, 198, 0.1);
 }
 
 #btn-send-feedback {
     margin-top: 15px;
-    background: #003dd4;
+    background: #007BA8;
     color: #fff;
     border: none;
     padding: 12px 25px;
@@ -652,7 +652,7 @@ button:hover {
 }
 
 #btn-send-feedback:hover {
-    background: #002a9c;
+    background: #00658F;
 }
 
 #comment-list {

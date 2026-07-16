@@ -1,6 +1,6 @@
 /* Global Overrides specific to this page if needed */
 body {
-    background-color: #f8f9fa;
+    background-color: #FEF7FF;
     /* Light gray background for contrast */
 }
 .breadcrumb-nav {
@@ -21,12 +21,12 @@ body {
 }
 
 nav a:hover {
-    color: #007bff;
+    color: #007BA8;
 }
 
 /* --- Hero Section --- */
 .contact-hero {
-    background: linear-gradient(135deg, #0d6efd 0%, #0dcaf0 100%);
+    background: linear-gradient(135deg, #007BA8 0%, #0dcaf0 100%);
     color: white;
     padding: 60px 0 80px;
     margin-bottom: -50px;
@@ -96,8 +96,8 @@ nav a:hover {
 .info-item .icon-box {
     width: 50px;
     height: 50px;
-    background-color: #e7f1ff;
-    color: #0d6efd;
+    background-color: #ECF8FD;
+    color: #00658F;
     border-radius: 12px;
     display: flex;
     align-items: center;
@@ -128,7 +128,7 @@ nav a:hover {
 }
 
 .info-item .info-content a:hover {
-    color: #0d6efd;
+    color: #007BA8;
 }
 
 /* Social Buttons */
@@ -197,8 +197,8 @@ nav a:hover {
 }
 
 .form-control:focus {
-    border-color: #0d6efd;
-    box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.1);
+    border-color: #007BA8;
+    box-shadow: 0 0 0 4px rgba(0, 123, 168, 0.1);
     background-color: white;
 }
 
@@ -209,14 +209,14 @@ nav a:hover {
     font-weight: 600;
     font-size: 1rem;
     letter-spacing: 0.5px;
-    box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
+    box-shadow: 0 4px 15px rgba(0, 123, 168, 0.3);
     transition: all 0.3s ease;
     width: 100%;
 }
 
 .btn-send-contact:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(13, 110, 253, 0.4);
+    box-shadow: 0 6px 20px rgba(0, 123, 168, 0.4);
 }
 
 /* --- Responsive Layout --- */

@@ -1,7 +1,7 @@
 /* ================= GLOBAL / RESET ================= */
 body {
     font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    background-color: #f4f7f6;
+    background-color: #FEF7FF;
     margin: 0;
     color: #2d3436;
     line-height: 1.6;
@@ -45,7 +45,7 @@ nav a {
 }
 
 nav a:hover {
-    color: #0984e3;
+    color: #007BA8;
     text-decoration: underline;
 }
 
@@ -147,13 +147,13 @@ nav a:hover {
 
 .voucher-detail-date i {
     /* hypothetical icon */
-    color: #0984e3;
+    color: #008BC6;
 }
 
 /* Coupon Code Box */
 .voucher-code-box {
     background: #f1f2f6;
-    border: 2px dashed #0984e3;
+    border: 2px dashed #008BC6;
     border-radius: 12px;
     padding: 20px;
     text-align: center;

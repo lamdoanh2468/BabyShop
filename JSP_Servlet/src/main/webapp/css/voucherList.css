@@ -1,7 +1,7 @@
 /* ================= GLOBAL / RESET ================= */
 body {
     font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    background-color: #f4f7f6;
+    background-color: #FEF7FF;
     /* Light gray background for contrast */
     color: #2d3436;
     margin: 0;
@@ -26,7 +26,7 @@ body {
     display: block;
     width: 60px;
     height: 4px;
-    background: linear-gradient(135deg, #0984e3, #74b9ff);
+    background: linear-gradient(135deg, #008BC6, #9BDBF3);
     margin: 10px auto 30px;
     border-radius: 2px;
 }
@@ -42,13 +42,13 @@ body {
 
 .voucher-breadcrumb a {
     text-decoration: none;
-    color: #0984e3;
+    color: #007BA8;
     font-weight: 500;
     transition: color 0.2s;
 }
 
 .voucher-breadcrumb a:hover {
-    color: #74b9ff;
+    color: #9BDBF3;
     text-decoration: underline;
 }
 
@@ -83,8 +83,8 @@ body {
 
 .voucher-card:hover {
     transform: translateY(-10px);
-    box-shadow: 0 20px 40px rgba(9, 132, 227, 0.15);
-    border-color: rgba(9, 132, 227, 0.1);
+    box-shadow: 0 20px 40px rgba(0, 139, 198, 0.15);
+    border-color: rgba(0, 139, 198, 0.1);
 }
 
 /* ================= DISCOUNT BADGE ================= */
@@ -170,19 +170,19 @@ body {
     padding: 12px;
     text-align: center;
     border-radius: 50px;
-    background: linear-gradient(135deg, #0984e3, #74b9ff);
+    background: linear-gradient(135deg, #008BC6, #9BDBF3);
     color: #fff;
     font-weight: 600;
     font-size: 0.95rem;
     text-decoration: none;
-    box-shadow: 0 4px 15px rgba(9, 132, 227, 0.3);
+    box-shadow: 0 4px 15px rgba(0, 139, 198, 0.3);
     transition: all 0.3s ease;
 }
 
 .voucher-detail-btn:hover {
-    background: linear-gradient(135deg, #74b9ff, #0984e3);
+    background: linear-gradient(135deg, #9BDBF3, #008BC6);
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(9, 132, 227, 0.4);
+    box-shadow: 0 6px 20px rgba(0, 139, 198, 0.4);
     color: #fff;
 }
 
@@ -224,15 +224,15 @@ body {
 /* HOVER */
 .vc-pagination-wrap .vc-pagination a.vc-page:hover {
     background-color: #f1f2f6;
-    color: #0984e3;
+    color: #00658F;
     transform: translateY(-2px);
 }
 
 /* ACTIVE */
 .vc-pagination-wrap .vc-pagination a.vc-page.active {
-    background: linear-gradient(135deg, #0984e3, #74b9ff);
+    background: linear-gradient(135deg, #008BC6, #9BDBF3);
     color: #fff;
-    box-shadow: 0 4px 10px rgba(9, 132, 227, 0.3);
+    box-shadow: 0 4px 10px rgba(0, 139, 198, 0.3);
 }
 
 /* PREV / NEXT ICONS */

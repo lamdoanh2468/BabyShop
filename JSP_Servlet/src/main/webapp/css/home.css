@@ -31,7 +31,7 @@ iframe {
 }
 
 body {
-    background: #f0f4ff;
+    background: #FEF7FF;
     color: #333;
 }
 
@@ -61,7 +61,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(to right, rgba(0, 74, 173, 0.6), transparent);
+    background: linear-gradient(to right, rgba(0, 101, 143, 0.6), transparent);
     /* Màu xanh của bạn */
     pointer-events: none;
 }
@@ -106,7 +106,7 @@ body {
 .btn-hero {
     display: inline-block;
     padding: 12px 35px;
-    background: #e63946;
+    background: #007BA8;
     /* Màu đỏ chủ đạo */
     color: #fff;
     border-radius: 30px;
@@ -114,12 +114,12 @@ body {
     font-weight: bold;
     font-size: 1.1em;
     transition: 0.3s;
-    box-shadow: 0 4px 15px rgba(230, 57, 70, 0.4);
+    box-shadow: 0 4px 15px rgba(0, 123, 168, 0.4);
 }
 
 .btn-hero:hover {
     background: #fff;
-    color: #e63946;
+    color: #007BA8;
     transform: translateY(-3px);
 }
 
@@ -130,7 +130,7 @@ body {
 }
 
 .category h2 {
-    color: #004aad;
+    color: #00658F;
     margin-bottom: 40px;
 }
 
@@ -165,7 +165,7 @@ body {
 .cat-item p {
     margin-top: 5px;
     font-weight: 600;
-    color: #004aad;
+    color: #00658F;
 }
 
 /* Giới thiệu */
@@ -188,7 +188,7 @@ body {
 }
 
 .intro-right h3 {
-    color: #004aad;
+    color: #00658F;
     margin-bottom: 10px;
 }
 
@@ -223,7 +223,7 @@ body {
 
 .policy i {
     font-size: 35px;
-    color: #004aad;
+    color: #00658F;
     /* Màu xanh thương hiệu */
 }
 
@@ -250,7 +250,7 @@ body {
 
 .section h2 {
     text-align: center;
-    color: #004aad;
+    color: #00658F;
     margin-bottom: 20px;
 }
 
@@ -334,7 +334,7 @@ body {
 
 /* ========== PRODUCT CARD ========== */
 .product-card {
-    background: #f9fbff;
+    background: #FEF7FF;
     border-radius: 12px;
     text-align: center;
     padding: 12px;
@@ -384,7 +384,7 @@ body {
 }
 
 .price {
-    color: #e63946;
+    color: #007BA8;
     font-weight: 700;
     font-size: 16px;
 }
@@ -422,14 +422,14 @@ body {
 }
 
 .detail-btn {
-    background: #1a73e8;
+    background: #007BA8;
     color: white;
 }
 
 .detail-btn:hover {
     background: white;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
-    color: #1a73e8;
+    color: #007BA8;
 }
 
 .favor-btn {
@@ -475,7 +475,7 @@ body {
 
 .sold {
     font-weight: 600;
-    color: #e60000;
+    color: #00658F;
 }
 
 /* ========== RESPONSIVE ========== */

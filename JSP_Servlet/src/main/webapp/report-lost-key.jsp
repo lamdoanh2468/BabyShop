@@ -158,7 +158,7 @@
                 icon: 'success',
                 title: 'Báo mất thành công!',
                 text: 'Chứng thư cũ đã bị thu hồi. Vui lòng tạo chứng thư mới.',
-                confirmButtonColor: '#6366f1',
+                confirmButtonColor: '#007BA8',
                 confirmButtonText: 'Quay lại quản lý khóa'
             }).then(() => {
                 window.location.href = '${pageContext.request.contextPath}/security-key';
