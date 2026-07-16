@@ -67,13 +67,13 @@
         }
 
         .sign-step-card:hover {
-            border-color: #6366f1;
-            background: #f8fafc;
+            border-color: #008BC6;
+            background: #FEF7FF;
         }
 
         .sign-step-card.primary {
-            border-color: #6366f1;
-            background: #eef2ff;
+            border-color: #008BC6;
+            background: #ECF8FD;
         }
 
         .sign-step-card.success {
@@ -128,7 +128,7 @@
         }
 
         .sign-status-loading {
-            color: #2563eb;
+            color: #007BA8;
             font-weight: 600;
         }
     </style>

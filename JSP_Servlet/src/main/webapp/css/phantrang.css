@@ -37,18 +37,18 @@
 
 /* HOVER */
 .vc-pagination a.vc-page:hover {
-    background: #eef4ff;
-    border-color: #0984e3;
-    color: #0984e3;
+    background: #ECF8FD;
+    border-color: #008BC6;
+    color: #00658F;
     transform: translateY(-2px);
 }
 
 /* ACTIVE */
 .vc-pagination a.vc-page.active {
-    background: linear-gradient(135deg, #0984e3, #74b9ff);
+    background: linear-gradient(135deg, #008BC6, #9BDBF3);
     color: #fff;
-    border-color: #0984e3;
-    box-shadow: 0 6px 18px rgba(9,132,227,0.35);
+    border-color: #008BC6;
+    box-shadow: 0 6px 18px rgba(0,139,198,0.35);
 }
 
 /* PREV / NEXT */

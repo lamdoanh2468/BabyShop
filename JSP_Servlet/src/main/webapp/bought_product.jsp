@@ -87,7 +87,7 @@
                             Hãy khám phá các sản phẩm tuyệt vời của chúng tôi!
                         </p>
                         <a href="${pageContext.request.contextPath}/product-list" style="display: inline-block; margin-top: 20px; padding: 12px 24px;
-                                      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                                      background: linear-gradient(135deg, #007BA8 0%, #00658F 100%); 
                                       color: white; text-decoration: none; border-radius: 10px; 
                                       font-weight: 600; transition: all 0.3s ease;">
                             <i class="fas fa-shopping-cart"></i> Mua sắm ngay

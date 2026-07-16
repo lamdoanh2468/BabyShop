@@ -24,32 +24,10 @@
                 <div class="dashboard">
 
                     <!-- SIDEBAR -->
-                    <aside class="sidebar">
-                        <nav class="menu">
-                            <a href="${pageContext.request.contextPath}/admin/overview"><i
-                                    class="fa-solid fa-house"></i><span>Dashboard</span></a>
-                            <a href="${pageContext.request.contextPath}/admin/accounts" class="active"><i
-                                    class="fa-solid fa-user"></i><span>Tài khoản</span></a>
-                            <a href="${pageContext.request.contextPath}/admin/orders"><i
-                                    class="fa-solid fa-box"></i><span>Đơn hàng</span></a>
-                            <a href="${pageContext.request.contextPath}/admin/products"><i
-                                    class="fa-solid fa-cubes"></i><span>Sản phẩm</span></a>
-                            <a href="${pageContext.request.contextPath}/admin/categories"><i
-                                    class="fa-solid fa-layer-group"></i><span>Danh mục sản phẩm</span></a>
-                            <a href="${pageContext.request.contextPath}/admin/brands"><i
-                                    class="fa-solid fa-tags"></i><span>Thương hiệu</span></a>
-                <a href="${pageContext.request.contextPath}/admin/contacts"><i
-                    class="fa-solid fa-envelope"></i><span>Liên hệ</span></a>
-                <a href="${pageContext.request.contextPath}/admin/stocks"><i
-                    class="fa-solid fa-warehouse"></i><span>Kho hàng</span></a>
-                            <a href="${pageContext.request.contextPath}/admin/vouchers"><i
-                                    class="fa-solid fa-ticket"></i><span>Vouchers</span></a>
-                            <a href="${pageContext.request.contextPath}/admin/settings"><i
-                                    class="fa-solid fa-gear"></i><span>Cài đặt</span></a>
-                        </nav>
-                    </aside>
 
-                    <!-- CONTENT -->
+                    <jsp:include page="admin_sidebar.jsp"/>
+
+<!-- CONTENT -->
                     <div class="content-wrapper">
                         <main class="main">
                             <div class="product-header">
@@ -86,12 +64,12 @@
                                             onmouseenter="showProfile(this)" onmouseleave="hideProfile()">
 
                                             <td>#${a.accountId}</td>
-                                            <td style="font-weight: 500; color: #514EA5;">${a.username}</td>
+                                            <td style="font-weight: 500; color: #007BA8;">${a.username}</td>
                                             <td>${a.email}</td>
 
                                             <td>
                                                 <span class="status ${a.role == 1 ? 'on' : 'off'}"
-                                                    style="background: ${a.role == 1 ? '#E4F1FF' : '#F7F8FF'}; color: ${a.role == 1 ? '#2E7CD9' : '#666'};">
+                                                    style="background: ${a.role == 1 ? '#ECF8FD' : '#E7E0EC'}; color: ${a.role == 1 ? '#00658F' : '#49454F'};">
                                                     ${a.role == 1 ? 'Admin' : 'User'}
                                                 </span>
                                             </td>
@@ -127,8 +105,8 @@
                             </table>
                         </main>
 
-                        <aside class="right-panel"></aside>
-                    </div>
+
+</div>
                 </div>
                 <!-- PROFILE POPUP -->
                 <div id="profile-popup" class="profile-popup"></div>

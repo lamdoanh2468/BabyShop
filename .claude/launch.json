@@ -1,0 +1,39 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "babyshop-web-docker",
+      "runtimeExecutable": "docker",
+      "runtimeArgs": [
+        "compose",
+        "-f",
+        "JSP_Servlet/docker-compose.yml",
+        "up",
+        "--build",
+        "web"
+      ],
+      "port": 8080
+    },
+    {
+      "name": "babyshop-mysql-docker",
+      "runtimeExecutable": "docker",
+      "runtimeArgs": [
+        "compose",
+        "-f",
+        "JSP_Servlet/docker-compose.yml",
+        "up",
+        "mysql"
+      ],
+      "port": 3306
+    },
+    {
+      "name": "xampp-mysql",
+      "runtimeExecutable": "c:\\xampp\\mysql\\bin\\mysqld.exe",
+      "runtimeArgs": [
+        "--defaults-file=c:\\xampp\\mysql\\bin\\my.ini",
+        "--standalone"
+      ],
+      "port": 3306
+    }
+  ]
+}

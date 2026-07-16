@@ -169,20 +169,20 @@
 }
 
 .sk-btn:hover {
-    border-color: #6366f1;
-    color: #4f46e5;
+    border-color: #008BC6;
+    color: #007BA8;
     transform: translateY(-1px);
 }
 
 .sk-btn.primary {
-    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    background: linear-gradient(135deg, #008BC6, #007BA8);
     border-color: transparent;
     color: #ffffff;
 }
 
 .sk-btn.primary:hover {
     color: #ffffff;
-    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.35);
+    box-shadow: 0 8px 20px rgba(0, 139, 198, 0.35);
 }
 
 .sk-btn.danger {
@@ -264,7 +264,7 @@
 .sk-inline-link {
     display: inline-block;
     margin-top: 8px;
-    color: #4f46e5;
+    color: #007BA8;
     font-weight: 700;
     text-decoration: none;
 }
