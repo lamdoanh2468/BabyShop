@@ -1,2 +1,9 @@
 FE/fontawesome-free-7.1.0-web/
 .idea/workspace.xml
+
+# Build output
+out/
+
+# Secrets & local data — never commit
+*.pem
+JSP_Servlet/db_babyshop.sql

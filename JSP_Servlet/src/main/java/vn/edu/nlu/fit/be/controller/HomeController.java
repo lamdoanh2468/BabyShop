@@ -11,40 +11,23 @@ import vn.edu.nlu.fit.be.service.ProductService;
 import java.io.IOException;
 import java.util.*;
 
-@WebServlet(name = "HomeController", value = "/home", loadOnStartup = 1)
+@WebServlet(name = "HomeController", value = "/home")
 public class HomeController extends HttpServlet {
     private final CategoryService categoryService = new CategoryService();
 
     private final ProductService productService = new ProductService();
 
     @Override
-    public void init() throws ServletException {
-        List<Product> interiorProducts = productService.getLatestProductsByCategory(1);
-        List<Product> decoratingProducts = productService.getLatestProductsByCategory(2);
-        List<Product> toyProducts = productService.getLatestProductsByCategory(3);
-
-        getServletContext().setAttribute("categories", categoryService.getAllCategories());
-        getServletContext().setAttribute("NoiThatMoi", interiorProducts);
-        getServletContext().setAttribute("TrangTriMoi", decoratingProducts);
-        getServletContext().setAttribute("DoChoiMoi", toyProducts);
-    }
-
-    @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         List<Product> interiorProducts = productService.getLatestProductsByCategory(1);
         List<Product> decoratingProducts = productService.getLatestProductsByCategory(2);
-        Map<Integer, Integer> decorateSold = productService.getSoldMap(decoratingProducts);
         List<Product> toyProducts = productService.getLatestProductsByCategory(3);
 
         req.setAttribute("categories", categoryService.getAllCategories());
-
         req.setAttribute("NoiThatMoi", interiorProducts);
-
         req.setAttribute("TrangTriMoi", decoratingProducts);
-
         req.setAttribute("DoChoiMoi", toyProducts);
-        req.setAttribute("categories", categoryService.getAllCategories());
         req.getRequestDispatcher("/home.jsp").forward(req, resp);
     }
 
