@@ -1,0 +1,59 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: babyshop-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_ROOT_PASSWORD: ""
+      MYSQL_DATABASE: db_babyshop
+      TZ: Asia/Ho_Chi_Minh
+    # Ghìm RAM cho vừa t3.micro 1GB: buffer pool nhỏ + tắt performance_schema (~200MB).
+    command: --innodb-buffer-pool-size=128M --performance-schema=OFF --skip-name-resolve
+    mem_limit: 450m
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      # file dump .sql nằm cùng thư mục với file compose này
+      - ./db_babyshop.sql:/docker-entrypoint-initdb.d/01-db_babyshop.sql:ro
+    healthcheck:
+      # Bắt buộc dùng 127.0.0.1 (TCP), không phải localhost (unix socket):
+      # lúc import dump, MySQL chạy server tạm với --skip-networking, ping qua
+      # socket sẽ báo healthy sớm trong khi dữ liệu chưa import xong.
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 60s
+    networks:
+      - babyshop-net
+
+  web:
+    # Đổi thành đúng <user>/<repo>:<tag> trên Docker Hub của bạn
+    image: ${WEB_IMAGE:-lamdoanh2468/babyshop:latest}
+    pull_policy: always
+    container_name: babyshop-web
+    restart: unless-stopped
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: ""
+      DB_NAME: db_babyshop
+      TZ: Asia/Ho_Chi_Minh
+      # Ghìm heap JVM để Tomcat không phình quá 1GB RAM của t3.micro.
+      JAVA_OPTS: "-Xmx300m -Xms128m"
+    mem_limit: 500m
+    depends_on:
+      mysql:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    networks:
+      - babyshop-net
+networks:
+  babyshop-net:
+
+volumes:
+  mysql_data:

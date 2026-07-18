@@ -1,0 +1,2509 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BabyShop Việt Nam</title>
+
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+    <!-- SweetAlert dùng cho header logout -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Bootstrap: kept only for its carousel JS (data-bs-slide etc.) below; Tailwind (loaded
+         inside header.jsp) supplies all visual styling and is injected after this stylesheet
+         so it wins the cascade for anything both frameworks touch. -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body class="bg-page text-ink-700 font-body">
+
+
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500;600;700;800&family=Noto+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+<!-- Font Awesome (shared icon set for the whole storefront) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+      integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<!-- Tailwind (CDN, no build step) — see design-system/storefront/MASTER.md for the source of these tokens -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    // brand-500 (#008BC6) is the identity color — 3.8:1 on white, so it is
+                    // valid for fills, icons, borders and focus rings, but NOT for normal-size
+                    // text. Anything text-sized uses brand-600 (4.8:1) or brand-700.
+                    brand: {
+                        50: '#ECF8FD', 100: '#CDEDF9', 200: '#9BDBF3',
+                        500: '#008BC6', 600: '#007BA8', 700: '#00658F', 900: '#013E58',
+                    },
+                    // Retained alias: existing markup uses trust-* for secondary//info accents.
+                    trust: { 50: '#ECF8FD', 700: '#00658F' },
+                    ink: { 900: '#1D1B20', 700: '#49454F', 500: '#6E6779' },
+                    surface: '#FFFFFF',
+                    page: '#FEF7FF',
+                    border: '#E7E0EC',
+                    borderStrong: '#79747E',
+                    success: '#15803D', warning: '#B45309', info: '#0369A1', danger: '#DC2626',
+                },
+                fontFamily: {
+                    display: ['"Be Vietnam Pro"', 'sans-serif'],
+                    body: ['"Noto Sans"', 'sans-serif'],
+                },
+                borderRadius: { xl2: '16px' },
+                boxShadow: {
+                    card: '0 1px 2px rgba(29,27,32,0.06)',
+                    raised: '0 8px 24px -12px rgba(29,27,32,0.18)',
+                },
+            },
+        },
+    };
+</script>
+<style>
+    body { font-family: 'Noto Sans', sans-serif; background: #FEF7FF; color: #49454F; }
+    .font-display { font-family: 'Be Vietnam Pro', sans-serif; }
+</style>
+
+<header id="siteHeader" class="sticky top-0 z-50 bg-surface/95 backdrop-blur border-b border-border shadow-sm font-body">
+    <!-- Top bar -->
+    <div class="bg-ink-900 text-white text-sm">
+        <div class="max-w-6xl mx-auto px-4 flex items-center justify-between gap-4 py-2">
+            <div>
+                Hotline:
+                <a href="tel:0964163168" class="font-semibold hover:underline">0964 163 168</a>
+            </div>
+
+            <div>
+                
+                    
+                        <a href="/login" class="font-semibold hover:underline">Đăng nhập</a>
+                        <span class="opacity-60 mx-2">/</span>
+                        <a href="/register" class="font-semibold hover:underline">Đăng ký</a>
+                    
+                    
+                
+            </div>
+        </div>
+    </div>
+
+    <!-- Main row -->
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center gap-4">
+        <!-- Brand -->
+        <a href="/" class="shrink-0 font-display font-extrabold text-2xl tracking-tight" aria-label="BabyShop">
+            <span class="text-ink-900">Baby</span><span class="text-brand-600">Shop</span>
+        </a>
+
+        <!-- Search (desktop) -->
+        <div class="hidden md:flex flex-1 justify-center">
+            <form action="/search" method="get" role="search"
+                  class="w-full max-w-lg flex items-center gap-2 bg-surface border border-border rounded-full pl-4 pr-1.5 py-1.5 shadow-card focus-within:border-brand-600 focus-within:ring-2 focus-within:ring-brand-100 transition">
+                <input type="search" name="keyword" value="" placeholder="Tìm bàn ghế, tủ, đồ chơi..."
+                       class="flex-1 bg-transparent outline-none text-sm text-ink-900 placeholder:text-ink-500" />
+                <button type="submit" aria-label="Tìm"
+                        class="w-9 h-9 shrink-0 grid place-items-center rounded-full bg-brand-600 text-white hover:bg-brand-700 transition">
+                    <i class="fa-solid fa-magnifying-glass text-sm"></i>
+                </button>
+            </form>
+        </div>
+
+        <!-- Right side -->
+        <div class="flex items-center gap-2 ml-auto">
+            <nav aria-label="Điều hướng chính" class="hidden lg:block">
+                <ul class="flex items-center gap-1 text-sm font-semibold text-ink-700">
+                    <li><a href="/" class="block px-3 py-2.5 rounded-lg hover:bg-brand-50 hover:text-brand-600 transition">Trang chủ</a></li>
+                    <li><a href="/product-list" class="block px-3 py-2.5 rounded-lg hover:bg-brand-50 hover:text-brand-600 transition">Sản phẩm</a></li>
+                    <li><a href="/news" class="block px-3 py-2.5 rounded-lg hover:bg-brand-50 hover:text-brand-600 transition">Tin tức</a></li>
+                    <li><a href="/voucher-list" class="block px-3 py-2.5 rounded-lg hover:bg-brand-50 hover:text-brand-600 transition">Ưu đãi</a></li>
+                    <li><a href="/contact" class="block px-3 py-2.5 rounded-lg hover:bg-brand-50 hover:text-brand-600 transition">Liên hệ</a></li>
+                </ul>
+            </nav>
+
+            <div class="flex items-center gap-2">
+                <a href="/profile" aria-label="Tài khoản"
+                   class="w-11 h-11 grid place-items-center rounded-xl border border-border bg-surface text-ink-900 shadow-card hover:-translate-y-0.5 hover:shadow-raised transition">
+                    <i class="fa-solid fa-user text-base"></i>
+                </a>
+
+                <a href="/cart" aria-label="Giỏ hàng"
+                   class="relative w-11 h-11 grid place-items-center rounded-xl border border-border bg-surface text-ink-900 shadow-card hover:-translate-y-0.5 hover:shadow-raised transition">
+                    <i class="fa-solid fa-cart-shopping text-base"></i>
+                    <span aria-hidden="true"
+                          class="absolute -top-1.5 -right-1.5 min-w-[20px] h-5 px-1 rounded-full bg-brand-600 text-white text-xs font-bold grid place-items-center border-2 border-surface">
+                        
+                            
+                            0
+                        
+                    </span>
+                </a>
+
+                <button type="button" class="sh-hamburger lg:hidden w-11 h-11 grid place-items-center rounded-xl border border-border bg-surface text-ink-900 shadow-card"
+                        aria-label="Mở menu" aria-controls="mobileMenu" aria-expanded="false">
+                    <i class="fa-solid fa-bars text-base"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div id="mobileMenu" class="hidden fixed inset-0 z-50 bg-ink-900/40 backdrop-blur-sm" aria-hidden="true">
+        <div class="h-full w-[min(88vw,360px)] bg-surface shadow-raised p-5 overflow-y-auto">
+            <div class="flex items-center justify-between mb-4">
+                <span class="font-display font-extrabold text-lg text-ink-900">Menu</span>
+                <button type="button" class="sh-hamburger-close w-9 h-9 grid place-items-center rounded-lg hover:bg-brand-50" aria-label="Đóng menu">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form action="/search" method="get" role="search" class="mb-4">
+                <input type="search" name="keyword" value="" placeholder="Tìm sản phẩm..."
+                       class="w-full rounded-xl border border-border px-4 py-3 text-sm outline-none focus:border-brand-600" />
+            </form>
+
+            <ul class="flex flex-col gap-1 text-sm font-semibold text-ink-900">
+                <li><a href="/" class="block px-3 py-3 rounded-xl hover:bg-brand-50 hover:text-brand-600">Trang chủ</a></li>
+                <li><a href="/product-list" class="block px-3 py-3 rounded-xl hover:bg-brand-50 hover:text-brand-600">Danh sách sản phẩm</a></li>
+                <li><a href="/news" class="block px-3 py-3 rounded-xl hover:bg-brand-50 hover:text-brand-600">Tin tức</a></li>
+                <li><a href="/voucher-list" class="block px-3 py-3 rounded-xl hover:bg-brand-50 hover:text-brand-600">Ưu đãi</a></li>
+                <li><a href="/contact" class="block px-3 py-3 rounded-xl hover:bg-brand-50 hover:text-brand-600">Liên hệ</a></li>
+                <li><a href="/profile" class="block px-3 py-3 rounded-xl hover:bg-brand-50 hover:text-brand-600">Tài khoản</a></li>
+                <li><a href="/cart" class="block px-3 py-3 rounded-xl hover:bg-brand-50 hover:text-brand-600">Giỏ hàng</a></li>
+            </ul>
+        </div>
+    </div>
+</header>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const header = document.getElementById('siteHeader');
+        if (!header) return;
+
+        const btn = header.querySelector('.sh-hamburger');
+        const closeBtn = header.querySelector('.sh-hamburger-close');
+        const menu = document.getElementById('mobileMenu');
+        if (!btn || !menu) return;
+
+        function setOpen(open) {
+            btn.setAttribute('aria-expanded', String(open));
+            menu.setAttribute('aria-hidden', String(!open));
+            menu.classList.toggle('hidden', !open);
+            document.body.classList.toggle('overflow-hidden', open);
+        }
+
+        btn.addEventListener('click', () => {
+            const isOpen = btn.getAttribute('aria-expanded') === 'true';
+            setOpen(!isOpen);
+        });
+
+        if (closeBtn) closeBtn.addEventListener('click', () => setOpen(false));
+
+        menu.addEventListener('click', (e) => {
+            if (e.target === menu) setOpen(false);
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') setOpen(false);
+        });
+    });
+
+    const logOutBtn = document.querySelector(".logout-btn");
+    if (logOutBtn) {
+        logOutBtn.addEventListener("click", (event) => {
+            event.preventDefault();
+            const url = logOutBtn.getAttribute("href");
+
+            fetch(url)
+                .then(response => {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Đã đăng xuất",
+                        text: "Đăng xuất khỏi tài khoản thành công.",
+                        timer: 1500,
+                        showConfirmButton: false,
+                    }).then(() => {
+                        window.location.href = response.url;
+                    });
+                })
+                .catch(error => {
+                    console.error(error);
+                    Swal.fire({
+                        icon: "error",
+                        title: "Lỗi",
+                        text: "Có lỗi xảy ra, vui lòng thử lại sau.",
+                    });
+                });
+        });
+    }
+</script>
+
+
+<!-- Banner chính -->
+<section class="max-w-6xl mx-auto px-4 pt-6">
+    <div class="rounded-xl2 overflow-hidden shadow-card aspect-[21/9] sm:aspect-[3/1] bg-brand-50">
+        <img src="/img/banner/banner.png" alt="Banner"
+             class="w-full h-full object-cover">
+    </div>
+</section>
+
+<!-- Danh mục sản phẩm -->
+<section class="max-w-6xl mx-auto px-4 pt-12">
+    <h2 class="font-display font-bold text-2xl text-center text-ink-900 mb-8">Danh mục sản phẩm</h2>
+
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+        
+            <a href="/product-list?category_id=1"
+               class="group bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised hover:-translate-y-1 transition text-center">
+                <div class="aspect-square rounded-lg overflow-hidden bg-page mb-2">
+                    <img src="https://gotrangtri.vn/wp-content/uploads/2024/04/avar-giuong-go-2-tang-tre-em.jpg" alt="Đồ Nội Thất" class="w-full h-full object-cover group-hover:scale-105 transition">
+                </div>
+                <p class="text-sm font-semibold text-ink-900 line-clamp-1">Đồ Nội Thất</p>
+            </a>
+        
+            <a href="/product-list?category_id=2"
+               class="group bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised hover:-translate-y-1 transition text-center">
+                <div class="aspect-square rounded-lg overflow-hidden bg-page mb-2">
+                    <img src="https://lumitex.vn/upload/product/22-8-2024/rem-tre-em-60.png" alt="Đồ Trang Trí" class="w-full h-full object-cover group-hover:scale-105 transition">
+                </div>
+                <p class="text-sm font-semibold text-ink-900 line-clamp-1">Đồ Trang Trí</p>
+            </a>
+        
+            <a href="/product-list?category_id=3"
+               class="group bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised hover:-translate-y-1 transition text-center">
+                <div class="aspect-square rounded-lg overflow-hidden bg-page mb-2">
+                    <img src="https://sudospaces.com/babycuatoi/2021/11/5501a-mo-hinh-duong-dua-khung-long-cho-be-11.jpg" alt="Đồ Chơi" class="w-full h-full object-cover group-hover:scale-105 transition">
+                </div>
+                <p class="text-sm font-semibold text-ink-900 line-clamp-1">Đồ Chơi</p>
+            </a>
+        
+    </div>
+</section>
+
+<!-- Giới thiệu -->
+<section class="max-w-6xl mx-auto px-4 pt-12">
+    <div class="rounded-xl2 overflow-hidden shadow-card bg-surface">
+        <img src="/img/banner/intro.jpg" alt="Giới thiệu BabyShop" class="w-full h-auto">
+    </div>
+</section>
+
+<!-- Chính sách -->
+<section class="max-w-6xl mx-auto px-4">
+    <div class="mt-10 -mb-10 relative z-10 bg-surface rounded-xl2 shadow-raised px-6 py-6 grid grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="flex items-center gap-3">
+            <i class="fa-solid fa-certificate text-2xl text-brand-600"></i>
+            <span class="text-sm font-bold text-ink-900 uppercase tracking-wide">Bảo hành chính hãng</span>
+        </div>
+        <div class="flex items-center gap-3">
+            <i class="fa-solid fa-screwdriver-wrench text-2xl text-brand-600"></i>
+            <span class="text-sm font-bold text-ink-900 uppercase tracking-wide">Bảo trì trọn đời</span>
+        </div>
+        <div class="flex items-center gap-3">
+            <i class="fa-solid fa-truck-ramp-box text-2xl text-brand-600"></i>
+            <span class="text-sm font-bold text-ink-900 uppercase tracking-wide">Lắp đặt miễn phí</span>
+        </div>
+        <div class="flex items-center gap-3">
+            <i class="fa-solid fa-truck-fast text-2xl text-brand-600"></i>
+            <span class="text-sm font-bold text-ink-900 uppercase tracking-wide">Miễn phí vận chuyển</span>
+        </div>
+    </div>
+</section>
+
+<!-- ====== CAROUSEL SECTION TEMPLATE ====== -->
+
+
+<!-- 1) ĐỒ NỘI THẤT MỚI NHẤT -->
+<section class="max-w-6xl mx-auto px-4 pt-20 pb-4">
+    <h2 class="font-display font-bold text-2xl text-center text-ink-900 mb-8">Đồ nội thất mới nhất</h2>
+
+    
+
+    
+        <div id="noiThatCarousel" class="carousel slide" data-bs-ride="false" data-bs-touch="true">
+            <div class="carousel-inner">
+                
+                    
+                        <div class="carousel-item active">
+                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=69"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://topkids.com.vn//img/upload/images/Temp_thumb/250x250/g1-hong-webe67Uu8CMtuztNs2oO3YtMfHDUfeZtsTvFFPeQbXZ5JddlUEGDD24117715462794.webp" alt="Ghế Điều Chỉnh Độ Cao Chống Gù G1" class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Ghế Điều Chỉnh Độ Cao Chống Gù G1</h4>
+                        <p class="text-brand-600 font-bold">
+                            
+                            2.090.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=69&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=69" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=69" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=68"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://topkids.com.vn//img/upload/images/Temp_thumb/250x250/z6510236438554_c110d74d5abc497038f6fa342e0782e8FPJCwOMzvDQ392YtQqAehd6c7P0PCGZELn0mfwBhuoTxrWHM942546471470618.webp" alt="Ghế Điều Chỉnh Chiều Cao Chống Gù FAN01 - 2025" class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Ghế Điều Chỉnh Chiều Cao Chống Gù FAN01 - 2025</h4>
+                        <p class="text-brand-600 font-bold">
+                            
+                            2.090.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=68&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=68" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=68" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=67"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://topkids.com.vn//img/upload/images/Temp_thumb/250x250/g3-hong-web_to41NV8KimhXR32Foc8S3hSQEB96MrCwPYZJietAGo1b3Iw7qZ24114303885303.webp" alt="Ghế Điều Chỉnh Độ Cao Chống Gù G3" class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Ghế Điều Chỉnh Độ Cao Chống Gù G3</h4>
+                        <p class="text-brand-600 font-bold">
+                            
+                            2.230.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=67&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=67" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=67" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=66"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://topkids.com.vn//img/upload/images/Temp_thumb/250x250/z6579922504455_ba3c9547332687fabb92d3e2bd023cd8jVqassFVyS6kHaVT85pP6MO5sAszAyOiW7RnvRr7NaxLi2ow0d2555909328598.webp" alt="Ghế Điều Chỉnh Chiều Cao Chống Gù FAN02 New - 2025" class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Ghế Điều Chỉnh Chiều Cao Chống Gù FAN02 New - 2025</h4>
+                        <p class="text-brand-600 font-bold">
+                            
+                            2.290.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=66&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=66" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=66" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=65"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://topkids.com.vn//img/upload/images/Temp_thumb/250x250/fan-11-hong-web_68VQfXquPQErWgRmHbEoAy2SZ2cpGlctNhR17J4GOnpx2M9aLx24119232447222.webp" alt="Ghế Điều Chỉnh Chiều Cao Chống Gù FAN11" class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Ghế Điều Chỉnh Chiều Cao Chống Gù FAN11</h4>
+                        <p class="text-brand-600 font-bold">
+                            
+                            2.350.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=65&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=65" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=65" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=64"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://topkids.com.vn//img/upload/images/Temp_thumb/250x250/g2-hong-web_ioFZBAkbsU5MtCbs7smrqZZThhd6hOjbf1FGwe4s2AGSzEftXR24112873846301.webp" alt="Ghế Điều Chỉnh Độ Cao Chống Gù G2" class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Ghế Điều Chỉnh Độ Cao Chống Gù G2</h4>
+                        <p class="text-brand-600 font-bold">
+                            
+                            2.540.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=64&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=64" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=64" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                        </div>
+                        </div>
+                    
+                
+                    
+                        <div class="carousel-item ">
+                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=63"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://topkids.com.vn//img/upload/images/Temp_thumb/250x250/co2-ghi-web_GpR81MkxKhkIZrwPqeSiir30PNiRaoQf9IqSPz9JlcYvruVRA92519155084901.webp" alt="Ghế Điều Chỉnh Độ Cao Chống Gù CO2" class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Ghế Điều Chỉnh Độ Cao Chống Gù CO2</h4>
+                        <p class="text-brand-600 font-bold">
+                            
+                            2.700.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=63&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=63" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=63" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=62"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://topkids.com.vn//img/upload/images/Temp_thumb/250x250/g5-xanh-web_tzqtqBcflMQysF84F0JppcbjTD4TIGHf69EXVO2qczsbYkm2vu2411186942187.webp" alt="Ghế Điều Chỉnh Độ Cao Chống Gù G5" class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Ghế Điều Chỉnh Độ Cao Chống Gù G5</h4>
+                        <p class="text-brand-600 font-bold">
+                            
+                            3.090.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=62&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=62" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=62" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=61"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://topkids.com.vn//img/upload/images/Temp_thumb/250x250/g6-xanh-web_6I8LX2baInaCIDde2XgSXp3cWbtqFfceyH2SeNzoNxBQa7Rr1Q24118999348849.webp" alt="Ghế Điều Chỉnh Độ Cao Chống Gù G6" class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Ghế Điều Chỉnh Độ Cao Chống Gù G6</h4>
+                        <p class="text-brand-600 font-bold">
+                            
+                            3.790.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=61&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=61" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=61" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=60"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://topkids.com.vn//img/upload/images/Temp_thumb/250x250/z6223369350553_9735dd3021a14419839c7cd98cffc81eKsdcok10A9F7m2o043MsKeyPHCJZiyJ2cASqmki8b12XDBStZx2518611067055.webp" alt="Ghế Điều Chỉnh Chiều Cao Chống Gù G9" class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Ghế Điều Chỉnh Chiều Cao Chống Gù G9</h4>
+                        <p class="text-brand-600 font-bold">
+                            
+                            3.790.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=60&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=60" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=60" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=59"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://topkids.com.vn//img/upload/images/Temp_thumb/250x250/co2d-xanh-web_O3gxulLCFBfjR9FSTmlydAtavLGB13GyE63mAr4DnKsm10ZgRC2412379599210.webp" alt="Ghế Điều Chỉnh Độ Cao Chống Gù CO2D" class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Ghế Điều Chỉnh Độ Cao Chống Gù CO2D</h4>
+                        <p class="text-brand-600 font-bold">
+                            
+                            3.950.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=59&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=59" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=59" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=58"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://topkids.com.vn//img/upload/images/Temp_thumb/250x250/g8-hong-web_CcPPgDUX6aA1twcqTExGC7879l4L0i6D0ZAbVfNzKhyAmfXDW224115777956158.webp" alt="Ghế Điều Chỉnh Độ Cao Chống Gù G8 Ultra Luxury" class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Ghế Điều Chỉnh Độ Cao Chống Gù G8 Ultra Luxury</h4>
+                        <p class="text-brand-600 font-bold">
+                            
+                            4.390.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=58&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=58" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=58" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                        </div>
+                        </div>
+                    
+                
+                    
+                        <div class="carousel-item ">
+                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=57"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://topkids.com.vn/img/upload/images/Temp_thumb/250x250/fan-02-hong-websSbMGQ9NCdzZOOynrPBsabtLOw0XbgHDmab5GsZNZtHkHIeBxQ255859856634.webp" alt="Ghế Điều Chỉnh Chiều Cao Chống Gù FAN05" class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Ghế Điều Chỉnh Chiều Cao Chống Gù FAN05</h4>
+                        <p class="text-brand-600 font-bold">
+                            
+                            4.390.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=57&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=57" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=57" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=56"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://topkids.com.vn/img/upload/images/Temp_thumb/250x250/cos-hong-100-webeMFFQJASSDp358yalbM7uAAFiMOmjP2N5IzwigELY2NuDqJsHR2519749664313.webp" alt="Bàn Học Thông Minh FANCY ROS 100" class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Bàn Học Thông Minh FANCY ROS 100</h4>
+                        <p class="text-brand-600 font-bold">
+                            
+                            3.910.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=56&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=56" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=56" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=55"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://topkids.com.vn/img/upload/images/Temp_thumb/250x250/lux-gjhh105t-xanh-web_fC2FDjSsgiglG9gGGA2OqQxx5bE5gHh1mofIJtBoKJ93BETcu22514070387718.webp" alt="Bàn Chống Gù Chống Cận GJHH105T và Y001" class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Bàn Chống Gù Chống Cận GJHH105T và Y001</h4>
+                        <p class="text-brand-600 font-bold">
+                            
+                            4.090.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=55&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=55" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=55" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=54"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://topkids.com.vn/img/upload/images/Temp_thumb/250x250/ros-hong-100h-web-copyqXOatHdpFk8jmwu8kdcEmdIXCWJ4vPljBJDAGtXOWZfYhVghaY251968704346.webp" alt="Bàn Học Thông Minh FANCY ROS 100H" class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Bàn Học Thông Minh FANCY ROS 100H</h4>
+                        <p class="text-brand-600 font-bold">
+                            
+                            4.210.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=54&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=54" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=54" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=53"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://topkids.com.vn/img/upload/images/Temp_thumb/250x250/t1-xanh-web-copy42D7Dki3YxA0oPKyfTSDuEB8olWZaynt4kyW5gsQFUAFlhoZfG251259067222.webp" alt="Bàn Học Thông Minh Chống Gù Chống Cận T1" class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Bàn Học Thông Minh Chống Gù Chống Cận T1</h4>
+                        <p class="text-brand-600 font-bold">
+                            
+                            4.550.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=53&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=53" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=53" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=52"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://topkids.com.vn/img/upload/images/Temp_thumb/250x250/z6774680876203_43ba0a48fea714275832b806ba92fe52loGeySl6SFm2vkwwFjGautypfNReKdEaSzJeUxxxJiS4Axg8fv2573034554393.webp" alt="Bàn Học Thông Minh Chống Gù Chống Cận TOPSBAN " class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Bàn Học Thông Minh Chống Gù Chống Cận TOPSBAN </h4>
+                        <p class="text-brand-600 font-bold">
+                            
+                            4.600.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=52&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=52" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=52" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                        </div>
+                        </div>
+                    
+                
+                    
+                        <div class="carousel-item ">
+                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=51"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://topkids.com.vn/img/upload/images/Temp_thumb/250x250/vancover-t3-hong-web_rm4FXdcag8Y4DrCS1KgCErJN2Zj9yLm3r0SF3Dap3FnuS79WXf2511719951654.webp" alt="Bàn Học Thông Minh Chống Cận VANCOVER" class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Bàn Học Thông Minh Chống Cận VANCOVER</h4>
+                        <p class="text-brand-600 font-bold">
+                            
+                            4.850.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=51&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=51" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=51" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=50"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://topkids.com.vn/img/upload/images/Temp_thumb/250x250/fancy-jz-web_uNHdT1vVDQ8fpN9fPi5XXcCuxgq7F7aHXcfLQdXKdIfEhHJL492518797068308.webp" alt="Bàn Học Thông Minh Cho Trẻ FANCY JZ" class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Bàn Học Thông Minh Cho Trẻ FANCY JZ</h4>
+                        <p class="text-brand-600 font-bold">
+                            
+                            5.060.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=50&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=50" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=50" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                        </div>
+                        </div>
+                    
+                
+            </div>
+
+            
+                <button type="button" class="carousel-control-prev !w-10 !opacity-100" data-bs-target="#noiThatCarousel" data-bs-slide="prev">
+                    <span class="w-10 h-10 grid place-items-center rounded-full bg-surface shadow-raised text-ink-900"><i class="fa-solid fa-chevron-left"></i></span>
+                    <span class="sr-only">Trước</span>
+                </button>
+                <button type="button" class="carousel-control-next !w-10 !opacity-100" data-bs-target="#noiThatCarousel" data-bs-slide="next">
+                    <span class="w-10 h-10 grid place-items-center rounded-full bg-surface shadow-raised text-ink-900"><i class="fa-solid fa-chevron-right"></i></span>
+                    <span class="sr-only">Sau</span>
+                </button>
+            
+        </div>
+    
+</section>
+
+<!-- 2) ĐỒ TRANG TRÍ MỚI NHẤT -->
+<section class="max-w-6xl mx-auto px-4 py-4">
+    <h2 class="font-display font-bold text-2xl text-center text-ink-900 mb-8">Đồ trang trí mới nhất</h2>
+
+    
+
+    
+        <div id="trangTriCarousel" class="carousel slide" data-bs-ride="false" data-bs-touch="true">
+            <div class="carousel-inner">
+                
+                    
+                        <div class="carousel-item active">
+                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=38"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://xuongtranh.net/uploads/w900/2023/06/15/bo-2-tranh-phi-hanh-gia-ngo-nghinh-treo-phong-be-trai.jpg" alt="Tranh phi hành gia ngộ nghĩnh trang trí phòng bé " class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Tranh phi hành gia ngộ nghĩnh trang trí phòng bé </h4>
+                        <p class="text-brand-600 font-bold">
+                            252.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=38&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=38" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=38" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=37"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://xuongtranh.net/uploads/w900/2023/06/15/bo-3-tranh-ca-heo-treo-phong-be-ngo-nghinh.jpg" alt="Tranh cá heo treo phòng bé ngộ nghĩnh" class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Tranh cá heo treo phòng bé ngộ nghĩnh</h4>
+                        <p class="text-brand-600 font-bold">
+                            504.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=37&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=37" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=37" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=36"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://xuongtranh.net/uploads/w900/2023/06/15/bo-3-tranh-treo-phong-be-gai-nang-tien-ca.jpg" alt="Tranh treo phòng bé gái nàng tiên cá" class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Tranh treo phòng bé gái nàng tiên cá</h4>
+                        <p class="text-brand-600 font-bold">
+                            504.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=36&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=36" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=36" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=35"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://xuongtranh.net/uploads/w900/2023/06/15/tranh-treo-phong-ngu-meo-de-thuong-cho-be.jpg" alt="Tranh treo phòng ngủ mèo dễ thương cho bé" class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Tranh treo phòng ngủ mèo dễ thương cho bé</h4>
+                        <p class="text-brand-600 font-bold">
+                            252.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=35&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=35" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=35" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=34"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://xuongtranh.net/uploads/w900/2023/06/15/bo-6-tranh-dong-vat-ngo-nghinh-treo-phong-be-trai.jpg" alt="Tranh động vật ngộ nghĩnh treo phòng bé" class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Tranh động vật ngộ nghĩnh treo phòng bé</h4>
+                        <p class="text-brand-600 font-bold">
+                            1.248.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=34&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=34" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=34" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=33"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://xuongtranh.net/uploads/w900/2023/06/15/bo-tranh-lovely-dong-vat-mau-sac-trang-tri-phong-cho-be.jpg" alt="Tranh Lovely động vật màu sắc trang trí phòng bé" class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Tranh Lovely động vật màu sắc trang trí phòng bé</h4>
+                        <p class="text-brand-600 font-bold">
+                            912.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=33&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=33" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=33" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                        </div>
+                        </div>
+                    
+                
+                    
+                        <div class="carousel-item ">
+                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=32"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://xuongtranh.net/uploads/w900/2023/06/15/set-2-tranh-tho-ngo-nghinh-va-bong-bay-ngo-nghinh.jpg" alt="Tranh thỏ và bóng bay ngộ nghĩnh" class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Tranh thỏ và bóng bay ngộ nghĩnh</h4>
+                        <p class="text-brand-600 font-bold">
+                            336.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=32&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=32" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=32" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=31"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://xuongtranh.net/uploads/w900/2023/06/15/tranh-ca-heo-xanh-va-be-gai-ngo-nghinh.jpg" alt="Tranh cá heo xanh và bé gái ngộ nghĩnh" class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Tranh cá heo xanh và bé gái ngộ nghĩnh</h4>
+                        <p class="text-brand-600 font-bold">
+                            126.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=31&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=31" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=31" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=30"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://xuongtranh.net/uploads/w900/2023/06/15/tranh-meo-vang-va-be-gai-dep.jpg" alt="Tranh mèo vàng và bé gái màu nước cực đẹp" class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Tranh mèo vàng và bé gái màu nước cực đẹp</h4>
+                        <p class="text-brand-600 font-bold">
+                            168.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=30&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=30" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=30" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=29"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://xuongtranh.net/uploads/w900/2023/06/15/set-4-trang-cong-chua-bale-trang-tri-phong-be-gai.jpg" alt=" Tranh công chúa múa bale trang trí phòng bé gái" class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]"> Tranh công chúa múa bale trang trí phòng bé gái</h4>
+                        <p class="text-brand-600 font-bold">
+                            708.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=29&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=29" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=29" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=28"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://xuongtranh.net/uploads/w900/2023/06/15/tranh-dong-vat-ngo-nghinh-trang-tri-phong-tre-em.jpg" alt="Tranh động vật ngộ nghĩnh trang trí phòng trẻ em" class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Tranh động vật ngộ nghĩnh trang trí phòng trẻ em</h4>
+                        <p class="text-brand-600 font-bold">
+                            504.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=28&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=28" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=28" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=27"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://xuongtranh.net/uploads/w900/2023/06/15/tranh-khung-long-ngo-nghinh-trang-tri-phong-be-trai.jpg" alt="Tranh khủng long ngộ nghĩnh trang trí phòng bé " class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Tranh khủng long ngộ nghĩnh trang trí phòng bé </h4>
+                        <p class="text-brand-600 font-bold">
+                            126.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=27&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=27" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=27" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                        </div>
+                        </div>
+                    
+                
+                    
+                        <div class="carousel-item ">
+                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=26"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://xuongtranh.net/uploads/w900/2023/06/15/tranh-ky-lan-hong-va-cau-vong-de-thuong-cho-phong-be-gai.jpg" alt="Tranh kỳ lân và cầu vồng đáng yêu cho bé gái" class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Tranh kỳ lân và cầu vồng đáng yêu cho bé gái</h4>
+                        <p class="text-brand-600 font-bold">
+                            504.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=26&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=26" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=26" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=25"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://xuongtranh.net/uploads/w900/2023/06/15/tranh-treo-phong-tre-em-ca-heo-va-be-gai-cam-bong-bong.jpg" alt="Tranh treo phòng trẻ em cá heo và bé cái cầm bóng " class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Tranh treo phòng trẻ em cá heo và bé cái cầm bóng </h4>
+                        <p class="text-brand-600 font-bold">
+                            252.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=25&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=25" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=25" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=24"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://xuongtranh.net/uploads/w900/2023/06/15/tranh-treo-phong-be-gai-dang-yeu-voi-ca-heo.jpg" alt="Tranh treo phòng bé gái đáng yêu với cá heo" class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Tranh treo phòng bé gái đáng yêu với cá heo</h4>
+                        <p class="text-brand-600 font-bold">
+                            126.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=24&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=24" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=24" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=23"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://xuongtranh.net/uploads/w900/2023/06/15/tranh-treo-tuong--sweet-dream-cho-be-trai.jpg" alt="Tranh treo tường Sweet Dream cho bé trai" class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Tranh treo tường Sweet Dream cho bé trai</h4>
+                        <p class="text-brand-600 font-bold">
+                            504.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=23&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=23" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=23" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=22"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://xuongtranh.net/uploads/w900/2023/06/15/tranh-treo-tuong-phi-hanh-gia-trang-tri-phong-be-trai-dep.jpg" alt="Tranh treo phòng phi hành gia trang trí phòng bé " class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Tranh treo phòng phi hành gia trang trí phòng bé </h4>
+                        <p class="text-brand-600 font-bold">
+                            126.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=22&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=22" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=22" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=21"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://xuongtranh.net/uploads/w900/2023/06/15/tranh-treo-tuong-gau-trang-ngo-nghinh-trang-tri-phong-be-trai.jpg" alt="Tranh treo tường gấu trắng ngộ nghĩnh trang trí " class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Tranh treo tường gấu trắng ngộ nghĩnh trang trí </h4>
+                        <p class="text-brand-600 font-bold">
+                            504.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=21&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=21" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=21" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                        </div>
+                        </div>
+                    
+                
+                    
+                        <div class="carousel-item ">
+                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=20"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://xuongtranh.net/uploads/w900/2023/06/15/tranh-treo-phong-tre-em-mau-nuoc-de-thuong-cho-be-gai.jpg" alt="Tranh treo tường trẻ em màu nước dễ thương" class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Tranh treo tường trẻ em màu nước dễ thương</h4>
+                        <p class="text-brand-600 font-bold">
+                            252.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=20&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=20" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=20" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=19"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://xuongtranh.net/uploads/w900/2023/06/15/tranh-treo-tuong-phi-hanh-gia-treo-phong-be-trai.jpg" alt="Tranh phi hành gia treo phòng bé trai cực chất" class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Tranh phi hành gia treo phòng bé trai cực chất</h4>
+                        <p class="text-brand-600 font-bold">
+                            1.212.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=19&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=19" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=19" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                        </div>
+                        </div>
+                    
+                
+            </div>
+
+            
+                <button type="button" class="carousel-control-prev !w-10 !opacity-100" data-bs-target="#trangTriCarousel" data-bs-slide="prev">
+                    <span class="w-10 h-10 grid place-items-center rounded-full bg-surface shadow-raised text-ink-900"><i class="fa-solid fa-chevron-left"></i></span>
+                    <span class="sr-only">Trước</span>
+                </button>
+                <button type="button" class="carousel-control-next !w-10 !opacity-100" data-bs-target="#trangTriCarousel" data-bs-slide="next">
+                    <span class="w-10 h-10 grid place-items-center rounded-full bg-surface shadow-raised text-ink-900"><i class="fa-solid fa-chevron-right"></i></span>
+                    <span class="sr-only">Sau</span>
+                </button>
+            
+        </div>
+    
+</section>
+
+<!-- 3) ĐỒ CHƠI MỚI NHẤT -->
+<section class="max-w-6xl mx-auto px-4 py-4 pb-16">
+    <h2 class="font-display font-bold text-2xl text-center text-ink-900 mb-8">Đồ chơi mới nhất</h2>
+
+    
+
+    
+        <div id="doChoiCarousel" class="carousel slide" data-bs-ride="false" data-bs-touch="true">
+            <div class="carousel-inner">
+                
+                    
+                        <div class="carousel-item active">
+                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=89"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://sudospaces.com/babycuatoi/2025/03/rk-526-ngua-bap-benh-ket-hop-choi-chan-cho-be-small.jpg" alt="Ngựa bập bênh kết hợp chòi chân có nhạc " class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Ngựa bập bênh kết hợp chòi chân có nhạc </h4>
+                        <p class="text-brand-600 font-bold">
+                            399.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=89&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=89" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=89" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=88"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://sudospaces.com/babycuatoi/2022/01/rk-514b-t-small.png" alt="Ngựa bập bênh kết hợp chòi chân " class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Ngựa bập bênh kết hợp chòi chân </h4>
+                        <p class="text-brand-600 font-bold">
+                            629.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=88&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=88" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=88" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=87"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://sudospaces.com/babycuatoi/2022/01/rk-511b-d.png" alt="Ngựa bập bênh kết hợp chòi chân quay 90 độ " class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Ngựa bập bênh kết hợp chòi chân quay 90 độ </h4>
+                        <p class="text-brand-600 font-bold">
+                            399.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=87&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=87" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=87" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=86"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://sudospaces.com/babycuatoi/2021/03/rk-701-do-choi-bap-benh-cho-be-3-small.jpg" alt="Bập bênh đôi Cỡ Lớn hươu cao cổ 3 cấp độ " class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Bập bênh đôi Cỡ Lớn hươu cao cổ 3 cấp độ </h4>
+                        <p class="text-brand-600 font-bold">
+                            945.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=86&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=86" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=86" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=85"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://sudospaces.com/babycuatoi/2023/08/zk1033-ca-heo-bap-benh-nhap-khau-truong-mam-non-khu-vui-choi-small.jpg" alt="Bập bênh cá heo đơn nhập khẩu " class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Bập bênh cá heo đơn nhập khẩu </h4>
+                        <p class="text-brand-600 font-bold">
+                            419.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=85&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=85" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=85" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=84"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://sudospaces.com/babycuatoi/2023/08/zk1017b-bap-benh-don-doi-ket-hop-ca-voi.jpg" alt="Bập bênh đơn đôi kết hợp cá voi " class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Bập bênh đơn đôi kết hợp cá voi </h4>
+                        <p class="text-brand-600 font-bold">
+                            681.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=84&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=84" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=84" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                        </div>
+                        </div>
+                    
+                
+                    
+                        <div class="carousel-item ">
+                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=83"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://sudospaces.com/babycuatoi/2020/08/zk1032-bap-benh-cho-be-6-small.jpg" alt="Bập bênh Voi đơn nhập khẩu " class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Bập bênh Voi đơn nhập khẩu </h4>
+                        <p class="text-brand-600 font-bold">
+                            419.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=83&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=83" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=83" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=82"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://sudospaces.com/babycuatoi/2023/08/zk1022-bap-benh-ngua-doi-cho-be-khu-vui-choi-truong-mam-non.jpg" alt="Bập bênh đôi hình con ngựa " class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Bập bênh đôi hình con ngựa </h4>
+                        <p class="text-brand-600 font-bold">
+                            871.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=82&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=82" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=82" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=81"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://sudospaces.com/babycuatoi/2024/11/mq01-mam-quay-cho-be-choi-trong-nha-small.jpg" alt="Mâm xoay vận động cho bé " class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Mâm xoay vận động cho bé </h4>
+                        <p class="text-brand-600 font-bold">
+                            1.260.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=81&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=81" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=81" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=80"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://sudospaces.com/babycuatoi/2023/07/zk1019-bap-benh-3-cho-be-khu-vui-choi-5-small.jpg" alt="Bập bênh 3 chỗ ngồi cá voi " class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Bập bênh 3 chỗ ngồi cá voi </h4>
+                        <p class="text-brand-600 font-bold">
+                            871.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=80&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=80" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=80" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=79"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://sudospaces.com/babycuatoi/2023/08/zk1020-bap-benh-doi-con-ga-truong-mam-non-khu-vui-choi-2.jpg" alt="Bập bênh đôi con gà " class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Bập bênh đôi con gà </h4>
+                        <p class="text-brand-600 font-bold">
+                            871.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=79&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=79" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=79" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=78"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://sudospaces.com/babycuatoi/2024/01/rk-702-do-choi-bap-benh-doi-cho-be-co-lon-small.jpg" alt="Bập bênh đôi Cỡ Lớn 2 cấp độ" class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Bập bênh đôi Cỡ Lớn 2 cấp độ</h4>
+                        <p class="text-brand-600 font-bold">
+                            839.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=78&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=78" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=78" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                        </div>
+                        </div>
+                    
+                
+                    
+                        <div class="carousel-item ">
+                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=77"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://sudospaces.com/babycuatoi/2024/01/rk-701-do-choi-bap-benh-cho-be-huou-cao-co-doi-2-small.jpg" alt="Bập bênh đôi hươu cao cổ 3 cấp độ " class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Bập bênh đôi hươu cao cổ 3 cấp độ </h4>
+                        <p class="text-brand-600 font-bold">
+                            734.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=77&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=77" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=77" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=76"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://sudospaces.com/babycuatoi/2023/08/zk1035-ngua-bap-benh-nhap-khau-truong-mam-non-khu-vui-choi-small.jpg" alt="Bập bênh Ngựa đơn nhập khẩu " class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Bập bênh Ngựa đơn nhập khẩu </h4>
+                        <p class="text-brand-600 font-bold">
+                            419.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=76&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=76" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=76" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=75"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://sudospaces.com/babycuatoi/2023/08/zk1063-ham-chui-con-kien-mau-moi-3-1-small.jpg" alt="Hầm chui con kiến nhập khẩu " class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Hầm chui con kiến nhập khẩu </h4>
+                        <p class="text-brand-600 font-bold">
+                            2.535.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=75&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=75" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=75" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=74"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://sudospaces.com/babycuatoi/2023/12/zk1062-small.png" alt="Hầm chui con sâu nhập khẩu " class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Hầm chui con sâu nhập khẩu </h4>
+                        <p class="text-brand-600 font-bold">
+                            2.535.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=74&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=74" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=74" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=73"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://sudospaces.com/babycuatoi/2021/05/js003-thiet-bi-the-duc-cho-tre-em-2-small.jpg" alt="Thiết bị tập thể dục trẻ em- xe đạp bộ " class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Thiết bị tập thể dục trẻ em- xe đạp bộ </h4>
+                        <p class="text-brand-600 font-bold">
+                            2.150.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=73&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=73" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=73" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=72"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://sudospaces.com/babycuatoi/2023/07/js009-may-tap-the-duc-cho-tre-di-bo-tai-nha-va-truong-mam-non-small.jpg" alt="Thiết bị tập thể dục cho bé - Máy tập chèo thuyền " class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Thiết bị tập thể dục cho bé - Máy tập chèo thuyền </h4>
+                        <p class="text-brand-600 font-bold">
+                            2.150.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=72&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=72" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=72" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                        </div>
+                        </div>
+                    
+                
+                    
+                        <div class="carousel-item ">
+                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=71"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://sudospaces.com/babycuatoi/2023/07/js006-may-tap-the-duc-cho-tre-di-bo-tai-nha-va-truong-mam-non-5-small.jpg" alt="Thiết bị tập thể dục trẻ em- Đạp bộ tại chỗ " class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Thiết bị tập thể dục trẻ em- Đạp bộ tại chỗ </h4>
+                        <p class="text-brand-600 font-bold">
+                            2.150.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=71&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=71" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=71" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                
+                    
+
+                    <div class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a href="/product-detail?product_id=70"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img src="https://sudospaces.com/babycuatoi/2023/11/kxht-055.png" alt="Hàng rào nhựa khu vui chơi kích " class="w-full h-full object-contain">
+                        </a>
+
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]">Hàng rào nhựa khu vui chơi kích </h4>
+                        <p class="text-brand-600 font-bold">
+                            314.000đ
+                        </p>
+
+                        <div class="flex gap-1.5 mt-auto">
+                            <a href="/cart;jsessionid=D968EE2279D759EF815F52A8A2CCB556?action=add&product_id=70&quantity=1&returnUrl=/home"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i>
+                            </a>
+                            <a href="/product-detail?product_id=70" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i>
+                            </a>
+                            <a href="/my-favorite?action=add&product_id=70" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    
+                        </div>
+                        </div>
+                    
+                
+            </div>
+
+            
+                <button type="button" class="carousel-control-prev !w-10 !opacity-100" data-bs-target="#doChoiCarousel" data-bs-slide="prev">
+                    <span class="w-10 h-10 grid place-items-center rounded-full bg-surface shadow-raised text-ink-900"><i class="fa-solid fa-chevron-left"></i></span>
+                    <span class="sr-only">Trước</span>
+                </button>
+                <button type="button" class="carousel-control-next !w-10 !opacity-100" data-bs-target="#doChoiCarousel" data-bs-slide="next">
+                    <span class="w-10 h-10 grid place-items-center rounded-full bg-surface shadow-raised text-ink-900"><i class="fa-solid fa-chevron-right"></i></span>
+                    <span class="sr-only">Sau</span>
+                </button>
+            
+        </div>
+    
+</section>
+
+
+
+
+<!-- Font Awesome (shared with header.jsp) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+      integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<footer class="bg-ink-900 text-white font-body">
+    <div class="max-w-6xl mx-auto px-4 py-14">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+
+            <!-- Brand -->
+            <div>
+                <h3 class="font-display font-extrabold text-2xl mb-3">
+                    <span class="text-white">Baby</span><span class="text-brand-600">Shop</span>
+                </h3>
+                <p class="text-white/70 mb-4 text-sm leading-relaxed">Cung cấp đồ dùng, nội thất và đồ chơi trẻ em chính hãng với giá tốt nhất.</p>
+
+                <div class="space-y-2 text-sm text-white/70">
+                    <p class="flex items-center gap-2"><i class="fa-solid fa-location-dot w-4"></i> 123 Đường ABC, TP. Hồ Chí Minh</p>
+                    <p class="flex items-center gap-2"><i class="fa-solid fa-phone w-4"></i> <a href="tel:0123456789" class="text-white hover:underline">0123 456 789</a></p>
+                    <p class="flex items-center gap-2"><i class="fa-solid fa-envelope w-4"></i> <a href="mailto:babystore@gmail.com" class="text-white hover:underline">babystore@gmail.com</a></p>
+                </div>
+            </div>
+
+            <!-- Support links -->
+            <div>
+                <h4 class="font-display font-bold text-lg mb-4">Hỗ trợ khách hàng</h4>
+                <ul class="space-y-2 text-sm text-white/70">
+                    <li><a href="#" class="hover:text-white hover:underline">Chính sách bảo hành</a></li>
+                    <li><a href="#" class="hover:text-white hover:underline">Chính sách đổi trả</a></li>
+                    <li><a href="#" class="hover:text-white hover:underline">Hướng dẫn thanh toán</a></li>
+                    <li><a href="#" class="hover:text-white hover:underline">Hướng dẫn mua hàng</a></li>
+                </ul>
+            </div>
+
+            <!-- Socials & payment -->
+            <div>
+                <h4 class="font-display font-bold text-lg mb-4">Kết nối với chúng tôi</h4>
+                <div class="flex gap-2.5 mb-6">
+                    <a href="#" aria-label="Facebook" class="w-9 h-9 grid place-items-center rounded-lg bg-white/10 hover:bg-white/20 hover:-translate-y-0.5 transition"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#" aria-label="Instagram" class="w-9 h-9 grid place-items-center rounded-lg bg-white/10 hover:bg-white/20 hover:-translate-y-0.5 transition"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" aria-label="TikTok" class="w-9 h-9 grid place-items-center rounded-lg bg-white/10 hover:bg-white/20 hover:-translate-y-0.5 transition"><i class="fa-brands fa-tiktok"></i></a>
+                    <a href="#" aria-label="YouTube" class="w-9 h-9 grid place-items-center rounded-lg bg-white/10 hover:bg-white/20 hover:-translate-y-0.5 transition"><i class="fa-brands fa-youtube"></i></a>
+                </div>
+
+                <h4 class="font-display font-bold text-lg mb-3">Phương thức thanh toán</h4>
+                <div class="flex flex-wrap gap-2">
+                    <img src="./img/visa.png" alt="Visa" class="w-12 h-8 object-contain bg-white rounded p-1">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Mastercard-logo.png" alt="MasterCard" class="w-12 h-8 object-contain bg-white rounded p-1">
+                    <img src="https://m.momoshop.com.tw/img/momologo.svg" alt="Momo" class="w-12 h-8 object-contain bg-white rounded p-1">
+                    <img src="https://thienankids.edu.vn/icon/zaloicon.png" alt="ZaloPay" class="w-12 h-8 object-contain bg-white rounded p-1">
+                </div>
+            </div>
+
+            <!-- Newsletter -->
+            <div>
+                <h4 class="font-display font-bold text-lg mb-4">Đăng ký nhận tin</h4>
+                <p class="text-white/70 text-sm mb-3">Nhận thông tin khuyến mãi và sản phẩm mới nhất.</p>
+                <form class="flex flex-col gap-2" onsubmit="return false;">
+                    <label for="footer-newsletter-email" class="sr-only">Email</label>
+                    <input id="footer-newsletter-email" type="email" required placeholder="Email của bạn"
+                           class="w-full rounded-lg px-3 py-2.5 text-sm text-ink-900 outline-none focus:ring-2 focus:ring-brand-100" />
+                    <button type="submit" class="rounded-lg px-3 py-2.5 text-sm font-semibold bg-white text-ink-900 hover:bg-brand-50 transition">Đăng ký</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Bottom -->
+        <div class="mt-10 pt-6 border-t border-white/15 flex flex-wrap items-center justify-between gap-3 text-sm text-white/70">
+            <p>© <span id="year"></span> BabyShop. All rights reserved.</p>
+            <ul class="flex gap-4">
+                <li><a href="#" class="hover:text-white hover:underline">Điều khoản sử dụng</a></li>
+                <li><a href="#" class="hover:text-white hover:underline">Chính sách bảo mật</a></li>
+            </ul>
+        </div>
+    </div>
+</footer>
+
+<script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+
+<script src="/js/home.js"></script>
+
+<style>
+    @media (prefers-reduced-motion: reduce) {
+        * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+    }
+</style>
+</body>
+
+</html>
