@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<!--
+  Fragment carousel(cid, items): render 1 carousel Bootstrap, chia items thành các slide 6 sản phẩm.
+  Thay cho logic "st.index % 6" mở/đóng div của JSP bằng 2 vòng lặp lồng nhau (chuẩn Thymeleaf).
+-->
+<div th:fragment="carousel(cid, items)" th:remove="tag">
+    <div th:id="${cid}" class="carousel slide home-bs-carousel" data-bs-ride="false" data-bs-touch="true">
+        <div class="carousel-inner">
+            <div th:each="slide : ${#numbers.sequence(0, (items.size() - 1) / 6)}"
+                 class="carousel-item" th:classappend="${slide == 0} ? 'active'">
+                <div class="row g-3">
+                    <div th:each="p : ${items.subList(slide * 6, T(java.lang.Math).min(slide * 6 + 6, items.size()))}"
+                         class="col-6 col-md-4 col-lg-3 col-xl-2">
+                        <div class="product-card">
+                            <div class="product-img">
+                                <a th:href="@{/product-detail(product_id=${p.productId})}">
+                                    <img th:src="${p.productImage}" th:alt="${p.productName}"/>
+                                </a>
+                            </div>
+
+                            <h4 class="product-title" th:text="${p.productName}">Tên sản phẩm</h4>
+                            <p class="price">
+                                <span th:text="${#numbers.formatInteger(p.productPrice, 0, 'POINT')}">0</span>đ
+                            </p>
+
+                            <div class="product-actions">
+                                <a class="filter-btn cart-btn"
+                                   th:href="@{/cart(action='add', product_id=${p.productId}, quantity=1, returnUrl='/')}">
+                                    <i class="fa-solid fa-cart-plus"></i></a>
+                                <a class="filter-btn detail-btn"
+                                   th:href="@{/product-detail(product_id=${p.productId})}">
+                                    <i class="fa-solid fa-eye"></i></a>
+                                <a class="filter-btn favor-btn"
+                                   th:href="@{/my-favorite(action='add', product_id=${p.productId})}">
+                                    <i class="fa-solid fa-heart"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <th:block th:if="${items.size() > 6}">
+            <button class="carousel-control-prev" type="button" th:data-bs-target="'#' + ${cid}" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" th:data-bs-target="'#' + ${cid}" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </th:block>
+    </div>
+</div>
+</body>
+</html>

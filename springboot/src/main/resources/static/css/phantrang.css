@@ -1,0 +1,59 @@
+/* ================= PAGINATION ================= */
+.vc-pagination-wrap {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin: 60px 0 80px;
+}
+
+.vc-pagination {
+    display: flex;
+    gap: 14px;
+}
+
+/* PAGE BUTTON */
+.vc-pagination a.vc-page {
+    width: 44px;
+    height: 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+    border: 1px solid #ddd;
+
+    background: #fff;
+    color: #333;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    text-decoration: none;
+    cursor: pointer;
+
+    transition: all 0.25s ease;
+}
+
+/* HOVER */
+.vc-pagination a.vc-page:hover {
+    background: #eef4ff;
+    border-color: #0984e3;
+    color: #0984e3;
+    transform: translateY(-2px);
+}
+
+/* ACTIVE */
+.vc-pagination a.vc-page.active {
+    background: linear-gradient(135deg, #0984e3, #74b9ff);
+    color: #fff;
+    border-color: #0984e3;
+    box-shadow: 0 6px 18px rgba(9,132,227,0.35);
+}
+
+/* PREV / NEXT */
+.vc-pagination a.vc-page.prev,
+.vc-pagination a.vc-page.next {
+    font-size: 18px;
+    font-weight: 700;
+}

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Danh sách sản phẩm</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="icon" type="image/x-icon" th:href="@{/favicon.ico}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+          integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/productList.css}"/>
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="product-list-page">
+    <nav class="breadcrumb-nav">
+        <a th:href="@{/}">Trang chủ</a>
+        <span class="dot">•</span>
+        <a href="">Danh sách sản phẩm</a>
+    </nav>
+
+    <div class="image-slider">
+        <div id="carouselExampleIndicators" class="carousel slide">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            </div>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img th:src="@{/img/slider_product_list.jpg}" class="d-block w-100" alt="Slide 1">
+                </div>
+                <div class="carousel-item">
+                    <img th:src="@{/img/slider_product_list_2.png}" class="d-block w-100" alt="Slide 2">
+                </div>
+                <div class="carousel-item">
+                    <img th:src="@{/img/slider_product_list_3.jpg}" class="d-block w-100" alt="Slide 3">
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Bộ lọc theo danh mục + thương hiệu -->
+    <div class="filter-box">
+        <div class="filter-demand-group">
+            <h4>Chọn theo nhu cầu</h4>
+            <div class="demand-group">
+                <div class="img-button" th:each="category : ${categories}">
+                    <a th:href="@{/product-list(category_id=${category.categoryId}, sort=${currentSort}, brand=${currentBrand})}">
+                        <img th:src="${category.categoryImage}" alt="Danh mục"/>
+                        <span th:text="${category.categoryName}">Danh mục</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="filter-box">
+        <h3>Bộ lọc tìm kiếm</h3>
+        <div class="filter-group active">
+            <div class="filter-header">
+                <span>Theo thương hiệu</span>
+                <i class="fa-solid fa-chevron-down"></i>
+            </div>
+            <div class="filter-content">
+                <form th:action="@{/product-list}" method="get" id="brandFilterForm">
+                    <input type="hidden" name="category_id" th:if="${currentCategoryId != null}" th:value="${currentCategoryId}">
+                    <input type="hidden" name="sort" th:if="${currentSort != null}" th:value="${currentSort}">
+                    <div class="checkbox-list">
+                        <div class="brand-list" th:each="brand : ${brands}">
+                            <label class="custom-checkbox">
+                                <input type="checkbox" name="brand" th:value="${brand.brandName}"
+                                       th:checked="${currentBrand != null and #arrays.contains(currentBrand, brand.brandName)}">
+                                <span class="checkmark"></span>
+                                <span class="label-text" th:text="${brand.brandName}">Thương hiệu</span>
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sắp xếp -->
+    <div class="filter-box">
+        <div class="filter-group active">
+            <h4>Sắp xếp theo</h4>
+            <div class="filter-content">
+                <a th:href="${currentSort == 'price_asc'}
+                        ? @{/product-list(category_id=${currentCategoryId}, brand=${currentBrand}, page=1)}
+                        : @{/product-list(category_id=${currentCategoryId}, brand=${currentBrand}, sort='price_asc', page=1)}"
+                   class="filter-btn" th:classappend="${currentSort == 'price_asc'} ? 'active'">Giá tăng dần</a>
+
+                <a th:href="${currentSort == 'price_desc'}
+                        ? @{/product-list(category_id=${currentCategoryId}, brand=${currentBrand}, page=1)}
+                        : @{/product-list(category_id=${currentCategoryId}, brand=${currentBrand}, sort='price_desc', page=1)}"
+                   class="filter-btn" th:classappend="${currentSort == 'price_desc'} ? 'active'">Giá giảm dần</a>
+
+                <a th:href="${currentSort == 'latest'}
+                        ? @{/product-list(category_id=${currentCategoryId}, brand=${currentBrand}, page=1)}
+                        : @{/product-list(category_id=${currentCategoryId}, brand=${currentBrand}, sort='latest', page=1)}"
+                   class="filter-btn" th:classappend="${currentSort == 'latest'} ? 'active'">Mới nhất</a>
+
+                <a th:href="${currentSort == 'oldest'}
+                        ? @{/product-list(category_id=${currentCategoryId}, brand=${currentBrand}, page=1)}
+                        : @{/product-list(category_id=${currentCategoryId}, brand=${currentBrand}, sort='oldest', page=1)}"
+                   class="filter-btn" th:classappend="${currentSort == 'oldest'} ? 'active'">Cũ nhất</a>
+
+                <a th:href="${currentSort == 'best_selling'}
+                        ? @{/product-list(category_id=${currentCategoryId}, brand=${currentBrand}, page=1)}
+                        : @{/product-list(category_id=${currentCategoryId}, brand=${currentBrand}, sort='best_selling', page=1)}"
+                   class="filter-btn" th:classappend="${currentSort == 'best_selling'} ? 'active'">Bán chạy nhất</a>
+            </div>
+        </div>
+
+        <a class="filter-btn remove-btn" th:href="@{/product-list}">Xóa lọc</a>
+    </div>
+
+    <div class="product-container">
+        <h1>Danh sách sản phẩm</h1>
+
+        <div class="product-list">
+            <div class="product" th:each="product : ${products}">
+                <a th:href="@{/product-detail(product_id=${product.productId})}">
+                    <img alt="Ảnh sản phẩm" th:src="${product.productImage}"/>
+                </a>
+
+                <h3 th:text="${product.productName}">Tên sản phẩm</h3>
+
+                <p class="price">
+                    <span th:text="${#numbers.formatInteger(product.productPrice, 0, 'POINT')}">0</span>đ
+                </p>
+
+                <a class="filter-btn cart-btn" title="Thêm vào giỏ hàng"
+                   th:href="@{/cart(action='add', product_id=${product.productId}, quantity=1)}">
+                    <i class="fa-solid fa-cart-plus"></i>
+                </a>
+                <a class="filter-btn detail-btn" title="Xem chi tiết"
+                   th:href="@{/product-detail(product_id=${product.productId})}">
+                    <i class="fa-solid fa-eye"></i>
+                </a>
+                <a class="filter-btn favor-btn" title="Thêm vào danh sách yêu thích"
+                   th:href="@{/my-favorite(action='add', product_id=${product.productId})}">
+                    <i class="fa-solid fa-heart"></i>
+                </a>
+
+                <div class="product-stats">
+                    <div>Đã bán <span th:text="${soldMap.get(product.productId)}">0</span></div>
+                </div>
+            </div>
+        </div>
+
+        <p th:if="${#lists.isEmpty(products)}">Không có sản phẩm</p>
+
+        <button type="button" id="backToTop" title="Back To Top">
+            <i class="fa-solid fa-arrow-up"></i>
+        </button>
+
+        <div class="pagination">
+            <a th:if="${currentPage > 1}" class="prev-page"
+               th:href="@{/product-list(page=${currentPage - 1}, category_id=${currentCategoryId}, sort=${currentSort}, brand=${currentBrand})}">&laquo;</a>
+
+            <a th:each="i : ${#numbers.sequence(1, totalPages)}"
+               class="page-index" th:classappend="${currentPage == i} ? 'active'"
+               th:href="@{/product-list(page=${i}, category_id=${currentCategoryId}, sort=${currentSort}, brand=${currentBrand})}"
+               th:text="${i}">1</a>
+
+            <a th:if="${currentPage < totalPages}" class="next-page"
+               th:href="@{/product-list(page=${currentPage + 1}, category_id=${currentCategoryId}, sort=${currentSort}, brand=${currentBrand})}">&raquo;</a>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+<script th:src="@{/js/header.js}"></script>
+<script th:src="@{/js/productList.js}"></script>
+</body>
+</html>

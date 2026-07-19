@@ -1,0 +1,56 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: babyshop-sb-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: db_babyshop
+      TZ: Asia/Ho_Chi_Minh
+    # Ghìm RAM cho vừa máy nhỏ (t3.micro 1GB)
+    command: --innodb-buffer-pool-size=128M --performance-schema=OFF --skip-name-resolve
+    mem_limit: 450m
+    volumes:
+      - mysql_data:/var/lib/mysql
+      # Đặt file dump db_babyshop.sql cạnh file compose này (KHÔNG commit lên git)
+      - ./db_babyshop.sql:/docker-entrypoint-initdb.d/01-db_babyshop.sql:ro
+    healthcheck:
+      # Dùng 127.0.0.1 (TCP) để chỉ healthy khi import dump xong, tránh race với web
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 60s
+    networks:
+      - babyshop-net
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: babyshop-spring:latest
+    container_name: babyshop-sb-web
+    restart: unless-stopped
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: ""
+      DB_NAME: db_babyshop
+      TZ: Asia/Ho_Chi_Minh
+      # Ghìm heap JVM để không phình quá RAM máy nhỏ
+      JAVA_TOOL_OPTIONS: "-Xmx300m -Xms128m"
+    mem_limit: 500m
+    depends_on:
+      mysql:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    networks:
+      - babyshop-net
+
+networks:
+  babyshop-net:
+
+volumes:
+  mysql_data:

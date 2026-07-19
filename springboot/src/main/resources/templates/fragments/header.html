@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="header" th:remove="tag">
+    <link rel="stylesheet" th:href="@{/css/header.css}"/>
+
+    <header class="site-header" id="siteHeader">
+        <!-- Top bar -->
+        <div class="sh-top-bar">
+            <div class="sh-container sh-top-bar-inner">
+                <div class="sh-hotline">
+                    Hotline: <a href="tel:0964163168">0964 163 168</a>
+                </div>
+
+                <div class="sh-auth-links">
+                    <th:block th:if="${session == null or session.USER == null}">
+                        <a th:href="@{/login}">Đăng nhập</a>
+                        <span class="sep">/</span>
+                        <a th:href="@{/register}">Đăng ký</a>
+                    </th:block>
+                    <th:block th:if="${session != null and session.USER != null}">
+                        Xin chào, <strong th:text="${session.USER.username}">user</strong>
+                        <span class="sep">/</span>
+                        <a class="logout-btn" th:href="@{/logout}">Đăng xuất</a>
+                    </th:block>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main header -->
+        <div class="sh-container sh-main">
+            <div class="sh-brand">
+                <a th:href="@{/}" class="sh-logo" aria-label="BabyShop">
+                    <span class="sh-brand-text sh-multi-logo" aria-hidden="true">
+                        <span>B</span><span>a</span><span>b</span><span>y</span><span>S</span><span>h</span><span>o</span><span>p</span>
+                    </span>
+                </a>
+            </div>
+
+            <div class="sh-search-wrap">
+                <form th:action="@{/search}" method="get" class="sh-search-form" role="search">
+                    <button type="submit" class="sh-search-btn" aria-label="Tìm">🔍</button>
+                    <input type="search" class="sh-search-input" placeholder="Tìm bàn ghế, tủ, đồ chơi..."
+                           name="keyword" th:value="${param.keyword}"/>
+                </form>
+            </div>
+
+            <div class="sh-right">
+                <nav class="sh-nav" aria-label="Điều hướng chính">
+                    <ul class="sh-nav-links">
+                        <li><a th:href="@{/}">Trang chủ</a></li>
+                        <li><a th:href="@{/product-list}">Sản phẩm</a></li>
+                        <li><a th:href="@{/voucher-list}">Ưu đãi</a></li>
+                        <li><a th:href="@{/contact}">Liên hệ</a></li>
+                    </ul>
+                </nav>
+
+                <div class="sh-actions">
+                    <a th:href="@{/profile}" class="icon-btn" aria-label="Tài khoản">👤</a>
+                    <a th:href="@{/cart}" class="icon-btn sh-cart" aria-label="Giỏ hàng">
+                        🛒
+                        <span class="sh-cart-badge" aria-hidden="true"
+                              th:text="${session != null and session.cart != null} ? ${session.cart.totalQuantity} : 0">0</span>
+                    </a>
+                    <button class="sh-hamburger icon-btn" type="button" aria-label="Mở menu"
+                            aria-controls="mobileMenu" aria-expanded="false">
+                        <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile drawer -->
+        <div class="sh-mobile" id="mobileMenu" aria-hidden="true">
+            <div class="sh-mobile-inner">
+                <form th:action="@{/search}" method="get" class="sh-mobile-search" role="search">
+                    <input type="search" name="keyword" th:value="${param.keyword}" placeholder="Tìm sản phẩm..."/>
+                </form>
+                <ul class="sh-mobile-links">
+                    <li><a th:href="@{/}">Trang chủ</a></li>
+                    <li><a th:href="@{/product-list}">Danh sách sản phẩm</a></li>
+                    <li><a th:href="@{/voucher-list}">Ưu đãi</a></li>
+                    <li><a th:href="@{/contact}">Liên hệ</a></li>
+                    <li><a th:href="@{/profile}">Tài khoản</a></li>
+                    <li><a th:href="@{/cart}">Giỏ hàng</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const header = document.getElementById('siteHeader');
+            if (!header) return;
+            const btn = header.querySelector('.sh-hamburger');
+            const menu = document.getElementById('mobileMenu');
+            if (!btn || !menu) return;
+            function setOpen(open) {
+                btn.setAttribute('aria-expanded', String(open));
+                menu.setAttribute('aria-hidden', String(!open));
+                header.classList.toggle('is-open', open);
+                document.body.classList.toggle('no-scroll', open);
+            }
+            btn.addEventListener('click', () => {
+                const isOpen = btn.getAttribute('aria-expanded') === 'true';
+                setOpen(!isOpen);
+            });
+            menu.addEventListener('click', (e) => { if (e.target === menu) setOpen(false); });
+            document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setOpen(false); });
+        });
+    </script>
+</div>
+</body>
+</html>

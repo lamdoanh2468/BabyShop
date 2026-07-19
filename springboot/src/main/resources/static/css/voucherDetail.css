@@ -1,0 +1,216 @@
+/* ================= GLOBAL / RESET ================= */
+body {
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f4f7f6;
+    margin: 0;
+    color: #2d3436;
+    line-height: 1.6;
+}
+
+iframe {
+    width: 100%;
+    border: none;
+    display: block;
+}
+
+/* Header/Footer Frames */
+#header-frame {
+    height: 118px;
+}
+
+#footer-frame {
+    height: 390px;
+    margin-top: 50px;
+}
+
+/* ================= NAVIGATION ================= */
+nav {
+    padding: 20px 40px;
+    background: #fff;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    font-size: 0.95rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+nav a {
+    color: #636e72;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+nav a:hover {
+    color: #0984e3;
+    text-decoration: underline;
+}
+
+.dot {
+    color: #b2bec3;
+    font-size: 0.8rem;
+}
+
+/* ================= CONTAINER ================= */
+.voucher-detail-container {
+    display: flex;
+    justify-content: center;
+    padding: 60px 20px;
+    min-height: 60vh;
+}
+
+/* ================= ERROR STATE ================= */
+.voucher-error {
+    text-align: center;
+    color: #d63031;
+    font-size: 1.2rem;
+    font-weight: 600;
+    background: #ffeaa7;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* ================= DETAIL CARD (TICKET STYLE) ================= */
+.voucher-detail-card {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+    max-width: 900px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+/* Image Section */
+.voucher-detail-img-wrap {
+    width: 100%;
+    height: 350px;
+    position: relative;
+    overflow: hidden;
+}
+
+.voucher-detail-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.voucher-detail-card:hover .voucher-detail-img {
+    transform: scale(1.03);
+}
+
+/* Overlay Gradient */
+.voucher-detail-img-wrap::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    background: linear-gradient(to top, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+}
+
+/* Content Section */
+.voucher-detail-content {
+    padding: 40px 60px;
+    position: relative;
+    z-index: 1;
+}
+
+.voucher-detail-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #2d3436;
+    margin-bottom: 10px;
+    text-align: center;
+    text-transform: capitalize;
+}
+
+.voucher-detail-date {
+    font-size: 1rem;
+    color: #636e72;
+    text-align: center;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+.voucher-detail-date i {
+    /* hypothetical icon */
+    color: #0984e3;
+}
+
+/* Coupon Code Box */
+.voucher-code-box {
+    background: #f1f2f6;
+    border: 2px dashed #0984e3;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    margin: 0 auto 40px;
+    max-width: 400px;
+    position: relative;
+}
+
+.voucher-key-label {
+    display: block;
+    font-size: 0.9rem;
+    color: #636e72;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.voucher-code-value {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #d63031;
+    letter-spacing: 2px;
+    user-select: all;
+    /* Easy copy */
+}
+
+/* Description */
+.voucher-detail-desc {
+    font-size: 1.1rem;
+    color: #2d3436;
+    line-height: 1.8;
+    background: #fff;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+.voucher-detail-desc ul {
+    margin: 20px 0;
+    padding-left: 25px;
+}
+
+.voucher-detail-desc li {
+    margin-bottom: 10px;
+    padding-left: 5px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .voucher-detail-content {
+        padding: 30px 20px;
+    }
+
+    .voucher-detail-title {
+        font-size: 1.8rem;
+    }
+
+    .voucher-code-value {
+        font-size: 1.5rem;
+    }
+}

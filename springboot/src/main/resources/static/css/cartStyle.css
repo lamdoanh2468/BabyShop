@@ -1,0 +1,1517 @@
+html,
+body {
+    overflow-x: hidden;
+}
+
+/* Scoped reset for cart page only - không ảnh hưởng header */
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.breadcrumb-nav,
+.page-title,
+.clear-cart-btn,
+.cart-container,
+.cart-container *,
+.empty-cart,
+.empty-cart * {
+    margin: 0;
+    box-sizing: border-box;
+}
+
+
+/* Set base font for cart page */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    background-color: #f5f5f7;
+    color: #333;
+    font-size: 14px;
+    /* Base size cho cart content */
+}
+
+iframe {
+    width: 100%;
+    border: none;
+    display: block;
+}
+
+/* Header iframe */
+#header-frame {
+    width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.breadcrumb-nav {
+    padding: 1.5rem 4rem;
+    background: white;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    font-size: 0.9rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.breadcrumb-nav a {
+    color: #666;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.breadcrumb-nav a:hover {
+    color: #007bff;
+}
+
+.dot {
+    color: #999;
+}
+
+/* Cart header wrapper for title and clear button */
+.cart-header-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.page-title {
+    font-size: 1.4rem;
+    margin: 0;
+}
+
+.cart-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem 4rem;
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 2rem;
+    align-items: start;
+}
+
+.cart-items {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* Cart items header - shows count and clear button */
+.cart-items-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 1rem;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.cart-items-count {
+    font-size: 0.95rem;
+    color: #666;
+    font-weight: 500;
+}
+
+.cart-item {
+    display: grid;
+    grid-template-columns: 120px 1fr auto;
+    gap: 1.5rem;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid #f0f0f0;
+    position: relative;
+    transition: background 0.25s ease;
+
+}
+
+.cart-items:hover {
+    /*transform: scale(1.01);*/
+    /*transition: transform 0.3s ease;*/
+    background: #fafafa;
+}
+
+.cart-item div {
+    position: relative;
+}
+
+.cart-item:last-child {
+    border-bottom: none;
+}
+
+.item-image {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #f0f0f0;
+    position: relative;
+}
+
+.sale-badge {
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    background: #ff3b30;
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.item-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.item-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.25rem;
+}
+
+.item-variant {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.item-sku {
+    font-size: 0.85rem;
+    color: #999;
+}
+
+.item-price {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+.current-price {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #ff3b30;
+}
+
+.original-price {
+    font-size: 1rem;
+    color: #999;
+    text-decoration: line-through;
+}
+
+.item-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 1rem;
+}
+
+.delete-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #999;
+    font-size: 1.3rem;
+    padding: 0.5rem;
+    transition: color 0.3s;
+}
+
+.delete-btn:hover {
+    color: #ff3b30;
+}
+
+.quantity-control {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.quantity-btn {
+    background: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    font-size: 1rem;
+    color: #666;
+    transition: background 0.3s;
+}
+
+.quantity-btn:hover {
+    background: #f5f5f5;
+}
+
+.quantity-input {
+    width: 50px;
+    text-align: center;
+    border: none;
+    font-size: 1rem;
+    padding: 0.5rem 0;
+}
+
+.order-summary {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    position: sticky;
+    top: 2rem;
+}
+
+.summary-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: #333;
+}
+
+.promo-code {
+    margin-bottom: 1.5rem;
+}
+
+.promo-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    color: #666;
+    font-size: 0.95rem;
+}
+
+.promo-header a {
+    text-decoration: none;
+    margin-left: auto;
+    font-size: 14px;
+    font-weight: 550;
+    color: #7545f2;
+}
+
+.promo-icon {
+    width: 20px;
+    height: 20px;
+}
+
+/* Voucher input group - unified styling */
+.promo-input-group {
+    display: flex;
+    gap: 0;
+    width: 100%;
+}
+
+.promo-form {
+    display: flex;
+    gap: 0;
+    width: 100%;
+}
+
+.promo-input-group .promo-form input[type="text"],
+.promo-form input.promo-input {
+    flex: 1;
+    height: 44px;
+    padding: 0 1rem;
+    border: 2px solid #e8ecef;
+    border-radius: 10px 0 0 10px;
+    border-right: none;
+    font-size: 0.95rem;
+    color: #333;
+    background: #fff;
+    outline: none;
+    transition: all 0.25s ease;
+    box-sizing: border-box;
+}
+
+.promo-input-group .promo-form input[type="text"]:focus,
+.promo-form input.promo-input:focus {
+    border-color: #7545f2;
+    box-shadow: 0 0 0 4px rgba(117, 69, 242, 0.1);
+    position: relative;
+    z-index: 1;
+}
+
+.promo-input-group .promo-form button.promo-btn,
+.promo-form button.promo-btn {
+    height: 44px;
+    padding: 0 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0 10px 10px 0;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-4px);
+    }
+
+    75% {
+        transform: translateX(4px);
+    }
+}
+
+.shake {
+    animation: shake 0.3s;
+}
+
+.promo-btn {
+    padding: 0.75rem 1.5rem;
+    background: #eae3fd;
+    color: #7545f2;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.3s;
+}
+
+.promo-btn:hover {
+    background: #7545f2;
+    color: #ffffff;
+    transition: 0.5s ease-out;
+}
+
+.promo-hint {
+    font-size: 0.8rem;
+    color: #999;
+    margin-top: 0.5rem;
+}
+
+.payment-methods {
+    margin-bottom: 1.5rem;
+}
+
+.payment-method {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 0;
+    cursor: pointer;
+}
+
+.payment-method input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.payment-method label {
+    font-size: 0.95rem;
+    color: #333;
+    cursor: pointer;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    font-size: 0.95rem;
+}
+
+.summary-row.total {
+    border-top: 2px solid #f0f0f0;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.summary-row .label {
+    color: #666;
+}
+
+.summary-row .value {
+    font-weight: 600;
+    color: #333;
+}
+
+.summary-row.total .value {
+    color: #28a745;
+    font-size: 1.2rem;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 1rem;
+    background: #00b14f;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 1.5rem;
+}
+
+.submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(230, 57, 70, 0.4);
+}
+
+@media (max-width: 1024px) {
+    .cart-container {
+        grid-template-columns: 1fr;
+    }
+
+    .order-summary {
+        position: static;
+    }
+}
+
+@media (max-width: 768px) {
+    .breadcrumb-nav {
+        padding: 1rem 1.5rem;
+    }
+
+    .cart-container {
+        padding: 0 1rem 2rem;
+    }
+
+    .cart-item {
+        grid-template-columns: 80px 1fr;
+        gap: 1rem;
+    }
+
+    .item-image {
+        width: 80px;
+        height: 80px;
+    }
+
+    .item-actions {
+        grid-column: 2;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+}
+
+.empty-cart {
+    display: block;
+    padding: 2em;
+    color: #333;
+    background: white;
+    text-align: center;
+    font-size: 15px;
+    border-radius: 8px;
+}
+
+.empty-cart img {
+    width: 250px;
+    margin: 20px;
+    position: relative;
+    left: 20px;
+}
+
+.empty-cart p,
+.empty-cart a {
+    font-size: 18px;
+}
+
+@media (max-width: 480px) {
+    .page-title {
+        left: 1rem;
+        font-size: 18px;
+    }
+
+    .cart-container {
+        grid-template-columns: 1fr;
+        padding: 0 0.5rem 1rem;
+    }
+
+    .item-title {
+        font-size: 0.95rem;
+    }
+
+    .current-price {
+        font-size: 1rem;
+    }
+
+    .promo-input-group {
+        flex-direction: column;
+    }
+
+    .promo-btn {
+        width: 100%;
+    }
+}
+
+/* ===== Cart header wrapper for title and clear button ===== */
+.cart-header {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* ===== Clear all cart button ===== */
+.clear-cart-btn {
+    padding: 0.75rem 1.2rem;
+    background: #fff5f5;
+    color: #ff3b30;
+    border: 1px solid #ffdad7;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.clear-cart-btn:hover {
+    background: #ff3b30;
+    color: #ffffff;
+    border-color: #ff3b30;
+    box-shadow: 0 4px 10px rgba(255, 59, 48, 0.25);
+    transform: translateY(-1px);
+}
+
+.clear-cart-btn:active {
+    transform: scale(0.97);
+}
+
+/* =========================
+   CART LAYOUT - PATCH
+   Dán cuối file để override
+   ========================= */
+
+/* 1) Container: cột trái co giãn, cột phải “vừa đủ”, gap dễ nhìn */
+.cart-container {
+    grid-template-columns: minmax(0, 1fr) 380px;
+    gap: 1.5rem;
+}
+
+/* 2) Card tổng: đừng đổi nền khi hover cả khối (đang hơi “lạ”) */
+.cart-items:hover {
+    background: white;
+    /* giữ nền */
+}
+
+/* 3) Hover đúng vào từng item */
+.cart-item {
+    border-bottom: 1px solid #f1f1f3;
+    padding: 1.25rem 0;
+    border-radius: 10px;
+    /* để hover nhìn “card-ish” */
+}
+
+.cart-item:hover {
+    background: #fafafa;
+}
+
+/* 4) Grid item: ảnh + info + actions cân tốt hơn */
+.cart-item {
+    grid-template-columns: 120px minmax(0, 1fr) 190px;
+    align-items: center;
+}
+
+/* 5) Tiêu đề/chi tiết: không bị tràn dài */
+.item-details {
+    min-width: 0;
+}
+
+.item-title {
+    line-height: 1.25;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    /* tối đa 2 dòng */
+    line-clamp: 2;
+    /* standard property */
+    -webkit-box-orient: vertical;
+}
+
+/* 6) Actions: luôn thẳng hàng, gọn */
+.item-actions {
+    align-items: flex-end;
+    gap: 0.75rem;
+}
+
+/* Nút xoá (icon) dễ bấm hơn, có nền nhẹ khi hover */
+.delete-btn {
+    border-radius: 10px;
+    padding: 0.45rem 0.6rem;
+}
+
+.delete-btn:hover {
+    background: rgba(255, 59, 48, 0.08);
+}
+
+/* Quantity: đồng đều, input không bị lệch */
+.quantity-control {
+    height: 40px;
+    border-radius: 10px;
+}
+
+.quantity-btn {
+    height: 40px;
+    padding: 0 0.9rem;
+}
+
+.quantity-input {
+    height: 40px;
+    width: 56px;
+}
+
+/* 7) Order summary: sticky mượt + spacing hợp lý */
+.order-summary {
+    top: 1.25rem;
+    padding: 1.5rem;
+}
+
+/* 8) Title + breadcrumbs căn “pro” hơn một chút */
+.page-title {
+    margin: 0;
+    font-size: 1.4rem;
+}
+
+/* =============================================
+   CHECKOUT FORM STYLES - Premium Look
+   ============================================= */
+
+/* Form container */
+.checkout-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+/* Form sections */
+.form-section {
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    border: 1px solid #e8ecef;
+    border-radius: 12px;
+    padding: 1.25rem;
+    transition: all 0.3s ease;
+}
+
+.form-section:hover {
+    border-color: #d0d7de;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* Section headers */
+.form-section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px dashed #e0e0e0;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #333;
+}
+
+.form-section-header i {
+    color: #7545f2;
+    font-size: 1rem;
+}
+
+/* Form groups */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group:last-child {
+    margin-bottom: 0;
+}
+
+/* Form labels */
+.form-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #555;
+    margin-bottom: 0.5rem;
+}
+
+.form-label i {
+    color: #7545f2;
+    font-size: 0.85rem;
+}
+
+/* Form inputs */
+.form-input {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    border: 2px solid #e8ecef;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    color: #333;
+    background: #fff;
+    transition: all 0.25s ease;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.form-input::placeholder {
+    color: #adb5bd;
+}
+
+.form-input:focus {
+    border-color: #7545f2;
+    box-shadow: 0 0 0 4px rgba(117, 69, 242, 0.1);
+}
+
+.form-input:hover:not(:focus) {
+    border-color: #ced4da;
+}
+
+/* Select wrapper */
+.select-wrapper {
+    position: relative;
+}
+
+.form-select {
+    width: 100%;
+    padding: 0.875rem 2.5rem 0.875rem 1rem;
+    border: 2px solid #e8ecef;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    color: #333;
+    background: #fff;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    box-sizing: border-box;
+}
+
+.form-select:focus {
+    border-color: #7545f2;
+    box-shadow: 0 0 0 4px rgba(117, 69, 242, 0.1);
+}
+
+.form-select:hover:not(:focus) {
+    border-color: #ced4da;
+}
+
+.select-arrow {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #7545f2;
+    font-size: 0.75rem;
+    pointer-events: none;
+    transition: transform 0.3s ease;
+}
+
+.select-wrapper:focus-within .select-arrow {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+/* Promo input group updated - removed to avoid conflicts */
+
+/* Summary rows within form */
+.checkout-form .summary-row {
+    padding: 0.6rem 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.checkout-form .summary-row:last-of-type:not(.total) {
+    border-bottom: none;
+}
+
+/* Discount row styling */
+.discount-row .discount-value {
+    color: #28a745;
+    font-weight: 600;
+}
+
+/* Total row emphasis */
+.checkout-form .summary-row.total {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    margin: 0.75rem -1.25rem -1.25rem;
+    padding: 1rem 1.25rem;
+    border-radius: 0 0 12px 12px;
+    border-top: 2px solid #22c55e;
+}
+
+.checkout-form .summary-row.total .value {
+    color: #16a34a;
+    font-size: 1.3rem;
+}
+
+/* Submit button enhanced */
+.checkout-form .submit-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    padding: 1.1rem 1.5rem;
+    border-radius: 12px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    text-transform: none;
+    box-shadow: 0 4px 15px rgba(34, 197, 94, 0.35);
+    transition: all 0.3s ease;
+    margin-top: 0.5rem;
+}
+
+.checkout-form .submit-btn:hover {
+    background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(34, 197, 94, 0.45);
+}
+
+.checkout-form .submit-btn:active {
+    transform: translateY(-1px);
+}
+
+.checkout-form .submit-btn i {
+    font-size: 0.9rem;
+}
+
+/* Secure notice */
+.secure-notice {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+    color: #6b7280;
+    margin-top: 0.75rem;
+    text-align: center;
+}
+
+.secure-notice i {
+    color: #22c55e;
+}
+
+/* Responsive adjustments for form */
+@media (max-width: 480px) {
+    .form-section {
+        padding: 1rem;
+    }
+
+    .checkout-form .summary-row.total {
+        margin: 0.75rem -1rem -1rem;
+        padding: 0.875rem 1rem;
+    }
+
+    .form-input,
+    .form-select {
+        padding: 0.75rem 0.875rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* ==============================================
+   VOUCHER STYLES - Modern Design
+   ============================================== */
+
+/* Voucher section container */
+.voucher-section {
+    background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
+    border: 1px solid #e9d5ff;
+}
+
+/* Voucher input wrapper - input + button inline */
+.voucher-input-wrapper {
+    display: flex;
+    gap: 0;
+    width: 100%;
+    border-radius: 10px;
+}
+
+.voucher-input {
+    flex: 1;
+    min-width: 0;
+    height: 46px;
+    padding: 0 1rem;
+    border: 2px solid #e8ecef;
+    border-right: none;
+    border-radius: 10px 0 0 10px;
+    font-size: 0.95rem;
+    color: #333;
+    background: #fff;
+    outline: none;
+    transition: all 0.25s ease;
+    box-sizing: border-box;
+}
+
+.voucher-input:focus {
+    border-color: #7545f2;
+    box-shadow: inset 0 0 0 1px #7545f2;
+}
+
+.voucher-input::placeholder {
+    color: #adb5bd;
+}
+
+.voucher-apply-btn {
+    height: 46px;
+    min-width: 90px;
+    padding: 0 1.25rem;
+    background: linear-gradient(135deg, #7545f2 0%, #5f3dc4 100%);
+    color: white;
+    border: 2px solid #7545f2;
+    border-radius: 0 10px 10px 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+    box-sizing: border-box;
+}
+
+.voucher-apply-btn:hover {
+    background: linear-gradient(135deg, #5f3dc4 0%, #4c2fa0 100%);
+    border-color: #5f3dc4;
+    box-shadow: 0 4px 12px rgba(117, 69, 242, 0.35);
+}
+
+/* Applied voucher state */
+.voucher-applied {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    border: 2px solid #86efac;
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+}
+
+.voucher-tag {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.voucher-tag i {
+    color: #22c55e;
+    font-size: 1.1rem;
+}
+
+.voucher-code {
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    color: white;
+    padding: 0.35rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+/* Remove voucher button - compact */
+.remove-voucher-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.875rem;
+    background: #fee2e2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+}
+
+.remove-voucher-btn:hover {
+    background: #dc2626;
+    color: white;
+    border-color: #dc2626;
+    box-shadow: 0 4px 10px rgba(220, 38, 38, 0.25);
+}
+
+.remove-voucher-btn i {
+    font-size: 0.8rem;
+}
+
+/* Success text below applied voucher */
+.voucher-success-text {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    background: rgba(34, 197, 94, 0.1);
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #16a34a;
+}
+
+.voucher-success-text i {
+    color: #22c55e;
+}
+
+/* Error message */
+.voucher-error {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #dc2626;
+}
+
+.voucher-error i {
+    color: #ef4444;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .voucher-applied {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+    }
+
+    .voucher-tag {
+        justify-content: center;
+    }
+
+    .remove-voucher-btn {
+        justify-content: center;
+    }
+}
+
+/* Signing popup after checkout */
+.sign-popup-content {
+    text-align: left;
+}
+
+.sign-popup-desc {
+    margin: 0 0 1rem;
+    color: #475569;
+    font-size: 0.95rem;
+    line-height: 1.55;
+}
+
+.sign-popup-hash {
+    margin: 1rem 0;
+    padding: 0.9rem;
+    border: 1px solid #dbeafe;
+    border-radius: 8px;
+    background: #eff6ff;
+}
+
+.sign-popup-hash span {
+    display: block;
+    margin-bottom: 0.45rem;
+    color: #1e40af;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.sign-popup-hash code {
+    display: block;
+    color: #0f172a;
+    font-size: 0.85rem;
+    line-height: 1.45;
+    white-space: normal;
+    word-break: break-all;
+}
+
+.sign-popup-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.sign-popup-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    padding: 0.7rem 0.85rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #334155;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.sign-popup-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.12);
+}
+
+.sign-popup-btn.primary {
+    border-color: #2563eb;
+    background: #2563eb;
+    color: #ffffff;
+}
+
+.sign-popup-btn.warning {
+    border-color: #f59e0b;
+    background: #f59e0b;
+    color: #ffffff;
+}
+
+.sign-popup-btn.success {
+    border-color: #16a34a;
+    background: #16a34a;
+    color: #ffffff;
+}
+
+.sign-popup-note {
+    margin: 1rem 0 0;
+    padding: 0.75rem 0.85rem;
+    border-radius: 8px;
+    background: #fff7ed;
+    color: #9a3412;
+    font-size: 0.85rem;
+    line-height: 1.45;
+}
+
+@media (max-width: 560px) {
+    .sign-popup-actions {
+        grid-template-columns: 1fr;
+    }
+}
+
+.sign-popup-fallback {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background: rgba(15, 23, 42, 0.55);
+}
+
+.sign-popup-fallback-panel {
+    position: relative;
+    width: min(760px, 100%);
+    max-height: 90vh;
+    overflow: auto;
+    padding: 1.5rem;
+    border-radius: 8px;
+    background: #ffffff;
+    box-shadow: 0 24px 60px rgba(15, 23, 42, 0.28);
+}
+
+.sign-popup-fallback-panel h2 {
+    margin: 0 2rem 1rem 0;
+    color: #0f172a;
+    font-size: 1.35rem;
+    line-height: 1.3;
+}
+
+.sign-popup-close {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    width: 36px;
+    height: 36px;
+    border: 0;
+    border-radius: 50%;
+    background: #f1f5f9;
+    color: #334155;
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.sign-swal-popup {
+    border-radius: 24px !important;
+    padding: 28px 30px !important;
+    box-shadow: 0 24px 80px rgba(15, 23, 42, 0.24) !important;
+}
+
+.sign-swal-title {
+    color: #1f2937 !important;
+    font-size: 24px !important;
+    font-weight: 750 !important;
+    line-height: 1.35 !important;
+}
+
+.sign-swal-html {
+    margin: 18px 0 0 !important;
+    overflow: visible !important;
+}
+
+.sign-swal-close {
+    width: 42px !important;
+    height: 42px !important;
+    border-radius: 50% !important;
+    color: #64748b !important;
+    transition: all 0.2s ease !important;
+}
+
+.sign-swal-close:hover {
+    background: #f1f5f9 !important;
+    color: #0f172a !important;
+    transform: rotate(90deg);
+}
+
+.sign-popup-steps {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 18px;
+}
+
+.sign-step-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 15px 16px;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    background: #ffffff;
+    color: #1e293b;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.sign-step-card:hover {
+    transform: translateY(-1px);
+    border-color: #cbd5e1;
+    box-shadow: 0 8px 22px rgba(15, 23, 42, 0.08);
+}
+
+.sign-step-card.primary {
+    border-color: #2563eb;
+    background: #eff6ff;
+}
+
+.sign-step-card.success {
+    border-color: #16a34a;
+    background: #f0fdf4;
+}
+
+.sign-step-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f1f5f9;
+    color: #334155;
+    flex-shrink: 0;
+    font-size: 1.05rem;
+}
+
+.sign-step-card.primary .sign-step-icon {
+    background: #2563eb;
+    color: #ffffff;
+}
+
+.sign-step-card.success .sign-step-icon {
+    background: #16a34a;
+    color: #ffffff;
+}
+
+.sign-step-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    text-align: left;
+}
+
+.sign-step-text strong {
+    font-size: 0.95rem;
+    color: #0f172a;
+}
+
+.sign-step-text span {
+    font-size: 0.82rem;
+    color: #64748b;
+    line-height: 1.35;
+}
+
+.sign-key-box {
+    margin-top: 16px;
+    padding: 15px;
+    border-radius: 14px;
+    background: #fff7ed;
+    border: 1px solid #fed7aa;
+}
+
+.sign-key-main {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.sign-key-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 11px;
+    background: #ffedd5;
+    color: #c2410c;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.sign-key-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    text-align: left;
+}
+
+.sign-key-text strong {
+    color: #9a3412;
+    font-size: 0.92rem;
+}
+
+.sign-key-text span {
+    color: #9a3412;
+    font-size: 0.82rem;
+    line-height: 1.45;
+}
+
+.sign-key-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+}
+
+.sign-key-btn {
+    border: none;
+    border-radius: 10px;
+    padding: 10px 14px;
+    background: #f97316;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 0.82rem;
+    text-decoration: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.sign-key-btn:hover {
+    background: #ea580c;
+}
+
+.sign-key-btn.disabled {
+    background: #fdba74;
+    cursor: not-allowed;
+    opacity: 0.75;
+}
+
+.sign-step-button {
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    font: inherit;
+}
+
+.sign-lost-key-link {
+    color: #dc2626;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.sign-lost-key-link:hover {
+    text-decoration: underline;
+}
+.sign-step-card.as-button {
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    font: inherit;
+}
+
+@media (min-width: 700px) {
+    .sign-popup-steps {
+        grid-template-columns: 1fr;
+    }
+}
+/* =========================
+   REMOVE GRADIENT COLORS
+   ========================= */
+
+.form-section {
+    background: #ffffff;
+}
+
+.checkout-form .summary-row.total {
+    background: #f0fdf4;
+}
+
+.checkout-form .submit-btn {
+    background: #16a34a;
+}
+
+.checkout-form .submit-btn:hover {
+    background: #15803d;
+}
+
+.voucher-section {
+    background: #ffffff;
+}
+
+.voucher-apply-btn {
+    background: #7545f2;
+}
+
+.voucher-apply-btn:hover {
+    background: #5f3dc4;
+}
+
+.voucher-applied {
+    background: #f0fdf4;
+}
+
+.voucher-code {
+    background: #16a34a;
+}
+
+.voucher-error {
+    background: #fef2f2;
+}

@@ -1,0 +1,243 @@
+/* ================= GLOBAL / RESET ================= */
+body {
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f4f7f6;
+    /* Light gray background for contrast */
+    color: #2d3436;
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* ================= PAGE TITLE ================= */
+.voucher-page-title {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #2d3436;
+    margin: 40px 0 10px;
+    position: relative;
+    display: table;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.voucher-page-title::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(135deg, #0984e3, #74b9ff);
+    margin: 10px auto 30px;
+    border-radius: 2px;
+}
+
+/* ================= BREADCRUMB ================= */
+.voucher-breadcrumb {
+    padding: 20px 40px;
+    font-size: 14px;
+    color: #636e72;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.voucher-breadcrumb a {
+    text-decoration: none;
+    color: #0984e3;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.voucher-breadcrumb a:hover {
+    color: #74b9ff;
+    text-decoration: underline;
+}
+
+.voucher-breadcrumb span {
+    margin: 0 8px;
+    color: #b2bec3;
+}
+
+/* ================= GRID SYSTEM ================= */
+.voucher-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+/* ================= VOUCHER CARD ================= */
+.voucher-card {
+    background: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 440px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    border: 1px solid rgba(0, 0, 0, 0.02);
+}
+
+.voucher-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(9, 132, 227, 0.15);
+    border-color: rgba(9, 132, 227, 0.1);
+}
+
+/* ================= DISCOUNT BADGE ================= */
+.voucher-discount {
+    position: absolute;
+    top: 20px;
+    left: -10px;
+    /* Ribbon effect */
+    background: linear-gradient(135deg, #e17055, #fab1a0);
+    color: #fff;
+    padding: 8px 16px;
+    font-weight: 700;
+    font-size: 16px;
+    border-radius: 0 8px 8px 0;
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+}
+
+.voucher-discount::before {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 0;
+    border-top: 6px solid #b33923;
+    border-left: 10px solid transparent;
+}
+
+/* ================= IMAGE ================= */
+.voucher-image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.voucher-card:hover .voucher-image {
+    transform: scale(1.05);
+}
+
+/* ================= CARD BODY ================= */
+.voucher-body {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    background: #fff;
+    z-index: 2;
+}
+
+.voucher-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #2d3436;
+    margin: 0 0 12px;
+    line-height: 1.4;
+}
+
+/* Dotted separator */
+.voucher-body::before {
+    content: '';
+    display: block;
+    border-top: 2px dashed #dfe6e9;
+    margin-bottom: 20px;
+}
+
+.voucher-date {
+    font-size: 0.9rem;
+    color: #636e72;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.voucher-date::before {
+    content: '📅';
+    font-size: 12px;
+}
+
+/* ================= BUTTONS ================= */
+.voucher-detail-btn {
+    margin-top: auto;
+    padding: 12px;
+    text-align: center;
+    border-radius: 50px;
+    background: linear-gradient(135deg, #0984e3, #74b9ff);
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    box-shadow: 0 4px 15px rgba(9, 132, 227, 0.3);
+    transition: all 0.3s ease;
+}
+
+.voucher-detail-btn:hover {
+    background: linear-gradient(135deg, #74b9ff, #0984e3);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(9, 132, 227, 0.4);
+    color: #fff;
+}
+
+/* ================= PAGINATION ================= */
+.vc-pagination-wrap {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin: 60px 0 80px;
+}
+
+.vc-pagination-wrap .vc-pagination {
+    display: flex;
+    gap: 10px;
+    background: #fff;
+    padding: 10px;
+    border-radius: 50px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+/* PAGE LINK */
+.vc-pagination-wrap .vc-pagination a.vc-page {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: none;
+    background-color: transparent;
+    color: #636e72;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+/* HOVER */
+.vc-pagination-wrap .vc-pagination a.vc-page:hover {
+    background-color: #f1f2f6;
+    color: #0984e3;
+    transform: translateY(-2px);
+}
+
+/* ACTIVE */
+.vc-pagination-wrap .vc-pagination a.vc-page.active {
+    background: linear-gradient(135deg, #0984e3, #74b9ff);
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(9, 132, 227, 0.3);
+}
+
+/* PREV / NEXT ICONS */
+.vc-pagination-wrap .vc-pagination a.vc-page.prev,
+.vc-pagination-wrap .vc-pagination a.vc-page.next {
+    font-size: 18px;
+    font-weight: 700;
+}

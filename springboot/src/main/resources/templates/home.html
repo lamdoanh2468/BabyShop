@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BabyShop Việt Nam</title>
+
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+    <link rel="icon" type="image/x-icon" th:href="@{/favicon.ico}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+          integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<!-- Banner chính -->
+<section class="hero">
+    <img th:src="@{/img/banner/banner.png}" class="banner-img" alt="Banner">
+</section>
+
+<!-- Danh mục sản phẩm -->
+<section class="category">
+    <h2>DANH MỤC SẢN PHẨM</h2>
+    <div class="category-grid">
+        <div class="cat-item" th:each="c : ${categories}">
+            <a th:href="@{/product-list(category_id=${c.categoryId})}">
+                <img th:src="${c.categoryImage}" th:alt="${c.categoryName}">
+            </a>
+            <p th:text="${c.categoryName}">Danh mục</p>
+        </div>
+    </div>
+</section>
+
+<!-- Giới thiệu -->
+<section class="intro">
+    <img th:src="@{/img/banner/intro.jpg}" alt="Giới thiệu">
+</section>
+
+<!-- Chính sách -->
+<section class="policies">
+    <div class="policy">BẢO HÀNH CHÍNH HÃNG</div>
+    <div class="policy">BẢO TRÌ TRỌN ĐỜI</div>
+    <div class="policy">LẮP ĐẶT MIỄN PHÍ</div>
+    <div class="policy">MIỄN PHÍ VẬN CHUYỂN</div>
+</section>
+
+<!-- 1) ĐỒ NỘI THẤT MỚI NHẤT -->
+<section class="section">
+    <h2>ĐỒ NỘI THẤT MỚI NHẤT</h2>
+    <div th:if="${#lists.isEmpty(NoiThatMoi)}" class="text-center text-muted py-4">Chưa có sản phẩm để hiển thị.</div>
+    <div th:unless="${#lists.isEmpty(NoiThatMoi)}"
+         th:replace="~{fragments/carousel :: carousel('noiThatCarousel', ${NoiThatMoi})}"></div>
+</section>
+
+<!-- 2) ĐỒ TRANG TRÍ MỚI NHẤT -->
+<section class="section">
+    <h2>ĐỒ TRANG TRÍ MỚI NHẤT</h2>
+    <div th:if="${#lists.isEmpty(TrangTriMoi)}" class="text-center text-muted py-4">Chưa có sản phẩm để hiển thị.</div>
+    <div th:unless="${#lists.isEmpty(TrangTriMoi)}"
+         th:replace="~{fragments/carousel :: carousel('trangTriCarousel', ${TrangTriMoi})}"></div>
+</section>
+
+<!-- 3) ĐỒ CHƠI MỚI NHẤT -->
+<section class="section">
+    <h2>ĐỒ CHƠI MỚI NHẤT</h2>
+    <div th:if="${#lists.isEmpty(DoChoiMoi)}" class="text-center text-muted py-4">Chưa có sản phẩm để hiển thị.</div>
+    <div th:unless="${#lists.isEmpty(DoChoiMoi)}"
+         th:replace="~{fragments/carousel :: carousel('doChoiCarousel', ${DoChoiMoi})}"></div>
+</section>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/home.js}"></script>
+</body>
+</html>

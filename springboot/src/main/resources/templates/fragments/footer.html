@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="footer" th:remove="tag">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/footer.css}"/>
+
+    <footer id="footer-frame" class="shop-footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <h3 class="brand-name">BabyStore</h3>
+                    <p class="brand-desc">Cung cấp linh kiện, laptop chính hãng với giá tốt nhất.</p>
+                    <div class="contact-info">
+                        <p><i class="fa-solid fa-location-dot"></i> 123 Đường ABC, TP. Hồ Chí Minh</p>
+                        <p><i class="fa-solid fa-phone"></i> <a href="tel:0123456789">0123 456 789</a></p>
+                        <p><i class="fa-solid fa-envelope"></i> <a href="mailto:babystore@gmail.com">babystore@gmail.com</a></p>
+                    </div>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Hỗ trợ khách hàng</h4>
+                    <ul>
+                        <li><a href="#">Chính sách bảo hành</a></li>
+                        <li><a href="#">Chính sách đổi trả</a></li>
+                        <li><a href="#">Hướng dẫn thanh toán</a></li>
+                        <li><a href="#">Hướng dẫn mua hàng</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-socials">
+                    <h4>Kết nối với chúng tôi</h4>
+                    <div class="social-icons">
+                        <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#"><i class="fa-brands fa-tiktok"></i></a>
+                        <a href="#"><i class="fa-brands fa-youtube"></i></a>
+                    </div>
+                    <h4>Phương thức thanh toán</h4>
+                    <div class="payment-icons">
+                        <img th:src="@{/img/visa.png}" alt="Visa"/>
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Mastercard-logo.png" alt="MasterCard"/>
+                        <img src="https://m.momoshop.com.tw/img/momologo.svg" alt="Momo"/>
+                        <img src="https://thienankids.edu.vn/icon/zaloicon.png" alt="ZaloPay"/>
+                    </div>
+                </div>
+
+                <div class="footer-newsletter">
+                    <h4>Đăng ký nhận tin</h4>
+                    <p>Nhận thông tin khuyến mãi và sản phẩm mới nhất.</p>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>© <span id="year"></span> BabyStore. All rights reserved.</p>
+                <ul class="legal-links">
+                    <li><a href="#">Điều khoản sử dụng</a></li>
+                    <li><a href="#">Chính sách bảo mật</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
+</div>
+</body>
+</html>
