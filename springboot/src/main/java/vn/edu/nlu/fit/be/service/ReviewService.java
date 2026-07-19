@@ -18,4 +18,8 @@ public class ReviewService {
     public List<Map<String, Object>> getReviewsByProductId(int productId) {
         return reviewRepo.findByProductId(productId);
     }
+
+    public void addReview(int accountId, int productId, String comment) {
+        reviewRepo.insert(accountId, productId, comment);
+    }
 }

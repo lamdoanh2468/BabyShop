@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sản phẩm yêu thích</title>
+    <link rel="icon" type="image/x-icon" th:href="@{/favicon.ico}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/profile.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="pf-page">
+    <nav class="pf-breadcrumb">
+        <a th:href="@{/}">Trang chủ</a>
+        <span class="dot">•</span>
+        <span>Sản phẩm yêu thích</span>
+    </nav>
+
+    <div class="pf-container">
+        <div th:replace="~{fragments/profileSidebar :: sidebar('favorite')}"></div>
+
+        <main class="pf-content">
+            <section class="pf-section pf-section-active">
+                <h3><i class="fas fa-heart"></i> Sản phẩm yêu thích</h3>
+
+                <div class="pf-empty" th:if="${#lists.isEmpty(FAVORITES)}">
+                    <span class="pf-empty-icon">💖</span>
+                    <h4>Chưa có sản phẩm yêu thích</h4>
+                    <p>Hãy khám phá và thêm sản phẩm vào danh sách yêu thích của bạn!</p>
+                    <a th:href="@{/product-list}" class="pf-empty-btn">
+                        <i class="fas fa-search"></i> Khám phá ngay
+                    </a>
+                </div>
+
+                <div class="pf-favorite-list">
+                    <div class="pf-favorite-row" th:each="f : ${FAVORITES}">
+                        <img th:src="${f.productImage}" th:alt="${f.productName}"/>
+
+                        <div class="pf-fav-info">
+                            <h4 th:text="${f.productName}">Tên sản phẩm</h4>
+                            <div class="pf-fav-price">
+                                <i class="fas fa-tag"></i>
+                                <span th:text="${#numbers.formatInteger(f.productPrice, 0, 'POINT')}">0</span>đ
+                            </div>
+                        </div>
+
+                        <a th:href="@{/cart(action='add', product_id=${f.productId}, quantity=1, returnUrl='/my-favorite')}"
+                           class="pf-add-cart">
+                            <i class="fas fa-cart-plus"></i> Thêm vào giỏ
+                        </a>
+
+                        <form method="post" th:action="@{/my-favorite}" style="margin: 0;">
+                            <input type="hidden" name="action" value="remove">
+                            <input type="hidden" name="product_id" th:value="${f.productId}">
+                            <button class="pf-remove-fav" type="submit"
+                                    onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này khỏi danh sách yêu thích?')">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

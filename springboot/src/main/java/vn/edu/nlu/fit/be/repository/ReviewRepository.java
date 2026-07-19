@@ -25,4 +25,9 @@ public class ReviewRepository {
                 "WHERE r.product_id = ? ORDER BY r.created_at DESC";
         return jdbc.queryForList(sql, productId);
     }
+
+    public void insert(int accountId, int productId, String comment) {
+        jdbc.update("INSERT INTO reviews (account_id, product_id, comment, created_at)" +
+                " VALUES (?, ?, ?, NOW())", accountId, productId, comment);
+    }
 }

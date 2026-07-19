@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<!-- Sidebar trang tài khoản. Tham số 'active' = mục đang chọn. -->
+<aside class="pf-sidebar" th:fragment="sidebar(active)">
+    <h2><i class="fas fa-user-circle"></i> <span th:text="${session.USER != null ? session.USER.username : ''}">user</span></h2>
+    <ul>
+        <li th:classappend="${active == 'profile'} ? 'active'"
+            th:onclick="|location.href='@{/profile}'|"><i class="fas fa-user"></i> Thông tin cá nhân</li>
+        <li th:classappend="${active == 'orders'} ? 'active'"
+            th:onclick="|location.href='@{/bought-product}'|"><i class="fas fa-shopping-bag"></i> Đơn hàng đã mua</li>
+        <li th:classappend="${active == 'favorite'} ? 'active'"
+            th:onclick="|location.href='@{/my-favorite}'|"><i class="fas fa-heart"></i> Sản Phẩm Yêu Thích</li>
+        <li th:classappend="${active == 'password'} ? 'active'"
+            th:onclick="|location.href='@{/change-password}'|"><i class="fas fa-key"></i> Đổi mật khẩu</li>
+        <li th:classappend="${active == 'security'} ? 'active'"
+            th:onclick="|location.href='@{/security-key}'|"><i class="fas fa-shield-halved"></i> Chữ ký điện tử và chứng thư số</li>
+    </ul>
+</aside>
+</body>
+</html>
