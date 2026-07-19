@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Giỏ hàng của bạn</title>
+    <link rel="icon" type="image/x-icon" th:href="@{/favicon.ico}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+          integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/cartStyle.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/header.css}"/>
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<nav class="breadcrumb-nav">
+    <a th:href="@{/}">Trang chủ</a>
+    <span class="dot">•</span>
+    <a th:href="@{/cart}">Giỏ hàng</a>
+</nav>
+
+<div class="cart-header">
+    <h3 class="page-title">Giỏ hàng</h3>
+</div>
+
+<div class="cart-container" th:with="cart=${session.cart}">
+    <!-- Giỏ hàng trống -->
+    <div class="empty-cart" th:if="${cart == null or cart.totalQuantity == 0}">
+        <img th:src="@{/img/cart-null.png}" alt=""/>
+        <p style="font-weight: 550">Giỏ hàng trống</p>
+        <p>Bạn tham khảo thêm các sản phẩm <a th:href="@{/product-list}">tại đây</a> nhé!</p>
+    </div>
+
+    <!-- Có sản phẩm -->
+    <div th:if="${cart != null and cart.totalQuantity > 0}">
+        <div class="cart-items">
+            <div class="cart-items-header">
+                <span class="cart-items-count">
+                    <span th:text="${cart.totalQuantity}">0</span> sản phẩm
+                </span>
+                <button th:onclick="|location.href='@{/cart(action='remove_all')}'|" class="clear-cart-btn">
+                    🗑 Xoá tất cả
+                </button>
+            </div>
+
+            <div class="cart-item" th:each="item : ${cart.items}">
+                <div>
+                    <img class="item-image" th:src="${item.product.productImage}" th:alt="${item.product.productName}"/>
+                </div>
+
+                <div class="item-details">
+                    <h3 class="item-title" th:text="${item.product.productName}">Tên sản phẩm</h3>
+                    <p class="item-variant">
+                        Mã SP: <span th:text="${#numbers.formatInteger(item.product.productId, 3)}">000</span>
+                    </p>
+                    <div class="item-price">
+                        <span class="current-price">
+                            <span th:text="${#numbers.formatInteger(item.price, 0, 'POINT')}">0</span>đ
+                        </span>
+                    </div>
+                </div>
+
+                <div class="item-actions">
+                    <button type="button" class="delete-btn" title="Xóa sản phẩm"
+                            th:onclick="|location.href='@{/cart(action='remove', product_id=${item.product.productId})}'|">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+
+                    <div class="quantity-control">
+                        <button type="button" class="quantity-btn"
+                                th:onclick="'decreaseUI(' + ${item.product.productId} + ')'">−</button>
+                        <input type="text" class="quantity-input" th:value="${item.quantity}"
+                               th:id="'quantity-' + ${item.product.productId}" readonly/>
+                        <button type="button" class="quantity-btn"
+                                th:onclick="'increaseUI(' + ${item.product.productId} + ')'">+</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tổng tiền. Voucher + form thanh toán + ký số thuộc nhóm order (migrate sau). -->
+        <div class="order-summary">
+            <h2 class="summary-title">Thông tin thanh toán</h2>
+
+            <div class="form-section">
+                <div class="form-section-header">
+                    <i class="fa-solid fa-receipt"></i>
+                    <span>Chi tiết thanh toán</span>
+                </div>
+                <div class="summary-row">
+                    <span class="label">Giá trị đơn hàng</span>
+                    <span class="value" id="subtotal"
+                          th:text="${#numbers.formatInteger(cart.totalPrice, 0, 'POINT')} + 'đ'">0đ</span>
+                </div>
+                <div class="summary-row total">
+                    <span class="label">Tổng thanh toán</span>
+                    <span class="value" id="total"
+                          th:text="${#numbers.formatInteger(cart.totalPrice, 0, 'POINT')} + 'đ'">0đ</span>
+                </div>
+            </div>
+
+            <a class="submit-btn" th:href="@{/order}" style="display:block;text-align:center;text-decoration:none">
+                <i class="fa-solid fa-lock"></i> Tiến hành thanh toán
+            </a>
+            <p class="secure-notice">
+                <i class="fa-solid fa-shield-halved"></i> Giao dịch được bảo mật an toàn
+            </p>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/header.js}"></script>
+<script th:src="@{/js/cart.js}"></script>
+</body>
+</html>
