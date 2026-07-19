@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Đăng nhập - Nội thất trẻ em</title>
+    <link rel="icon" type="image/x-icon" th:href="@{/favicon.ico}">
+    <link rel="stylesheet" th:href="@{/css/login.css}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+          integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+</head>
+<body>
+<div class="auth-container">
+    <div class="auth-box">
+        <form class="form active" th:action="@{/login}" method="post">
+            <h2>Đăng nhập</h2>
+
+            <p class="error" th:if="${error != null}" th:text="${error}">Lỗi</p>
+
+            <input type="hidden" name="returnUrl" th:value="${returnUrl}"/>
+
+            <div class="input-group">
+                <input type="text" name="username" id="username" placeholder="Tên đăng nhập hoặc Email" required/>
+                <i class="fa-solid fa-user"></i>
+            </div>
+
+            <div class="password-container">
+                <div class="input-group">
+                    <input type="password" name="password" id="password" placeholder="Mật khẩu" required/>
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+                <span class="toggle-password"><i class="fa-solid fa-eye"></i></span>
+            </div>
+
+            <button type="submit">Đăng nhập</button>
+
+            <!-- Đăng nhập Google: chuyển sang Spring Security OAuth2 ở Phase 2 -->
+            <a class="google-btn" href="#" title="Đăng nhập Google sẽ có ở giai đoạn sau">
+                <i class="fa-brands fa-google"></i> Đăng nhập bằng Google
+            </a>
+
+            <p class="switch">
+                Chưa có tài khoản?
+                <a th:href="@{/register}">Đăng ký</a>
+            </p>
+        </form>
+    </div>
+</div>
+
+<script th:src="@{/js/login.js}"></script>
+</body>
+</html>

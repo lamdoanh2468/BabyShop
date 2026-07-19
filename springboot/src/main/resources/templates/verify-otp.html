@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Xác thực OTP</title>
+    <link rel="stylesheet" th:href="@{/css/login.css}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"/>
+</head>
+<body>
+<div class="auth-container">
+    <div class="auth-box">
+        <form class="form active" th:action="@{/verify-otp}" method="post">
+            <h2>Xác thực OTP</h2>
+
+            <p style="text-align:center;color:#fff;margin-bottom:10px">
+                Mã OTP đã được gửi tới email của bạn
+            </p>
+
+            <p class="error" th:if="${error != null}" th:text="${error}">Lỗi</p>
+            <p class="success" style="color:#4CAF50;text-align:center;margin-bottom:10px"
+               th:if="${message != null}" th:text="${message}">Thông báo</p>
+
+            <input type="text" name="otp" placeholder="Nhập mã OTP (6 số)" maxlength="6" required/>
+
+            <p id="countdown" style="text-align:center;color:#fff;font-size:14px;margin-top:10px">
+                OTP hết hạn sau <b>60</b> giây
+            </p>
+
+            <button type="submit">Xác nhận</button>
+
+            <p class="switch">
+                Không nhận được mã?
+                <a th:href="@{/resend-otp}">Gửi lại OTP</a>
+            </p>
+        </form>
+    </div>
+</div>
+
+<script>
+    let timeLeft = 60;
+    const countdown = document.getElementById("countdown");
+    const timer = setInterval(() => {
+        timeLeft--;
+        countdown.innerHTML = "OTP hết hạn sau <b>" + timeLeft + "</b> giây";
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            countdown.innerHTML = "<span style='color:#ffb4b4'>OTP đã hết hạn</span>";
+        }
+    }, 1000);
+</script>
+</body>
+</html>
