@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Admin - Quản lý thương hiệu</title>
+    <link rel="stylesheet" th:href="@{/css/admin_style.css}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+    <style>
+        .btn-add { display:inline-flex; align-items:center; gap:8px; padding:12px 20px;
+            background:linear-gradient(135deg,#6C63FF,#A696FF); color:#fff; font-weight:600;
+            font-size:14px; border-radius:12px; text-decoration:none; transition:.3s ease; }
+        .btn-add:hover { transform:translateY(-2px); }
+    </style>
+</head>
+<body>
+<div class="dashboard">
+    <div th:replace="~{fragments/adminSidebar :: sidebar('brands')}"></div>
+
+    <main class="main">
+        <h2>Quản lý thương hiệu</h2>
+
+        <a th:href="@{/admin/brands(action='add')}" class="btn-add"
+           style="margin-bottom:20px;display:inline-block">
+            <i class="fa-solid fa-plus"></i> Thêm thương hiệu
+        </a>
+
+        <table class="data-table">
+            <thead>
+            <tr><th>ID</th><th>Tên thương hiệu</th><th>Logo</th><th>Thao tác</th></tr>
+            </thead>
+            <tbody>
+            <tr th:if="${#lists.isEmpty(brandList)}">
+                <td colspan="4" style="text-align:center;padding:20px;">Không có thương hiệu</td>
+            </tr>
+            <tr th:each="b : ${brandList}">
+                <td th:text="'#' + ${b.brandId}">#0</td>
+                <td><strong th:text="${b.brandName}">Tên</strong></td>
+                <td>
+                    <img th:if="${b.brandLogo != null and !b.brandLogo.isEmpty()}"
+                         th:src="${b.brandLogo}" th:alt="${b.brandName}"
+                         style="width:60px;height:60px;object-fit:cover;border-radius:8px"/>
+                </td>
+                <td>
+                    <a class="btn-small btn-on" th:href="@{/admin/brands(action='edit', id=${b.brandId})}">
+                        <i class="fa-solid fa-pen"></i></a>
+                    <form method="post" th:action="@{/admin/brands}" style="display:inline"
+                          onsubmit="return confirm('Xóa thương hiệu này?')">
+                        <input type="hidden" name="action" value="delete"/>
+                        <input type="hidden" name="brandId" th:value="${b.brandId}"/>
+                        <button type="submit" class="btn-small btn-delete"><i class="fa-solid fa-trash"></i></button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </main>
+
+    <aside class="right-panel">
+        <div class="voucher-form" th:if="${param.action != null and (param.action[0] == 'add' or param.action[0] == 'edit')}"
+             th:with="isAdd=${param.action[0] == 'add'}">
+            <h3 th:text="${isAdd} ? 'Thêm thương hiệu' : 'Sửa thương hiệu'">Thêm thương hiệu</h3>
+
+            <form method="post" th:action="@{/admin/brands}">
+                <input type="hidden" name="action" th:value="${isAdd} ? 'create' : 'update'"/>
+                <input th:unless="${isAdd}" type="hidden" name="brandId"
+                       th:value="${brandToEdit != null ? brandToEdit.brandId : ''}"/>
+
+                <div class="form-grid">
+                    <div class="form-item">
+                        <label>Tên thương hiệu</label>
+                        <input type="text" name="brandName"
+                               th:value="${brandToEdit != null ? brandToEdit.brandName : ''}" required/>
+                    </div>
+                    <div class="form-item">
+                        <label>Logo (URL)</label>
+                        <input type="text" name="brandLogo"
+                               th:value="${brandToEdit != null ? brandToEdit.brandLogo : ''}"
+                               placeholder="https://example.com/logo.png"/>
+                    </div>
+                    <div class="form-item textarea-full">
+                        <label>Mô tả</label>
+                        <textarea name="brandDescription" placeholder="Mô tả ngắn thương hiệu"
+                                  th:text="${brandToEdit != null ? brandToEdit.brandDescription : ''}"></textarea>
+                    </div>
+                </div>
+
+                <div style="margin-top:20px;text-align:right">
+                    <button type="submit" class="btn-primary">
+                        <i class="fa-solid" th:classappend="${isAdd} ? 'fa-plus' : 'fa-pen'"></i>
+                        <span th:text="${isAdd} ? 'Thêm thương hiệu' : 'Cập nhật thương hiệu'">Thêm thương hiệu</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </aside>
+</div>
+</body>
+</html>

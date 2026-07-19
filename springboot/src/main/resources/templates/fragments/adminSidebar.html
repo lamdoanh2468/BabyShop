@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<!-- Sidebar admin dùng chung. Tham số 'active' = mục đang chọn. -->
+<aside class="sidebar" th:fragment="sidebar(active)">
+    <nav class="menu">
+        <a th:href="@{/admin/overview}" th:classappend="${active == 'overview'} ? 'active'">
+            <i class="fa-solid fa-house"></i> <span>Dashboard</span></a>
+        <a th:href="@{/admin/accounts}" th:classappend="${active == 'accounts'} ? 'active'">
+            <i class="fa-solid fa-user"></i> <span>Tài khoản</span></a>
+        <a th:href="@{/admin/orders}" th:classappend="${active == 'orders'} ? 'active'">
+            <i class="fa-solid fa-box"></i> <span>Đơn hàng</span></a>
+        <a th:href="@{/admin/products}" th:classappend="${active == 'products'} ? 'active'">
+            <i class="fa-solid fa-cubes"></i> <span>Sản phẩm</span></a>
+        <a th:href="@{/admin/categories}" th:classappend="${active == 'categories'} ? 'active'">
+            <i class="fa-solid fa-layer-group"></i> <span>Danh mục sản phẩm</span></a>
+        <a th:href="@{/admin/brands}" th:classappend="${active == 'brands'} ? 'active'">
+            <i class="fa-solid fa-tags"></i> <span>Thương hiệu</span></a>
+        <a th:href="@{/admin/contacts}" th:classappend="${active == 'contacts'} ? 'active'">
+            <i class="fa-solid fa-envelope"></i> <span>Liên hệ</span></a>
+        <a th:href="@{/admin/stocks}" th:classappend="${active == 'stocks'} ? 'active'">
+            <i class="fa-solid fa-warehouse"></i> <span>Kho hàng</span></a>
+        <a th:href="@{/admin/vouchers}" th:classappend="${active == 'vouchers'} ? 'active'">
+            <i class="fa-solid fa-ticket"></i> <span>Vouchers</span></a>
+        <a th:href="@{/admin/settings}" th:classappend="${active == 'settings'} ? 'active'">
+            <i class="fa-solid fa-gear"></i> <span>Cài đặt</span></a>
+    </nav>
+</aside>
+</body>
+</html>

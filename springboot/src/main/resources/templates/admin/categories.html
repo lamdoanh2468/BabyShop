@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Admin - Quản lý danh mục</title>
+    <link rel="stylesheet" th:href="@{/css/admin_style.css}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+    <style>
+        .btn-add { display:inline-flex; align-items:center; gap:8px; padding:12px 20px;
+            background:linear-gradient(135deg,#6C63FF,#A696FF); color:#fff; font-weight:600;
+            font-size:14px; border-radius:12px; text-decoration:none; transition:.3s ease; }
+        .btn-add:hover { transform:translateY(-2px); }
+    </style>
+</head>
+<body>
+<div class="dashboard">
+    <div th:replace="~{fragments/adminSidebar :: sidebar('categories')}"></div>
+
+    <main class="main">
+        <h2>Quản lý danh mục</h2>
+
+        <a th:href="@{/admin/categories(action='add')}" class="btn-add"
+           style="margin-bottom:20px;display:inline-block">
+            <i class="fa-solid fa-plus"></i> Thêm danh mục
+        </a>
+
+        <table class="data-table">
+            <thead>
+            <tr><th>ID</th><th>Tên danh mục</th><th>Ảnh</th><th>Mô tả</th><th>Thao tác</th></tr>
+            </thead>
+            <tbody>
+            <tr th:if="${#lists.isEmpty(categories)}">
+                <td colspan="5" style="text-align:center;padding:20px;">Không có danh mục</td>
+            </tr>
+            <tr th:each="c : ${categories}">
+                <td th:text="'#' + ${c.categoryId}">#0</td>
+                <td><strong th:text="${c.categoryName}">Tên</strong></td>
+                <td>
+                    <img th:if="${c.categoryImage != null and !c.categoryImage.isEmpty()}"
+                         th:src="${c.categoryImage}" th:alt="${c.categoryName}"
+                         style="width:60px;height:60px;object-fit:cover;border-radius:8px"/>
+                </td>
+                <td style="max-width:300px">
+                    <span th:if="${c.description != null and !c.description.isEmpty()}"
+                          th:text="${#strings.abbreviate(c.description, 120)}">Mô tả</span>
+                    <i th:unless="${c.description != null and !c.description.isEmpty()}">Chưa có mô tả</i>
+                </td>
+                <td>
+                    <a class="btn-small btn-on" th:href="@{/admin/categories(action='edit', id=${c.categoryId})}">
+                        <i class="fa-solid fa-pen"></i></a>
+                    <form method="post" th:action="@{/admin/categories}" style="display:inline"
+                          onsubmit="return confirm('Xóa danh mục này?')">
+                        <input type="hidden" name="action" value="delete"/>
+                        <input type="hidden" name="id" th:value="${c.categoryId}"/>
+                        <button type="submit" class="btn-small btn-delete"><i class="fa-solid fa-trash"></i></button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </main>
+
+    <aside class="right-panel">
+        <div class="voucher-form" th:if="${param.action != null and (param.action[0] == 'add' or param.action[0] == 'edit')}"
+             th:with="isAdd=${param.action[0] == 'add'}">
+            <h3 th:text="${isAdd} ? 'Thêm danh mục' : 'Sửa danh mục'">Thêm danh mục</h3>
+
+            <form method="post" th:action="@{/admin/categories}">
+                <input type="hidden" name="action" th:value="${isAdd} ? 'create' : 'update'"/>
+                <input th:unless="${isAdd}" type="hidden" name="id" th:value="${category != null ? category.categoryId : ''}"/>
+
+                <div class="form-grid">
+                    <div class="form-item">
+                        <label>Tên danh mục</label>
+                        <input type="text" name="categoryName"
+                               th:value="${category != null ? category.categoryName : ''}" required/>
+                    </div>
+                    <div class="form-item">
+                        <label>Ảnh danh mục (URL)</label>
+                        <input type="text" name="categoryImage"
+                               th:value="${category != null ? category.categoryImage : ''}"
+                               placeholder="https://example.com/image.jpg"/>
+                    </div>
+                    <div class="form-item textarea-full">
+                        <label>Mô tả</label>
+                        <textarea name="description" placeholder="Mô tả ngắn danh mục"
+                                  th:text="${category != null ? category.description : ''}"></textarea>
+                    </div>
+                </div>
+
+                <div style="margin-top:20px;text-align:right">
+                    <button type="submit" class="btn-primary">
+                        <i class="fa-solid" th:classappend="${isAdd} ? 'fa-plus' : 'fa-pen'"></i>
+                        <span th:text="${isAdd} ? 'Thêm danh mục' : 'Cập nhật danh mục'">Thêm danh mục</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </aside>
+</div>
+</body>
+</html>

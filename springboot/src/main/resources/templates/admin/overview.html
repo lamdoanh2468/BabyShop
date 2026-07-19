@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Admin - Tổng quan</title>
+    <link rel="stylesheet" th:href="@{/css/admin_style.css}">
+    <link rel="stylesheet" th:href="@{/css/admin_chart.css}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="dashboard">
+    <div th:replace="~{fragments/adminSidebar :: sidebar('overview')}"></div>
+
+    <div class="content-wrapper">
+        <main class="main">
+            <h2>Thống kê dữ liệu</h2>
+
+            <section class="dashboard-cards">
+                <div class="card-large">
+                    <div class="card-info">
+                        <h4>Tổng doanh thu</h4>
+                        <p class="value"><span th:text="${#numbers.formatInteger(totalRevenue, 0, 'POINT')}">0</span>đ</p>
+                    </div>
+                    <i class="fa-solid fa-coins icon"></i>
+                </div>
+                <div class="card-large">
+                    <div class="card-info">
+                        <h4>Tổng đơn hàng</h4>
+                        <p class="value" th:text="${totalOrders}">0</p>
+                    </div>
+                    <i class="fa-solid fa-cart-shopping icon"></i>
+                </div>
+                <div class="card-small">
+                    <div class="card-info">
+                        <h4>Số lượng tài khoản</h4>
+                        <p class="value" th:text="${totalCustomers}">0</p>
+                    </div>
+                    <i class="fa-solid fa-user-group icon"></i>
+                </div>
+                <div class="card-small">
+                    <div class="card-info">
+                        <h4>Số lượng sản phẩm</h4>
+                        <p class="value" th:text="${totalProducts}">0</p>
+                    </div>
+                    <i class="fa-solid fa-boxes-stacked icon"></i>
+                </div>
+            </section>
+
+            <section class="charts-upgraded">
+                <div class="chart-card">
+                    <div class="chart-header"><h3>Doanh thu theo tháng</h3></div>
+                    <canvas id="revenueChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-header"><h3>Đơn hàng theo danh mục</h3></div>
+                    <canvas id="categoryChart"></canvas>
+                </div>
+            </section>
+
+            <section class="recent-orders">
+                <h3>Đơn hàng gần nhất</h3>
+                <table class="data-table">
+                    <thead>
+                    <tr><th>Mã đơn</th><th>Khách hàng</th><th>Tổng tiền</th><th>Ngày</th><th>Trạng thái</th></tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="o : ${recentOrders}">
+                        <td th:text="'#' + ${o.orderId}">#0</td>
+                        <td th:text="${o.username}">user</td>
+                        <td><span th:text="${#numbers.formatInteger(o.totalAmount, 0, 'POINT')}">0</span>đ</td>
+                        <td th:text="${#dates.format(o.orderDate, 'dd/MM/yyyy')}">01/01/2025</td>
+                        <td>
+                            <span class="status"
+                                  th:classappend="${o.statusOrder == 'Done' ? 'done'
+                                                  : (o.statusOrder == 'Pending' ? 'pending'
+                                                  : (o.statusOrder == 'Cancelled' ? 'cancelled' : 'pending'))}"
+                                  th:text="${o.statusOrder}">Pending</span>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(recentOrders)}">
+                        <td colspan="5" style="text-align:center;padding:20px;">Chưa có đơn hàng</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    window.ADMIN_DATA = {
+        revenueByMonth: /*[[${revenueByMonth}]]*/ [],
+        ordersByCategory: /*[[${ordersByCategory}]]*/ [],
+        contextPath: ""
+    };
+</script>
+<script th:src="@{/js/admin_script.js}"></script>
+</body>
+</html>
