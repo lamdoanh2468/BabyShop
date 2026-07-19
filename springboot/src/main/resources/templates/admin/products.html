@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Admin - Quản lý sản phẩm</title>
+    <link rel="stylesheet" th:href="@{/css/admin_style.css}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+    <style>
+        .btn-add { display:inline-flex; align-items:center; gap:8px; padding:12px 20px;
+            background:linear-gradient(135deg,#6C63FF,#A696FF); color:#fff; font-weight:600;
+            font-size:14px; border-radius:12px; text-decoration:none; }
+    </style>
+</head>
+<body>
+<div class="dashboard">
+    <div th:replace="~{fragments/adminSidebar :: sidebar('products')}"></div>
+
+    <main class="main">
+        <h2>Quản lý sản phẩm</h2>
+        <a th:href="@{/admin/products(action='add')}" class="btn-add"
+           style="margin-bottom:20px;display:inline-block"><i class="fa-solid fa-plus"></i> Thêm sản phẩm</a>
+
+        <table class="data-table">
+            <thead>
+            <tr><th>ID</th><th>Ảnh</th><th>Tên</th><th>Giá</th><th>Danh mục</th><th>Thao tác</th></tr>
+            </thead>
+            <tbody>
+            <tr th:if="${#lists.isEmpty(products)}">
+                <td colspan="6" style="text-align:center;padding:20px;">Không có sản phẩm</td>
+            </tr>
+            <tr th:each="p : ${products}">
+                <td th:text="'#' + ${p.productId}">#0</td>
+                <td>
+                    <img th:if="${p.productImage != null and !p.productImage.isEmpty()}" th:src="${p.productImage}"
+                         style="width:56px;height:56px;object-fit:cover;border-radius:8px"/>
+                </td>
+                <td><strong th:text="${p.productName}">Tên</strong></td>
+                <td><span th:text="${#numbers.formatInteger(p.productPrice, 0, 'POINT')}">0</span>đ</td>
+                <td th:text="${categoryMap.get(p.categoryId)}">Danh mục</td>
+                <td>
+                    <a class="btn-small btn-on" th:href="@{/admin/products(action='edit', id=${p.productId})}">
+                        <i class="fa-solid fa-pen"></i></a>
+                    <form method="post" th:action="@{/admin/products}" style="display:inline"
+                          onsubmit="return confirm('Xóa sản phẩm này?')">
+                        <input type="hidden" name="action" value="delete"/>
+                        <input type="hidden" name="id" th:value="${p.productId}"/>
+                        <button type="submit" class="btn-small btn-delete"><i class="fa-solid fa-trash"></i></button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </main>
+</div>
+</body>
+</html>

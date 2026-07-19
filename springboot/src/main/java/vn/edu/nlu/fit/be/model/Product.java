@@ -33,7 +33,8 @@ public class Product {
     @Column(name = "product_material")
     private String productMaterial;
 
-    @Column(name = "created_at")
+    // DB tự set (DEFAULT current_timestamp) -> không cho JPA ghi khi INSERT/UPDATE
+    @Column(name = "created_at", insertable = false, updatable = false)
     private Timestamp createdAt;
 
     public Product() {

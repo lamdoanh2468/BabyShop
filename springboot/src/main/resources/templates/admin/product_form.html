@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Admin - Form sản phẩm</title>
+    <link rel="stylesheet" th:href="@{/css/admin_style.css}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+</head>
+<body th:with="isEdit=${param.action != null and param.action[0] == 'edit'}">
+<div class="dashboard">
+    <div th:replace="~{fragments/adminSidebar :: sidebar('products')}"></div>
+
+    <main class="main">
+        <h2 th:text="${isEdit} ? 'Sửa sản phẩm' : 'Thêm sản phẩm'">Thêm sản phẩm</h2>
+
+        <form method="post" th:action="@{/admin/products}" class="voucher-form" style="max-width:640px">
+            <input type="hidden" name="action" th:value="${isEdit} ? 'update' : 'create'"/>
+            <input th:if="${isEdit}" type="hidden" name="productId"
+                   th:value="${product != null ? product.productId : ''}"/>
+
+            <div class="form-grid">
+                <div class="form-item">
+                    <label>Tên sản phẩm</label>
+                    <input type="text" name="productName" required
+                           th:value="${product != null ? product.productName : ''}"/>
+                </div>
+                <div class="form-item">
+                    <label>Giá (đ)</label>
+                    <input type="number" name="productPrice" min="0" required
+                           th:value="${product != null ? product.productPrice : ''}"/>
+                </div>
+                <div class="form-item">
+                    <label>Danh mục</label>
+                    <select name="categoryId">
+                        <option th:each="c : ${categories}" th:value="${c.categoryId}" th:text="${c.categoryName}"
+                                th:selected="${product != null and product.categoryId == c.categoryId}">Danh mục</option>
+                    </select>
+                </div>
+                <div class="form-item">
+                    <label>Thương hiệu</label>
+                    <select name="brandId">
+                        <option th:each="b : ${brands}" th:value="${b.brandId}" th:text="${b.brandName}"
+                                th:selected="${product != null and product.brandId == b.brandId}">Thương hiệu</option>
+                    </select>
+                </div>
+                <div class="form-item">
+                    <label>Kích thước</label>
+                    <input type="text" name="productSize" th:value="${product != null ? product.productSize : ''}"/>
+                </div>
+                <div class="form-item">
+                    <label>Chất liệu</label>
+                    <input type="text" name="productMaterial" th:value="${product != null ? product.productMaterial : ''}"/>
+                </div>
+                <div class="form-item textarea-full">
+                    <label>Ảnh (URL)</label>
+                    <input type="text" name="productImage" placeholder="https://example.com/image.jpg"
+                           th:value="${product != null ? product.productImage : ''}"/>
+                </div>
+            </div>
+
+            <div style="margin-top:20px;display:flex;gap:12px">
+                <button type="submit" class="btn-primary">
+                    <i class="fa-solid" th:classappend="${isEdit} ? 'fa-floppy-disk' : 'fa-plus'"></i>
+                    <span th:text="${isEdit} ? 'Cập nhật' : 'Thêm'">Thêm</span>
+                </button>
+                <a class="btn-small" th:href="@{/admin/products}">Quay lại</a>
+            </div>
+        </form>
+    </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Admin - Quản lý voucher</title>
+    <link rel="stylesheet" th:href="@{/css/admin_style.css}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+    <style>
+        .btn-add { display:inline-flex; align-items:center; gap:8px; padding:12px 20px;
+            background:linear-gradient(135deg,#6C63FF,#A696FF); color:#fff; font-weight:600;
+            font-size:14px; border-radius:12px; text-decoration:none; }
+    </style>
+</head>
+<body>
+<div class="dashboard">
+    <div th:replace="~{fragments/adminSidebar :: sidebar('vouchers')}"></div>
+
+    <main class="main">
+        <h2>Quản lý voucher</h2>
+        <a th:href="@{/admin/vouchers(action='add')}" class="btn-add"
+           style="margin-bottom:20px;display:inline-block"><i class="fa-solid fa-plus"></i> Thêm voucher</a>
+
+        <table class="data-table">
+            <thead>
+            <tr><th>ID</th><th>Mã</th><th>Tên</th><th>Giảm</th><th>Bắt đầu</th><th>Kết thúc</th><th>Thao tác</th></tr>
+            </thead>
+            <tbody>
+            <tr th:if="${#lists.isEmpty(vouchers)}">
+                <td colspan="7" style="text-align:center;padding:20px;">Không có voucher</td>
+            </tr>
+            <tr th:each="v : ${vouchers}">
+                <td th:text="'#' + ${v.voucherId}">#0</td>
+                <td><strong th:text="${v.voucherCode}">CODE</strong></td>
+                <td th:text="${v.voucherName}">Tên</td>
+                <td><span th:text="${#numbers.formatInteger(v.discountAmount, 0, 'POINT')}">0</span>đ</td>
+                <td th:text="${v.startDate}">--</td>
+                <td th:text="${v.endDate}">--</td>
+                <td>
+                    <a class="btn-small btn-on" th:href="@{/admin/vouchers(action='edit', id=${v.voucherId})}">
+                        <i class="fa-solid fa-pen"></i></a>
+                    <form method="post" th:action="@{/admin/vouchers}" style="display:inline"
+                          onsubmit="return confirm('Xóa voucher này?')">
+                        <input type="hidden" name="action" value="delete"/>
+                        <input type="hidden" name="id" th:value="${v.voucherId}"/>
+                        <button type="submit" class="btn-small btn-delete"><i class="fa-solid fa-trash"></i></button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </main>
+
+    <aside class="right-panel">
+        <div class="voucher-form" th:if="${param.action != null and (param.action[0] == 'add' or param.action[0] == 'edit')}"
+             th:with="isEdit=${param.action[0] == 'edit'}, v=${voucherToEdit}">
+            <h3 th:text="${isEdit} ? 'Sửa voucher' : 'Thêm voucher'">Thêm voucher</h3>
+
+            <form method="post" th:action="@{/admin/vouchers}">
+                <input type="hidden" name="action" th:value="${isEdit} ? 'edit' : 'create'"/>
+                <input th:if="${isEdit}" type="hidden" name="id" th:value="${v != null ? v.voucherId : ''}"/>
+
+                <div class="form-grid">
+                    <div class="form-item">
+                        <label>Mã voucher</label>
+                        <input type="text" name="voucherCode" required th:value="${v != null ? v.voucherCode : ''}"/>
+                    </div>
+                    <div class="form-item">
+                        <label>Tên voucher</label>
+                        <input type="text" name="voucherName" th:value="${v != null ? v.voucherName : ''}"/>
+                    </div>
+                    <div class="form-item">
+                        <label>Số tiền giảm (đ)</label>
+                        <input type="number" name="discountAmount" min="0" th:value="${v != null ? v.discountAmount : ''}"/>
+                    </div>
+                    <div class="form-item">
+                        <label>Ảnh (URL)</label>
+                        <input type="text" name="voucherImage" th:value="${v != null ? v.voucherImage : ''}"/>
+                    </div>
+                    <div class="form-item">
+                        <label>Ngày bắt đầu</label>
+                        <input type="date" name="startDate"
+                               th:value="${v != null and v.startDate != null ? v.startDate.toString() : ''}"/>
+                    </div>
+                    <div class="form-item">
+                        <label>Ngày kết thúc</label>
+                        <input type="date" name="endDate"
+                               th:value="${v != null and v.endDate != null ? v.endDate.toString() : ''}"/>
+                    </div>
+                    <div class="form-item textarea-full">
+                        <label>Mô tả</label>
+                        <textarea name="description" th:text="${v != null ? v.description : ''}"></textarea>
+                    </div>
+                </div>
+
+                <div style="margin-top:20px;text-align:right">
+                    <button type="submit" class="btn-primary">
+                        <i class="fa-solid" th:classappend="${isEdit} ? 'fa-pen' : 'fa-plus'"></i>
+                        <span th:text="${isEdit} ? 'Cập nhật' : 'Thêm'">Thêm</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </aside>
+</div>
+</body>
+</html>

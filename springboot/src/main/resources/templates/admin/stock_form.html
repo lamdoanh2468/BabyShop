@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Admin - Form kho</title>
+    <link rel="stylesheet" th:href="@{/css/admin_style.css}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+</head>
+<body th:with="isEdit=${param.action != null and param.action[0] == 'edit'}">
+<div class="dashboard">
+    <div th:replace="~{fragments/adminSidebar :: sidebar('stocks')}"></div>
+
+    <main class="main">
+        <h2 th:text="${isEdit} ? 'Sửa kho' : 'Thêm kho'">Thêm kho</h2>
+
+        <form method="post" th:action="@{/admin/stocks}" class="voucher-form" style="max-width:520px">
+            <input type="hidden" name="action" th:value="${isEdit} ? 'edit' : 'add'"/>
+            <input th:if="${isEdit}" type="hidden" name="id" th:value="${stock != null ? stock.stockId : ''}"/>
+
+            <div class="form-grid">
+                <div class="form-item">
+                    <label>Tên kho</label>
+                    <input type="text" name="name" required th:value="${stock != null ? stock.stockName : ''}"/>
+                </div>
+                <div class="form-item">
+                    <label>Địa chỉ</label>
+                    <input type="text" name="address" th:value="${stock != null ? stock.stockAddress : ''}"/>
+                </div>
+            </div>
+
+            <div style="margin-top:20px;display:flex;gap:12px">
+                <button type="submit" class="btn-primary">
+                    <i class="fa-solid" th:classappend="${isEdit} ? 'fa-floppy-disk' : 'fa-plus'"></i>
+                    <span th:text="${isEdit} ? 'Cập nhật' : 'Thêm'">Thêm</span>
+                </button>
+                <a class="btn-small" th:href="@{/admin/stocks}">Quay lại</a>
+            </div>
+        </form>
+    </main>
+</div>
+</body>
+</html>
