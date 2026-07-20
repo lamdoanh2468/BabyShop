@@ -77,4 +77,69 @@ public class AccountService {
     public boolean existsByEmail(String email) {
         return accountRepo.existsByEmail(email);
     }
+
+    /* ================= Admin quản lý tài khoản ================= */
+
+    public Account getById(int id) {
+        return accountRepo.findById(id).orElse(null);
+    }
+
+    public java.util.List<Account> getAll() {
+        return accountRepo.findAll(org.springframework.data.domain.Sort.by("accountId"));
+    }
+
+    public java.util.List<Account> search(String keyword) {
+        if (keyword == null || keyword.isBlank()) return getAll();
+        return accountRepo.findByUsernameContainingIgnoreCaseOrEmailContainingIgnoreCase(keyword, keyword);
+    }
+
+    @Transactional
+    public void updateStatus(int id, AccountStatus status) {
+        Account acc = accountRepo.findById(id).orElse(null);
+        if (acc != null) {
+            acc.setStatus(status);
+            accountRepo.save(acc);
+        }
+    }
+
+    public void deleteById(int id) {
+        accountRepo.deleteById(id);
+    }
+
+    // Admin tự cập nhật thông tin (email/mật khẩu -> account, họ tên -> profile). Trả account đã reload.
+    @Transactional
+    public Account updateAdminSelf(int accountId, String fullName, String email, String rawPassword) {
+        Account acc = accountRepo.findById(accountId).orElse(null);
+        if (acc == null) return null;
+        if (email != null && !email.isBlank()) acc.setEmail(email);
+        if (rawPassword != null && !rawPassword.isBlank()) {
+            acc.setPassword(passwordEncoder.encode(rawPassword)); // hash đàng hoàng (bản cũ lưu plaintext)
+        }
+        accountRepo.save(acc);
+        Profile p = profileRepo.findById(acc.getProfileId()).orElse(null);
+        if (p != null && fullName != null) {
+            p.setFullName(fullName);
+            profileRepo.save(p);
+        }
+        return acc;
+    }
+
+    // Admin thêm tài khoản với role chỉ định
+    @Transactional
+    public boolean adminAdd(String username, String email, String rawPassword, int role) {
+        if (accountRepo.existsByEmail(email)) return false;
+        Profile profile = new Profile();
+        profile.setEmail(email);
+        profileRepo.save(profile);
+
+        Account acc = new Account();
+        acc.setProfileId(profile.getProfileId());
+        acc.setEmail(email);
+        acc.setUsername(username);
+        acc.setPassword(passwordEncoder.encode(rawPassword));
+        acc.setStatus(AccountStatus.Active);
+        acc.setRole(role);
+        accountRepo.save(acc);
+        return true;
+    }
 }

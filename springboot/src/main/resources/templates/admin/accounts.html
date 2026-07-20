@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Admin - Tài khoản</title>
+    <link rel="stylesheet" th:href="@{/css/admin_style.css}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+    <style>
+        .btn-add { display:inline-flex; align-items:center; gap:8px; padding:12px 20px;
+            background:linear-gradient(135deg,#6C63FF,#A696FF); color:#fff; font-weight:600;
+            font-size:14px; border-radius:12px; text-decoration:none; }
+        .role-badge { padding:3px 10px; border-radius:10px; font-size:13px; font-weight:600; }
+        .toolbar { display:flex; gap:12px; align-items:center; margin-bottom:16px; flex-wrap:wrap; }
+    </style>
+</head>
+<body>
+<div class="dashboard">
+    <div th:replace="~{fragments/adminSidebar :: sidebar('accounts')}"></div>
+
+    <main class="main">
+        <h2>Quản lý tài khoản</h2>
+
+        <div class="toolbar">
+            <a th:href="@{/admin/accounts(action='add')}" class="btn-add"><i class="fa-solid fa-plus"></i> Thêm tài khoản</a>
+            <form method="get" th:action="@{/admin/accounts}" style="display:flex;gap:8px">
+                <input type="text" name="search" placeholder="Tìm username/email" th:value="${param.search}"/>
+                <button type="submit" class="btn-primary"><i class="fa-solid fa-magnifying-glass"></i></button>
+            </form>
+        </div>
+
+        <table class="data-table">
+            <thead>
+            <tr><th>ID</th><th>Username</th><th>Email</th><th>Vai trò</th><th>Trạng thái</th><th>Thao tác</th></tr>
+            </thead>
+            <tbody>
+            <tr th:if="${#lists.isEmpty(accounts)}">
+                <td colspan="6" style="text-align:center;padding:20px;">Không có tài khoản</td>
+            </tr>
+            <tr th:each="a : ${accounts}">
+                <td th:text="'#' + ${a.accountId}">#0</td>
+                <td><strong th:text="${a.username}">user</strong></td>
+                <td th:text="${a.email}">email</td>
+                <td>
+                    <span class="role-badge"
+                          th:style="${a.role != null and a.role == 1} ? 'background:#E4F1FF;color:#2E7CD9' : 'background:#F7F8FF;color:#666'"
+                          th:text="${a.role != null and a.role == 1} ? 'Admin' : 'User'">User</span>
+                </td>
+                <td>
+                    <!-- Đổi trạng thái Active/UnActive -->
+                    <form method="post" th:action="@{/admin/accounts/updateStatus}" style="display:inline">
+                        <input type="hidden" name="id" th:value="${a.accountId}"/>
+                        <select name="status" onchange="this.form.submit()">
+                            <option value="Active" th:selected="${a.status?.name() == 'Active'}">Active</option>
+                            <option value="UnActive" th:selected="${a.status?.name() == 'UnActive'}">UnActive</option>
+                        </select>
+                    </form>
+                </td>
+                <td>
+                    <form method="post" th:action="@{/admin/accounts/delete}" style="display:inline"
+                          onsubmit="return confirm('Xóa tài khoản này?')">
+                        <input type="hidden" name="id" th:value="${a.accountId}"/>
+                        <button type="submit" class="btn-small btn-delete"><i class="fa-solid fa-trash"></i></button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </main>
+</div>
+</body>
+</html>

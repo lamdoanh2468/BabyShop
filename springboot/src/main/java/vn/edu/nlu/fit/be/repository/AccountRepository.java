@@ -3,6 +3,7 @@ package vn.edu.nlu.fit.be.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import vn.edu.nlu.fit.be.model.Account;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface AccountRepository extends JpaRepository<Account, Integer> {
@@ -13,4 +14,7 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
     boolean existsByEmail(String email);
 
     Optional<Account> findByEmail(String email);
+
+    // Tìm theo tên đăng nhập hoặc email (admin quản lý tài khoản)
+    List<Account> findByUsernameContainingIgnoreCaseOrEmailContainingIgnoreCase(String username, String email);
 }

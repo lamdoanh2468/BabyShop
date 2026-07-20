@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Admin - Thêm tài khoản</title>
+    <link rel="stylesheet" th:href="@{/css/admin_style.css}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+</head>
+<body>
+<div class="dashboard">
+    <div th:replace="~{fragments/adminSidebar :: sidebar('accounts')}"></div>
+
+    <main class="main">
+        <h2>Thêm tài khoản</h2>
+        <form method="post" th:action="@{/admin/accounts}" class="voucher-form" style="max-width:520px">
+            <div class="form-grid">
+                <div class="form-item">
+                    <label>Username</label>
+                    <input type="text" name="username" required/>
+                </div>
+                <div class="form-item">
+                    <label>Email</label>
+                    <input type="email" name="email" required/>
+                </div>
+                <div class="form-item">
+                    <label>Mật khẩu</label>
+                    <input type="password" name="password" required/>
+                </div>
+                <div class="form-item">
+                    <label>Vai trò</label>
+                    <select name="role">
+                        <option value="0">User</option>
+                        <option value="1">Admin</option>
+                    </select>
+                </div>
+            </div>
+            <div style="margin-top:20px;display:flex;gap:12px">
+                <button type="submit" class="btn-primary"><i class="fa-solid fa-plus"></i> Thêm</button>
+                <a class="btn-small" th:href="@{/admin/accounts}">Quay lại</a>
+            </div>
+        </form>
+    </main>
+</div>
+</body>
+</html>

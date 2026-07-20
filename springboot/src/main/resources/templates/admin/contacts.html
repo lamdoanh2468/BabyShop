@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Admin - Liên hệ</title>
+    <link rel="stylesheet" th:href="@{/css/admin_style.css}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+</head>
+<body>
+<div class="dashboard">
+    <div th:replace="~{fragments/adminSidebar :: sidebar('contacts')}"></div>
+
+    <main class="main">
+        <h2>Quản lý liên hệ</h2>
+        <table class="data-table">
+            <thead>
+            <tr><th>ID</th><th>Họ tên</th><th>SĐT</th><th>Email</th><th>Địa chỉ</th><th>Thao tác</th></tr>
+            </thead>
+            <tbody>
+            <tr th:if="${#lists.isEmpty(contactList)}">
+                <td colspan="6" style="text-align:center;padding:20px;">Không có liên hệ</td>
+            </tr>
+            <tr th:each="c : ${contactList}">
+                <td th:text="'#' + ${c.contactId}">#0</td>
+                <td><strong th:text="${c.fullName}">Họ tên</strong></td>
+                <td th:text="${c.phone}">SĐT</td>
+                <td th:text="${c.email}">Email</td>
+                <td th:text="${c.address}">Địa chỉ</td>
+                <td>
+                    <a class="btn-small btn-on" th:href="@{/admin/contacts(action='view', id=${c.contactId})}">
+                        <i class="fa-solid fa-eye"></i></a>
+                    <a class="btn-small btn-delete" th:href="@{/admin/contacts(action='delete', id=${c.contactId})}"
+                       onclick="return confirm('Xóa liên hệ này?')"><i class="fa-solid fa-trash"></i></a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </main>
+
+    <aside class="right-panel">
+        <div class="voucher-form" th:if="${selectedContact != null}">
+            <h3>Chi tiết liên hệ</h3>
+            <p><strong>Họ tên:</strong> <span th:text="${selectedContact.fullName}"></span></p>
+            <p><strong>SĐT:</strong> <span th:text="${selectedContact.phone}"></span></p>
+            <p><strong>Email:</strong> <span th:text="${selectedContact.email}"></span></p>
+            <p><strong>Địa chỉ:</strong> <span th:text="${selectedContact.address}"></span></p>
+            <p><strong>Nội dung:</strong></p>
+            <p th:text="${selectedContact.message}" style="white-space:pre-wrap"></p>
+        </div>
+    </aside>
+</div>
+</body>
+</html>

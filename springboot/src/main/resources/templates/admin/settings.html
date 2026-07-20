@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Admin - Cài đặt</title>
+    <link rel="stylesheet" th:href="@{/css/admin_style.css}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+</head>
+<body>
+<div class="dashboard">
+    <div th:replace="~{fragments/adminSidebar :: sidebar('settings')}"></div>
+
+    <main class="main">
+        <h2>Cài đặt tài khoản admin</h2>
+        <form method="post" th:action="@{/admin/settings}" class="voucher-form" style="max-width:520px">
+            <input type="hidden" name="action" value="update"/>
+            <div class="form-grid">
+                <div class="form-item">
+                    <label>Họ và tên</label>
+                    <input type="text" name="fullName" th:value="${profileFullName}"/>
+                </div>
+                <div class="form-item">
+                    <label>Email</label>
+                    <input type="email" name="email" th:value="${admin != null ? admin.email : ''}"/>
+                </div>
+                <div class="form-item">
+                    <label>Mật khẩu mới <small>(để trống nếu không đổi)</small></label>
+                    <input type="password" name="password" placeholder="••••••"/>
+                </div>
+            </div>
+            <div style="margin-top:20px">
+                <button type="submit" class="btn-primary"><i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi</button>
+            </div>
+        </form>
+    </main>
+</div>
+</body>
+</html>
