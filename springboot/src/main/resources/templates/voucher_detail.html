@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Chi Tiết Voucher</title>
+    <link rel="icon" type="image/x-icon" th:href="@{/favicon.ico}">
+    <link rel="stylesheet" th:href="@{/css/voucherDetail.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"/>
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<nav>
+    <a th:href="@{/}">Trang chủ</a>
+    <span class="dot">•</span>
+    <a th:href="@{/voucher-list}">Danh sách voucher</a>
+    <span class="dot">•</span>
+    <span th:text="${voucher != null ? voucher.voucherName : ''}"></span>
+</nav>
+
+<div class="voucher-detail-container">
+    <div class="voucher-error" th:if="${voucher == null}">
+        Voucher không tồn tại hoặc đã hết hạn
+    </div>
+
+    <div class="voucher-detail-card" th:if="${voucher != null}">
+        <div class="voucher-detail-img-wrap">
+            <img th:src="${voucher.voucherImage}" th:alt="${voucher.voucherName}" class="voucher-detail-img">
+        </div>
+        <div class="voucher-detail-content">
+            <h1 class="voucher-detail-title" th:text="${voucher.voucherName}">Tên voucher</h1>
+            <div class="voucher-detail-date">
+                <span>📅 Hiệu lực:</span>
+                <span th:text="${voucher.startDate != null ? #dates.format(voucher.startDate, 'dd/MM/yyyy') : ''}"></span>
+                <span>–</span>
+                <span th:text="${voucher.endDate != null ? #dates.format(voucher.endDate, 'dd/MM/yyyy') : ''}"></span>
+            </div>
+            <div class="voucher-code-box">
+                <span class="voucher-key-label">Mã giảm giá</span>
+                <div class="voucher-code-value" th:text="${voucher.voucherCode}">CODE</div>
+            </div>
+            <div class="voucher-detail-desc" th:text="${voucher.description}">Mô tả</div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

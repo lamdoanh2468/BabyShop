@@ -1,0 +1,286 @@
+{
+  "info": {
+    "name": "BabyShop (Spring Boot)",
+    "description": "Bộ request mẫu cho bản migrate Spring Boot. Cookie phiên (JSESSIONID) được Postman tự lưu theo domain: chạy 'Auth > POST login' trước, các request cần đăng nhập sẽ tự có phiên. Sửa biến {{baseUrl}} nếu app chạy cổng khác.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080" },
+    { "key": "productId", "value": "101" },
+    { "key": "otp", "value": "000000", "description": "Lấy từ log server: docker compose logs web | grep OTP" }
+  ],
+  "item": [
+    {
+      "name": "1. Công khai",
+      "item": [
+        { "name": "Trang chủ", "request": { "method": "GET", "url": "{{baseUrl}}/" } },
+        { "name": "Danh sách sản phẩm", "request": { "method": "GET", "url": "{{baseUrl}}/product-list" } },
+        { "name": "Danh sách - lọc category + sort", "request": { "method": "GET", "url": "{{baseUrl}}/product-list?category_id=2&sort=price_asc&page=1" } },
+        { "name": "Danh sách - lọc brand", "request": { "method": "GET", "url": "{{baseUrl}}/product-list?brand=RemKhanhDuong" } },
+        { "name": "Chi tiết sản phẩm", "request": { "method": "GET", "url": "{{baseUrl}}/product-detail?product_id={{productId}}" } }
+      ]
+    },
+    {
+      "name": "2. Auth",
+      "item": [
+        { "name": "GET form đăng nhập", "request": { "method": "GET", "url": "{{baseUrl}}/login" } },
+        {
+          "name": "POST đăng ký",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/x-www-form-urlencoded" }],
+            "body": { "mode": "urlencoded", "urlencoded": [
+              { "key": "username", "value": "postman", "type": "text" },
+              { "key": "email", "value": "postman@example.com", "type": "text" },
+              { "key": "password", "value": "Pass123", "type": "text" },
+              { "key": "confirmPassword", "value": "Pass123", "type": "text" }
+            ]},
+            "url": "{{baseUrl}}/register",
+            "description": "Sau khi gọi, xem OTP trong log server rồi điền vào biến {{otp}}."
+          }
+        },
+        {
+          "name": "POST verify OTP",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/x-www-form-urlencoded" }],
+            "body": { "mode": "urlencoded", "urlencoded": [
+              { "key": "otp", "value": "{{otp}}", "type": "text" }
+            ]},
+            "url": "{{baseUrl}}/verify-otp",
+            "description": "Điền {{otp}} lấy từ log. Thành công -> tạo account -> redirect /login."
+          }
+        },
+        { "name": "GET gửi lại OTP", "request": { "method": "GET", "url": "{{baseUrl}}/resend-otp" } },
+        {
+          "name": "POST đăng nhập",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/x-www-form-urlencoded" }],
+            "body": { "mode": "urlencoded", "urlencoded": [
+              { "key": "username", "value": "postman", "type": "text" },
+              { "key": "password", "value": "Pass123", "type": "text" }
+            ]},
+            "url": "{{baseUrl}}/login",
+            "description": "Đặt session. Chạy request này TRƯỚC các nhóm cần đăng nhập."
+          }
+        },
+        { "name": "GET đăng xuất", "request": { "method": "GET", "url": "{{baseUrl}}/logout" } }
+      ]
+    },
+    {
+      "name": "3. Giỏ hàng (cần đăng nhập)",
+      "item": [
+        { "name": "Xem giỏ", "request": { "method": "GET", "url": "{{baseUrl}}/cart" } },
+        { "name": "Thêm vào giỏ", "request": { "method": "GET", "url": "{{baseUrl}}/cart?action=add&product_id=7&quantity=2" } },
+        {
+          "name": "Cập nhật SL (AJAX JSON)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "X-Requested-With", "value": "XMLHttpRequest" }],
+            "url": "{{baseUrl}}/cart?action=update&product_id=7&quantity=5",
+            "description": "Trả JSON {\"success\":true} hoặc 404 nếu không có trong giỏ."
+          }
+        },
+        { "name": "Xoá 1 sản phẩm", "request": { "method": "GET", "url": "{{baseUrl}}/cart?action=remove&product_id=7" } },
+        { "name": "Xoá tất cả", "request": { "method": "GET", "url": "{{baseUrl}}/cart?action=remove_all" } },
+        { "name": "Mua ngay", "request": { "method": "GET", "url": "{{baseUrl}}/cart?action=buy_now&product_id=10&quantity=1" } }
+      ]
+    },
+    {
+      "name": "4. Yêu thích / Profile / Review (cần đăng nhập)",
+      "item": [
+        { "name": "Xem yêu thích", "request": { "method": "GET", "url": "{{baseUrl}}/my-favorite" } },
+        { "name": "Toggle yêu thích (GET)", "request": { "method": "GET", "url": "{{baseUrl}}/my-favorite?action=add&product_id=7" } },
+        {
+          "name": "Toggle yêu thích (AJAX JSON)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "X-Requested-With", "value": "XMLHttpRequest" },
+              { "key": "Content-Type", "value": "application/x-www-form-urlencoded" }
+            ],
+            "body": { "mode": "urlencoded", "urlencoded": [ { "key": "product_id", "value": "7", "type": "text" } ]},
+            "url": "{{baseUrl}}/my-favorite",
+            "description": "Trả {\"liked\": true/false}."
+          }
+        },
+        { "name": "Xem profile", "request": { "method": "GET", "url": "{{baseUrl}}/profile" } },
+        {
+          "name": "Cập nhật profile",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/x-www-form-urlencoded" }],
+            "body": { "mode": "urlencoded", "urlencoded": [
+              { "key": "fullName", "value": "Postman User", "type": "text" },
+              { "key": "phone", "value": "0900000000", "type": "text" },
+              { "key": "address", "value": "Ha Noi", "type": "text" },
+              { "key": "gender", "value": "Male", "type": "text" },
+              { "key": "birthDate", "value": "2000-01-01", "type": "text" }
+            ]},
+            "url": "{{baseUrl}}/profile"
+          }
+        },
+        {
+          "name": "Thêm đánh giá",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/x-www-form-urlencoded" }],
+            "body": { "mode": "urlencoded", "urlencoded": [
+              { "key": "product_id", "value": "{{productId}}", "type": "text" },
+              { "key": "comment", "value": "San pham tot!", "type": "text" }
+            ]},
+            "url": "{{baseUrl}}/add-review"
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Admin (cần role=1)",
+      "description": "Đăng nhập bằng tài khoản có role=1. Promote: UPDATE accounts SET role=1 WHERE username='postman'; rồi login lại.",
+      "item": [
+        { "name": "Dashboard overview", "request": { "method": "GET", "url": "{{baseUrl}}/admin/overview" } },
+        { "name": "Danh mục - list", "request": { "method": "GET", "url": "{{baseUrl}}/admin/categories" } },
+        {
+          "name": "Danh mục - tạo",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/x-www-form-urlencoded" }],
+            "body": { "mode": "urlencoded", "urlencoded": [
+              { "key": "action", "value": "create", "type": "text" },
+              { "key": "categoryName", "value": "Danh muc moi", "type": "text" },
+              { "key": "categoryImage", "value": "https://example.com/c.jpg", "type": "text" },
+              { "key": "description", "value": "mo ta", "type": "text" }
+            ]},
+            "url": "{{baseUrl}}/admin/categories"
+          }
+        },
+        {
+          "name": "Danh mục - xoá",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/x-www-form-urlencoded" }],
+            "body": { "mode": "urlencoded", "urlencoded": [
+              { "key": "action", "value": "delete", "type": "text" },
+              { "key": "id", "value": "999", "type": "text" }
+            ]},
+            "url": "{{baseUrl}}/admin/categories"
+          }
+        },
+        { "name": "Thương hiệu - list", "request": { "method": "GET", "url": "{{baseUrl}}/admin/brands" } },
+        {
+          "name": "Thương hiệu - tạo",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/x-www-form-urlencoded" }],
+            "body": { "mode": "urlencoded", "urlencoded": [
+              { "key": "action", "value": "create", "type": "text" },
+              { "key": "brandName", "value": "Brand moi", "type": "text" },
+              { "key": "brandLogo", "value": "https://example.com/l.png", "type": "text" },
+              { "key": "brandDescription", "value": "mo ta", "type": "text" }
+            ]},
+            "url": "{{baseUrl}}/admin/brands"
+          }
+        },
+        { "name": "Sản phẩm - list", "request": { "method": "GET", "url": "{{baseUrl}}/admin/products" } },
+        { "name": "Sản phẩm - form thêm", "request": { "method": "GET", "url": "{{baseUrl}}/admin/products?action=add" } },
+        {
+          "name": "Sản phẩm - tạo",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/x-www-form-urlencoded" }],
+            "body": { "mode": "urlencoded", "urlencoded": [
+              { "key": "action", "value": "create", "type": "text" },
+              { "key": "productName", "value": "SP moi", "type": "text" },
+              { "key": "productPrice", "value": "99000", "type": "text" },
+              { "key": "categoryId", "value": "1", "type": "text" },
+              { "key": "brandId", "value": "2", "type": "text" },
+              { "key": "productSize", "value": "M", "type": "text" },
+              { "key": "productMaterial", "value": "Go", "type": "text" },
+              { "key": "productImage", "value": "https://example.com/p.jpg", "type": "text" }
+            ]},
+            "url": "{{baseUrl}}/admin/products",
+            "description": "categoryId/brandId phải tồn tại (FK). Xem list để lấy id thật."
+          }
+        },
+        { "name": "Voucher - list", "request": { "method": "GET", "url": "{{baseUrl}}/admin/vouchers" } },
+        {
+          "name": "Voucher - tạo",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/x-www-form-urlencoded" }],
+            "body": { "mode": "urlencoded", "urlencoded": [
+              { "key": "action", "value": "create", "type": "text" },
+              { "key": "voucherCode", "value": "SALE50", "type": "text" },
+              { "key": "voucherName", "value": "Giam 50k", "type": "text" },
+              { "key": "discountAmount", "value": "50000", "type": "text" },
+              { "key": "startDate", "value": "2026-01-01", "type": "text" },
+              { "key": "endDate", "value": "2026-12-31", "type": "text" },
+              { "key": "description", "value": "test", "type": "text" }
+            ]},
+            "url": "{{baseUrl}}/admin/vouchers"
+          }
+        },
+        { "name": "Kho - list", "request": { "method": "GET", "url": "{{baseUrl}}/admin/stocks" } },
+        {
+          "name": "Kho - tạo",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/x-www-form-urlencoded" }],
+            "body": { "mode": "urlencoded", "urlencoded": [
+              { "key": "action", "value": "add", "type": "text" },
+              { "key": "name", "value": "Kho HN", "type": "text" },
+              { "key": "address", "value": "Ha Noi", "type": "text" }
+            ]},
+            "url": "{{baseUrl}}/admin/stocks"
+          }
+        },
+        { "name": "Liên hệ - list", "request": { "method": "GET", "url": "{{baseUrl}}/admin/contacts" } },
+        { "name": "Tài khoản - list", "request": { "method": "GET", "url": "{{baseUrl}}/admin/accounts" } },
+        { "name": "Tài khoản - tìm", "request": { "method": "GET", "url": "{{baseUrl}}/admin/accounts?search=postman" } },
+        {
+          "name": "Tài khoản - thêm",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/x-www-form-urlencoded" }],
+            "body": { "mode": "urlencoded", "urlencoded": [
+              { "key": "username", "value": "user2", "type": "text" },
+              { "key": "email", "value": "user2@example.com", "type": "text" },
+              { "key": "password", "value": "Pass123", "type": "text" },
+              { "key": "role", "value": "0", "type": "text" }
+            ]},
+            "url": "{{baseUrl}}/admin/accounts"
+          }
+        },
+        {
+          "name": "Tài khoản - đổi trạng thái",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/x-www-form-urlencoded" }],
+            "body": { "mode": "urlencoded", "urlencoded": [
+              { "key": "id", "value": "2", "type": "text" },
+              { "key": "status", "value": "UnActive", "type": "text" }
+            ]},
+            "url": "{{baseUrl}}/admin/accounts/updateStatus"
+          }
+        },
+        { "name": "Tài khoản - profile (AJAX JSON)", "request": { "method": "GET", "url": "{{baseUrl}}/admin/accounts/profile?accountId=2" } },
+        { "name": "Cài đặt - xem", "request": { "method": "GET", "url": "{{baseUrl}}/admin/settings" } },
+        {
+          "name": "Cài đặt - cập nhật",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/x-www-form-urlencoded" }],
+            "body": { "mode": "urlencoded", "urlencoded": [
+              { "key": "action", "value": "update", "type": "text" },
+              { "key": "fullName", "value": "Admin Ten", "type": "text" },
+              { "key": "email", "value": "admin@example.com", "type": "text" },
+              { "key": "password", "value": "", "type": "text" }
+            ]},
+            "url": "{{baseUrl}}/admin/settings"
+          }
+        }
+      ]
+    }
+  ]
+}

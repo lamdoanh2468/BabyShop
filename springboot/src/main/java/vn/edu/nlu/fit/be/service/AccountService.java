@@ -78,6 +78,19 @@ public class AccountService {
         return accountRepo.existsByEmail(email);
     }
 
+    /* ================= Đổi mật khẩu ================= */
+    @Transactional
+    public boolean changePassword(int accountId, String oldPassword, String newPassword) {
+        Account acc = accountRepo.findById(accountId).orElse(null);
+        if (acc == null) return false;
+        if (acc.getPassword() == null || !passwordEncoder.matches(oldPassword, acc.getPassword())) {
+            return false; // mật khẩu hiện tại sai
+        }
+        acc.setPassword(passwordEncoder.encode(newPassword));
+        accountRepo.save(acc);
+        return true;
+    }
+
     /* ================= Admin quản lý tài khoản ================= */
 
     public Account getById(int id) {

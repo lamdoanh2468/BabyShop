@@ -17,7 +17,7 @@ public class HomeController {
         this.categoryService = categoryService;
     }
 
-    @GetMapping("/")
+    @GetMapping({"/", "/home"}) // /home là alias như bản JSP cũ
     public String home(Model model) {
         // Dữ liệu query tươi mỗi request (không cache một lần lúc khởi động như bản servlet cũ)
         model.addAttribute("categories", categoryService.getAllCategories());

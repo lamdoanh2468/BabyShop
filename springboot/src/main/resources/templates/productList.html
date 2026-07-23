@@ -17,11 +17,11 @@
 
 <div th:replace="~{fragments/header :: header}"></div>
 
-<div class="product-list-page">
+<div class="product-list-page" th:with="searchMode=${keyword != null}, basePath=${keyword != null ? '/search' : '/product-list'}">
     <nav class="breadcrumb-nav">
         <a th:href="@{/}">Trang chủ</a>
         <span class="dot">•</span>
-        <a href="">Danh sách sản phẩm</a>
+        <a href="" th:text="${searchMode} ? 'Kết quả tìm kiếm' : 'Danh sách sản phẩm'">Danh sách sản phẩm</a>
     </nav>
 
     <div class="image-slider">
@@ -53,8 +53,8 @@
         </div>
     </div>
 
-    <!-- Bộ lọc theo danh mục + thương hiệu -->
-    <div class="filter-box">
+    <!-- Bộ lọc theo danh mục + thương hiệu (ẩn khi đang tìm kiếm) -->
+    <div class="filter-box" th:if="${!searchMode}">
         <div class="filter-demand-group">
             <h4>Chọn theo nhu cầu</h4>
             <div class="demand-group">
@@ -68,7 +68,7 @@
         </div>
     </div>
 
-    <div class="filter-box">
+    <div class="filter-box" th:if="${!searchMode}">
         <h3>Bộ lọc tìm kiếm</h3>
         <div class="filter-group active">
             <div class="filter-header">
@@ -100,37 +100,38 @@
             <h4>Sắp xếp theo</h4>
             <div class="filter-content">
                 <a th:href="${currentSort == 'price_asc'}
-                        ? @{/product-list(category_id=${currentCategoryId}, brand=${currentBrand}, page=1)}
-                        : @{/product-list(category_id=${currentCategoryId}, brand=${currentBrand}, sort='price_asc', page=1)}"
+                        ? @{${basePath}(keyword=${keyword}, category_id=${currentCategoryId}, brand=${currentBrand}, page=1)}
+                        : @{${basePath}(keyword=${keyword}, category_id=${currentCategoryId}, brand=${currentBrand}, sort='price_asc', page=1)}"
                    class="filter-btn" th:classappend="${currentSort == 'price_asc'} ? 'active'">Giá tăng dần</a>
 
                 <a th:href="${currentSort == 'price_desc'}
-                        ? @{/product-list(category_id=${currentCategoryId}, brand=${currentBrand}, page=1)}
-                        : @{/product-list(category_id=${currentCategoryId}, brand=${currentBrand}, sort='price_desc', page=1)}"
+                        ? @{${basePath}(keyword=${keyword}, category_id=${currentCategoryId}, brand=${currentBrand}, page=1)}
+                        : @{${basePath}(keyword=${keyword}, category_id=${currentCategoryId}, brand=${currentBrand}, sort='price_desc', page=1)}"
                    class="filter-btn" th:classappend="${currentSort == 'price_desc'} ? 'active'">Giá giảm dần</a>
 
                 <a th:href="${currentSort == 'latest'}
-                        ? @{/product-list(category_id=${currentCategoryId}, brand=${currentBrand}, page=1)}
-                        : @{/product-list(category_id=${currentCategoryId}, brand=${currentBrand}, sort='latest', page=1)}"
+                        ? @{${basePath}(keyword=${keyword}, category_id=${currentCategoryId}, brand=${currentBrand}, page=1)}
+                        : @{${basePath}(keyword=${keyword}, category_id=${currentCategoryId}, brand=${currentBrand}, sort='latest', page=1)}"
                    class="filter-btn" th:classappend="${currentSort == 'latest'} ? 'active'">Mới nhất</a>
 
                 <a th:href="${currentSort == 'oldest'}
-                        ? @{/product-list(category_id=${currentCategoryId}, brand=${currentBrand}, page=1)}
-                        : @{/product-list(category_id=${currentCategoryId}, brand=${currentBrand}, sort='oldest', page=1)}"
+                        ? @{${basePath}(keyword=${keyword}, category_id=${currentCategoryId}, brand=${currentBrand}, page=1)}
+                        : @{${basePath}(keyword=${keyword}, category_id=${currentCategoryId}, brand=${currentBrand}, sort='oldest', page=1)}"
                    class="filter-btn" th:classappend="${currentSort == 'oldest'} ? 'active'">Cũ nhất</a>
 
                 <a th:href="${currentSort == 'best_selling'}
-                        ? @{/product-list(category_id=${currentCategoryId}, brand=${currentBrand}, page=1)}
-                        : @{/product-list(category_id=${currentCategoryId}, brand=${currentBrand}, sort='best_selling', page=1)}"
+                        ? @{${basePath}(keyword=${keyword}, category_id=${currentCategoryId}, brand=${currentBrand}, page=1)}
+                        : @{${basePath}(keyword=${keyword}, category_id=${currentCategoryId}, brand=${currentBrand}, sort='best_selling', page=1)}"
                    class="filter-btn" th:classappend="${currentSort == 'best_selling'} ? 'active'">Bán chạy nhất</a>
             </div>
         </div>
 
-        <a class="filter-btn remove-btn" th:href="@{/product-list}">Xóa lọc</a>
+        <a class="filter-btn remove-btn" th:href="${searchMode} ? @{/search(keyword=${keyword})} : @{/product-list}">Xóa lọc</a>
     </div>
 
     <div class="product-container">
-        <h1>Danh sách sản phẩm</h1>
+        <h1 th:if="${searchMode}">Kết quả tìm kiếm cho: <span th:text="${keyword}"></span></h1>
+        <h1 th:unless="${searchMode}">Danh sách sản phẩm</h1>
 
         <div class="product-list">
             <div class="product" th:each="product : ${products}">
@@ -171,15 +172,15 @@
 
         <div class="pagination">
             <a th:if="${currentPage > 1}" class="prev-page"
-               th:href="@{/product-list(page=${currentPage - 1}, category_id=${currentCategoryId}, sort=${currentSort}, brand=${currentBrand})}">&laquo;</a>
+               th:href="@{${basePath}(page=${currentPage - 1}, keyword=${keyword}, category_id=${currentCategoryId}, sort=${currentSort}, brand=${currentBrand})}">&laquo;</a>
 
             <a th:each="i : ${#numbers.sequence(1, totalPages)}"
                class="page-index" th:classappend="${currentPage == i} ? 'active'"
-               th:href="@{/product-list(page=${i}, category_id=${currentCategoryId}, sort=${currentSort}, brand=${currentBrand})}"
+               th:href="@{${basePath}(page=${i}, keyword=${keyword}, category_id=${currentCategoryId}, sort=${currentSort}, brand=${currentBrand})}"
                th:text="${i}">1</a>
 
             <a th:if="${currentPage < totalPages}" class="next-page"
-               th:href="@{/product-list(page=${currentPage + 1}, category_id=${currentCategoryId}, sort=${currentSort}, brand=${currentBrand})}">&raquo;</a>
+               th:href="@{${basePath}(page=${currentPage + 1}, keyword=${keyword}, category_id=${currentCategoryId}, sort=${currentSort}, brand=${currentBrand})}">&raquo;</a>
         </div>
     </div>
 </div>

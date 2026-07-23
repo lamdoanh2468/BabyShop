@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Danh sách Voucher</title>
+    <link rel="icon" type="image/x-icon" th:href="@{/favicon.ico}">
+    <link rel="stylesheet" th:href="@{/css/voucherList.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"/>
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<nav class="voucher-breadcrumb">
+    <a th:href="@{/}">Trang chủ</a>
+    <span>•</span>
+    <span>Danh sách Voucher</span>
+</nav>
+
+<h1 class="voucher-page-title">Danh sách Voucher</h1>
+
+<div class="voucher-grid">
+    <div class="voucher-card" th:each="v : ${vouchers}">
+        <div class="voucher-discount">-<span th:text="${#numbers.formatInteger(v.discountAmount, 0, 'POINT')}">0</span>đ</div>
+        <img th:src="${v.voucherImage}" th:alt="${v.voucherName}" class="voucher-image"/>
+        <div class="voucher-body">
+            <h3 class="voucher-name" th:text="${v.voucherName}">Tên voucher</h3>
+            <p class="voucher-date">Ngày bắt đầu: <span th:text="${v.startDate}"></span></p>
+            <p class="voucher-date">Ngày kết thúc: <span th:text="${v.endDate}"></span></p>
+            <a th:href="@{/voucher-detail(id=${v.voucherId})}" class="voucher-detail-btn">Xem chi tiết</a>
+        </div>
+    </div>
+    <p th:if="${#lists.isEmpty(vouchers)}" style="text-align:center;width:100%">Chưa có voucher nào.</p>
+</div>
+
+<div class="vc-pagination-wrap">
+    <div class="vc-pagination">
+        <a th:if="${currentPage > 1}" class="vc-page prev" th:href="@{/voucher-list(page=${currentPage - 1})}">&laquo;</a>
+        <a th:each="i : ${#numbers.sequence(1, totalPage)}"
+           class="vc-page" th:classappend="${currentPage == i} ? 'active'"
+           th:href="@{/voucher-list(page=${i})}" th:text="${i}">1</a>
+        <a th:if="${currentPage < totalPage}" class="vc-page next" th:href="@{/voucher-list(page=${currentPage + 1})}">&raquo;</a>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>
