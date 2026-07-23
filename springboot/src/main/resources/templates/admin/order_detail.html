@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Admin - Chi tiết đơn</title>
+    <link rel="stylesheet" th:href="@{/css/admin_style.css}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+</head>
+<body>
+<div class="dashboard">
+    <div th:replace="~{fragments/adminSidebar :: sidebar('orders')}"></div>
+
+    <main class="main">
+        <h2>Chi tiết đơn <span th:text="'#' + ${order.orderId}">#0</span></h2>
+        <a class="btn-small" th:href="@{/admin/orders}"><i class="fa-solid fa-arrow-left"></i> Danh sách</a>
+
+        <div class="voucher-form" style="max-width:640px;margin-top:16px">
+            <p><strong>Trạng thái:</strong> <span th:text="${order.status}"></span></p>
+            <p><strong>Địa chỉ giao:</strong> <span th:text="${order.deliveryAddress}"></span></p>
+            <p><strong>Thanh toán:</strong> <span th:text="${order.paymentMethod}"></span></p>
+            <p><strong>Ngày:</strong> <span th:text="${order.orderDate != null ? #dates.format(order.orderDate, 'dd/MM/yyyy HH:mm') : ''}"></span></p>
+
+            <form method="post" th:action="@{/admin/orders/status}" style="margin:12px 0;display:flex;gap:8px;align-items:center">
+                <input type="hidden" name="id" th:value="${order.orderId}"/>
+                <label>Đổi trạng thái:</label>
+                <select name="status">
+                    <option value="Done" th:selected="${order.status == 'Done'}">Done</option>
+                    <option value="Cancelled" th:selected="${order.status == 'Cancelled'}">Cancelled</option>
+                </select>
+                <button type="submit" class="btn-primary">Cập nhật</button>
+            </form>
+        </div>
+
+        <h3 style="margin-top:20px">Sản phẩm</h3>
+        <table class="data-table">
+            <thead>
+            <tr><th>Ảnh</th><th>Tên</th><th>Đơn giá</th><th>SL</th><th>Thành tiền</th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="d : ${items}">
+                <td>
+                    <img th:if="${d.productImage != null}" th:src="${d.productImage}"
+                         style="width:48px;height:48px;object-fit:cover;border-radius:6px"/>
+                </td>
+                <td th:text="${d.productName}">Tên</td>
+                <td><span th:text="${#numbers.formatInteger(d.unitPrice, 0, 'POINT')}">0</span>đ</td>
+                <td th:text="${d.quantity}">1</td>
+                <td><span th:text="${#numbers.formatInteger(d.lineTotal, 0, 'POINT')}">0</span>đ</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div style="text-align:right;margin-top:12px;font-size:18px">
+            <strong>Tổng: <span th:text="${#numbers.formatInteger(order.totalAmount, 0, 'POINT')}">0</span>đ</strong>
+        </div>
+    </main>
+</div>
+</body>
+</html>

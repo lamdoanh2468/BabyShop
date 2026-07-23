@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đơn hàng đã mua</title>
+    <link rel="icon" type="image/x-icon" th:href="@{/favicon.ico}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/profile.css}">
+    <link rel="stylesheet" th:href="@{/css/boughtProduct.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="pf-page">
+    <nav class="pf-breadcrumb">
+        <a th:href="@{/}">Trang chủ</a>
+        <span class="dot">•</span>
+        <span>Đơn hàng đã mua</span>
+    </nav>
+
+    <div class="pf-container">
+        <div th:replace="~{fragments/profileSidebar :: sidebar('orders')}"></div>
+
+        <main class="pf-content">
+            <section class="pf-section pf-section-active">
+                <h3><i class="fas fa-shopping-bag"></i> Đơn hàng đã mua</h3>
+
+                <div th:if="${orderSuccess != null}" th:text="${orderSuccess}"
+                     style="background:#dcfce7;color:#166534;padding:12px 16px;border-radius:8px;margin-bottom:16px"></div>
+
+                <div class="pf-empty" th:if="${#lists.isEmpty(orders)}">
+                    <span class="pf-empty-icon">🛍️</span>
+                    <h4>Chưa có đơn hàng nào</h4>
+                    <p>Hãy mua sắm và quay lại đây để xem đơn của bạn!</p>
+                    <a th:href="@{/product-list}" class="pf-empty-btn"><i class="fas fa-search"></i> Mua sắm ngay</a>
+                </div>
+
+                <div th:each="row : ${orders}" th:with="o=${row.order}"
+                     style="border:1px solid #e5e7eb;border-radius:12px;padding:16px;margin-bottom:16px">
+                    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+                        <div>
+                            <strong>Đơn #<span th:text="${o.orderId}">0</span></strong>
+                            <span style="color:#6b7280;margin-left:8px"
+                                  th:text="${o.orderDate != null ? #dates.format(o.orderDate, 'dd/MM/yyyy HH:mm') : ''}"></span>
+                        </div>
+                        <span class="status" th:text="${o.status}"
+                              style="padding:4px 12px;border-radius:12px;background:#eef2ff;color:#4338ca;font-weight:600">Done</span>
+                    </div>
+
+                    <div th:each="d : ${row.items}"
+                         style="display:flex;align-items:center;gap:12px;padding:8px 0;border-top:1px solid #f3f4f6">
+                        <img th:src="${d.productImage}" th:alt="${d.productName}"
+                             style="width:56px;height:56px;object-fit:cover;border-radius:8px"/>
+                        <div style="flex:1">
+                            <div th:text="${d.productName}">Tên</div>
+                            <div style="color:#6b7280;font-size:14px">
+                                <span th:text="${#numbers.formatInteger(d.unitPrice, 0, 'POINT')}">0</span>đ ×
+                                <span th:text="${d.quantity}">1</span>
+                            </div>
+                        </div>
+                        <div style="font-weight:600">
+                            <span th:text="${#numbers.formatInteger(d.lineTotal, 0, 'POINT')}">0</span>đ
+                        </div>
+                    </div>
+
+                    <div style="display:flex;justify-content:space-between;margin-top:12px;padding-top:12px;border-top:1px solid #e5e7eb">
+                        <span>Giao tới: <span th:text="${o.deliveryAddress}"></span> · <span th:text="${o.paymentMethod}"></span></span>
+                        <strong>Tổng: <span th:text="${#numbers.formatInteger(o.totalAmount, 0, 'POINT')}">0</span>đ</strong>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

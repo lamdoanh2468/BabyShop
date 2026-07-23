@@ -26,6 +26,9 @@
 </div>
 
 <div class="cart-container" th:with="cart=${session.cart}">
+    <div th:if="${error != null}" th:text="${error}"
+         style="background:#fee2e2;color:#b91c1c;padding:12px 16px;border-radius:8px;margin-bottom:16px"></div>
+
     <!-- Giỏ hàng trống -->
     <div class="empty-cart" th:if="${cart == null or cart.totalQuantity == 0}">
         <img th:src="@{/img/cart-null.png}" alt=""/>
@@ -80,33 +83,72 @@
             </div>
         </div>
 
-        <!-- Tổng tiền. Voucher + form thanh toán + ký số thuộc nhóm order (migrate sau). -->
-        <div class="order-summary">
+        <!-- Thanh toán cơ bản (chưa ký số). Voucher + địa chỉ + phương thức. -->
+        <div class="order-summary"
+             th:with="subtotal=${cart.totalPrice},
+                      discount=${session.discountAmount != null ? (session.discountAmount &lt; cart.totalPrice ? session.discountAmount : cart.totalPrice) : 0}">
             <h2 class="summary-title">Thông tin thanh toán</h2>
 
-            <div class="form-section">
-                <div class="form-section-header">
-                    <i class="fa-solid fa-receipt"></i>
-                    <span>Chi tiết thanh toán</span>
+            <!-- VOUCHER -->
+            <div class="form-section voucher-section">
+                <div class="form-section-header"><i class="fa-solid fa-ticket"></i> <span>Mã giảm giá</span></div>
+
+                <div class="voucher-applied" th:if="${session.voucherCode != null}">
+                    <div class="voucher-tag">
+                        <i class="fa-solid fa-check-circle"></i>
+                        <span class="voucher-code" th:text="${session.voucherCode}">CODE</span>
+                    </div>
+                    <form method="post" th:action="@{/order}" style="display:inline">
+                        <input type="hidden" name="orderAction" value="removeVoucher"/>
+                        <button type="submit" class="remove-voucher-btn">Hủy</button>
+                    </form>
                 </div>
-                <div class="summary-row">
-                    <span class="label">Giá trị đơn hàng</span>
-                    <span class="value" id="subtotal"
-                          th:text="${#numbers.formatInteger(cart.totalPrice, 0, 'POINT')} + 'đ'">0đ</span>
-                </div>
-                <div class="summary-row total">
-                    <span class="label">Tổng thanh toán</span>
-                    <span class="value" id="total"
-                          th:text="${#numbers.formatInteger(cart.totalPrice, 0, 'POINT')} + 'đ'">0đ</span>
-                </div>
+
+                <form method="post" th:action="@{/order}" class="voucher-input-wrapper" th:if="${session.voucherCode == null}">
+                    <input type="hidden" name="orderAction" value="applyVoucher"/>
+                    <input type="text" name="voucherCode" class="voucher-input" placeholder="Nhập mã voucher"/>
+                    <button type="submit" class="voucher-apply-btn">Áp dụng</button>
+                </form>
+                <div class="voucher-error" th:if="${voucherError != null}" th:text="${voucherError}"></div>
             </div>
 
-            <a class="submit-btn" th:href="@{/order}" style="display:block;text-align:center;text-decoration:none">
-                <i class="fa-solid fa-lock"></i> Tiến hành thanh toán
-            </a>
-            <p class="secure-notice">
-                <i class="fa-solid fa-shield-halved"></i> Giao dịch được bảo mật an toàn
-            </p>
+            <!-- FORM THANH TOÁN -->
+            <form method="post" th:action="@{/order}" class="checkout-form">
+                <div class="form-section">
+                    <div class="form-section-header"><i class="fa-solid fa-truck-fast"></i> <span>Thông tin giao hàng</span></div>
+                    <div class="form-group">
+                        <label class="form-label" for="deliveryAddress"><i class="fa-solid fa-location-dot"></i> Địa chỉ giao hàng</label>
+                        <input type="text" id="deliveryAddress" name="deliveryAddress" class="form-input"
+                               placeholder="Nhập địa chỉ nhận hàng của bạn" required/>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="paymentMethod"><i class="fa-solid fa-credit-card"></i> Phương thức thanh toán</label>
+                        <select id="paymentMethod" name="paymentMethod" class="form-select">
+                            <option value="COD">💵 Thanh toán khi nhận hàng (COD)</option>
+                            <option value="Card">💳 Thanh toán bằng thẻ</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="form-section-header"><i class="fa-solid fa-receipt"></i> <span>Chi tiết thanh toán</span></div>
+                    <div class="summary-row">
+                        <span class="label">Giá trị đơn hàng</span>
+                        <span class="value" th:text="${#numbers.formatInteger(subtotal, 0, 'POINT')} + 'đ'">0đ</span>
+                    </div>
+                    <div class="summary-row discount-row">
+                        <span class="label">Tiết kiệm với mã giảm</span>
+                        <span class="value discount-value" th:text="'-' + ${#numbers.formatInteger(discount, 0, 'POINT')} + 'đ'">0đ</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span class="label">Tổng thanh toán</span>
+                        <span class="value" th:text="${#numbers.formatInteger(subtotal - discount, 0, 'POINT')} + 'đ'">0đ</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn"><i class="fa-solid fa-lock"></i> Xác nhận thanh toán</button>
+                <p class="secure-notice"><i class="fa-solid fa-shield-halved"></i> Giao dịch được bảo mật an toàn</p>
+            </form>
         </div>
     </div>
 </div>
