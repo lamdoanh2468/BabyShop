@@ -35,8 +35,9 @@
 
             <button type="submit">Đăng nhập</button>
 
-            <!-- Đăng nhập Google: chuyển sang Spring Security OAuth2 ở Phase 2 -->
-            <a class="google-btn" href="#" title="Đăng nhập Google sẽ có ở giai đoạn sau">
+            <!-- Đăng nhập Google (OAuth2 thủ công) -->
+            <a class="google-btn"
+               th:href="${googleAuthUrl != null} ? ${googleAuthUrl} : @{/login(error='google_not_configured')}">
                 <i class="fa-brands fa-google"></i> Đăng nhập bằng Google
             </a>
 

@@ -2,6 +2,7 @@ package vn.edu.nlu.fit.be.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +13,9 @@ import vn.edu.nlu.fit.be.service.AccountService;
 import vn.edu.nlu.fit.be.service.EmailService;
 import vn.edu.nlu.fit.be.service.OtpService;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
 @Controller
 public class AuthController {
 
@@ -20,19 +24,39 @@ public class AuthController {
     private final AccountService accountService;
     private final OtpService otpService;
     private final EmailService emailService;
+    private final String googleClientId;
+    private final String googleRedirectUri;
 
-    public AuthController(AccountService accountService, OtpService otpService, EmailService emailService) {
+    public AuthController(AccountService accountService, OtpService otpService, EmailService emailService,
+                          @Value("${google.client-id:}") String googleClientId,
+                          @Value("${google.redirect-uri:}") String googleRedirectUri) {
         this.accountService = accountService;
         this.otpService = otpService;
         this.emailService = emailService;
+        this.googleClientId = googleClientId;
+        this.googleRedirectUri = googleRedirectUri;
     }
 
     /* ===================== LOGIN ===================== */
 
     @GetMapping("/login")
-    public String loginForm(@RequestParam(name = "returnUrl", required = false) String returnUrl, Model model) {
+    public String loginForm(@RequestParam(name = "returnUrl", required = false) String returnUrl,
+                            @RequestParam(name = "error", required = false) String error, Model model) {
         model.addAttribute("returnUrl", returnUrl);
+        model.addAttribute("googleAuthUrl", buildGoogleAuthUrl());
+        if ("blocked".equals(error)) model.addAttribute("error", "Tài khoản của bạn đã bị khoá.");
+        else if ("google_not_configured".equals(error)) model.addAttribute("error", "Đăng nhập Google chưa được cấu hình.");
+        else if ("google".equals(error)) model.addAttribute("error", "Đăng nhập Google thất bại, vui lòng thử lại.");
         return "login";
+    }
+
+    // URL Google authorize (null nếu chưa cấu hình client-id)
+    private String buildGoogleAuthUrl() {
+        if (googleClientId == null || googleClientId.isBlank()) return null;
+        return "https://accounts.google.com/o/oauth2/v2/auth?response_type=code&access_type=online"
+                + "&scope=" + URLEncoder.encode("email profile", StandardCharsets.UTF_8)
+                + "&client_id=" + URLEncoder.encode(googleClientId, StandardCharsets.UTF_8)
+                + "&redirect_uri=" + URLEncoder.encode(googleRedirectUri, StandardCharsets.UTF_8);
     }
 
     @PostMapping("/login")

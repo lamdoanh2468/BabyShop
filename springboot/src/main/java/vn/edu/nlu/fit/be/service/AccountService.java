@@ -78,6 +78,31 @@ public class AccountService {
         return accountRepo.existsByEmail(email);
     }
 
+    /* ================= Đăng nhập Google ================= */
+    // Tìm theo email; có -> trả (null nếu bị khoá); chưa có -> tạo account Google (password NULL).
+    @Transactional
+    public Account loginWithGoogle(String email, String name) {
+        Optional<Account> opt = accountRepo.findByEmail(email);
+        if (opt.isPresent()) {
+            Account acc = opt.get();
+            return acc.getStatus() == AccountStatus.Active ? acc : null;
+        }
+        Profile profile = new Profile();
+        profile.setEmail(email);
+        profile.setFullName(name);
+        profileRepo.save(profile);
+
+        Account acc = new Account();
+        acc.setProfileId(profile.getProfileId());
+        acc.setEmail(email);
+        acc.setUsername(name);
+        acc.setPassword(null); // tài khoản Google không có mật khẩu
+        acc.setStatus(AccountStatus.Active);
+        acc.setRole(0);
+        accountRepo.save(acc);
+        return acc;
+    }
+
     /* ================= Đổi mật khẩu ================= */
     @Transactional
     public boolean changePassword(int accountId, String oldPassword, String newPassword) {
