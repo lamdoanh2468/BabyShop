@@ -43,11 +43,11 @@ public class OrderService {
      */
     @Transactional
     public int placeOrder(int accountId, Cart cart, String deliveryAddress, String paymentMethod,
-                          Integer voucherId, int subtotal, int discount, int total) {
+                          Integer voucherId, int subtotal, int discount, int total, String status) {
         Order order = new Order();
         order.setAccountId(accountId);
         order.setVoucherId(voucherId);
-        order.setStatus("Done"); // đơn cơ bản hoàn tất ngay (luồng ký số làm ở nhóm sau)
+        order.setStatus(status);
         order.setSubtotalAmount(subtotal);
         order.setDiscountAmount(discount);
         order.setTotalAmount(total);

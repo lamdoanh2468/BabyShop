@@ -71,6 +71,20 @@
                         <span>Giao tới: <span th:text="${o.deliveryAddress}"></span> · <span th:text="${o.paymentMethod}"></span></span>
                         <strong>Tổng: <span th:text="${#numbers.formatInteger(o.totalAmount, 0, 'POINT')}">0</span>đ</strong>
                     </div>
+
+                    <!-- Ký số cho đơn đang chờ ký -->
+                    <div th:if="${o.status == 'WAITING_SIGNATURE'}"
+                         style="margin-top:12px;padding:12px;border:1px dashed #6366f1;border-radius:8px;background:#eef2ff">
+                        <p style="margin:0 0 8px"><strong>Đơn đang chờ ký.</strong>
+                            <a th:href="@{/security-key}">Quản lý khoá</a></p>
+                        <a class="pf-empty-btn" th:href="@{/order-sign/order-json(orderId=${o.orderId})}">
+                            <i class="fas fa-download"></i> Tải dữ liệu đơn để ký</a>
+                        <form class="sign-upload-form" style="margin-top:10px;display:flex;gap:8px;align-items:center"
+                              th:data-order-id="${o.orderId}">
+                            <input type="file" name="signedOrderFile" accept=".json,application/json" required/>
+                            <button type="submit" class="pf-empty-btn">Upload chữ ký</button>
+                        </form>
+                    </div>
                 </div>
             </section>
         </main>
@@ -78,5 +92,31 @@
 </div>
 
 <div th:replace="~{fragments/footer :: footer}"></div>
+<script>
+    document.querySelectorAll('.sign-upload-form').forEach(function (form) {
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const fd = new FormData(form);
+            try {
+                const res = await fetch('/upload-signature', {
+                    method: 'POST', body: fd, headers: {'X-Requested-With': 'XMLHttpRequest'}
+                });
+                const data = await res.json();
+                if (window.Swal) {
+                    Swal.fire({
+                        icon: data.success ? 'success' : 'error',
+                        title: data.success ? 'Chữ ký hợp lệ' : 'Xác minh thất bại',
+                        text: data.message
+                    }).then(() => { if (data.success) location.reload(); });
+                } else {
+                    alert(data.message);
+                    if (data.success) location.reload();
+                }
+            } catch (err) {
+                alert('Lỗi upload: ' + err.message);
+            }
+        });
+    });
+</script>
 </body>
 </html>

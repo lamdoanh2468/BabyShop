@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Admin - Ký số đơn hàng</title>
+    <link rel="stylesheet" th:href="@{/css/admin_style.css}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+</head>
+<body>
+<div class="dashboard">
+    <div th:replace="~{fragments/adminSidebar :: sidebar('orders')}"></div>
+
+    <main class="main">
+        <h2>Trạng thái ký số đơn hàng</h2>
+        <table class="data-table">
+            <thead>
+            <tr><th>Mã đơn</th><th>Khách</th><th>Order hash</th><th>Trạng thái</th><th>Tạo lúc</th><th>Xác minh lúc</th></tr>
+            </thead>
+            <tbody>
+            <tr th:if="${#lists.isEmpty(signs)}">
+                <td colspan="6" style="text-align:center;padding:20px;">Chưa có đơn nào cần ký</td>
+            </tr>
+            <tr th:each="s : ${signs}">
+                <td th:text="'#' + ${s.orderId}">#0</td>
+                <td th:text="${s.username}">user</td>
+                <td style="font-family:monospace;font-size:12px" th:text="${#strings.abbreviate(s.orderHash, 20)}">hash</td>
+                <td><span class="status" th:text="${s.status}">WAITING</span></td>
+                <td th:text="${s.createdAt != null ? #dates.format(s.createdAt, 'dd/MM/yyyy HH:mm') : ''}"></td>
+                <td th:text="${s.verifiedAt != null ? #dates.format(s.verifiedAt, 'dd/MM/yyyy HH:mm') : '—'}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </main>
+</div>
+</body>
+</html>

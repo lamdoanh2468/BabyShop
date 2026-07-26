@@ -9,7 +9,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import vn.edu.nlu.fit.be.model.Account;
 import vn.edu.nlu.fit.be.model.Cart;
 import vn.edu.nlu.fit.be.model.Voucher;
+import vn.edu.nlu.fit.be.service.CertificateService;
 import vn.edu.nlu.fit.be.service.OrderService;
+import vn.edu.nlu.fit.be.service.OrderSigningService;
 import vn.edu.nlu.fit.be.service.VoucherService;
 
 import java.util.List;
@@ -19,10 +21,15 @@ public class OrderController {
 
     private final OrderService orderService;
     private final VoucherService voucherService;
+    private final CertificateService certificateService;
+    private final OrderSigningService orderSigningService;
 
-    public OrderController(OrderService orderService, VoucherService voucherService) {
+    public OrderController(OrderService orderService, VoucherService voucherService,
+                          CertificateService certificateService, OrderSigningService orderSigningService) {
         this.orderService = orderService;
         this.voucherService = voucherService;
+        this.certificateService = certificateService;
+        this.orderSigningService = orderSigningService;
     }
 
     @GetMapping("/order")
@@ -90,8 +97,15 @@ public class OrderController {
         int total = Math.max(0, subtotal - discount);
 
         String pm = "Card".equals(paymentMethod) ? "Card" : "COD";
+        // Đơn tạo ở trạng thái chờ ký; sau đó cấp cert + tạo snapshot để ký số.
         int orderId = orderService.placeOrder(account.getAccountId(), cart, deliveryAddress.trim(),
-                pm, voucherId, subtotal, discount, total);
+                pm, voucherId, subtotal, discount, total, "WAITING_SIGNATURE");
+        try {
+            certificateService.ensureActiveCert(account.getAccountId());
+            orderSigningService.createSnapshotAndStore(orderId, account.getAccountId());
+        } catch (Exception e) {
+            ra.addFlashAttribute("error", "Không thể chuẩn bị ký số: " + e.getMessage());
+        }
 
         // Dọn giỏ + voucher khỏi session
         cart.removeAllItems();
@@ -99,7 +113,8 @@ public class OrderController {
         session.removeAttribute("voucherCode");
         session.removeAttribute("discountAmount");
 
-        ra.addFlashAttribute("orderSuccess", "Đặt hàng thành công! Mã đơn: #" + orderId);
+        ra.addFlashAttribute("orderSuccess",
+                "Đã tạo đơn #" + orderId + " (chờ ký). Vào 'Chữ ký số' để tải khoá và ký đơn.");
         return "redirect:/bought-product";
     }
 
