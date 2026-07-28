@@ -5,7 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BabyShop Việt Nam</title>
 
-    <link rel="stylesheet" th:href="@{/css/home.css}">
+    <!-- Trang chủ dùng bản redesign (home_modern.css). Muốn quay lại giao diện gốc: đổi về home.css -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/home_modern.css}">
     <link rel="icon" type="image/x-icon" th:href="@{/favicon.ico}">
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
@@ -45,10 +49,10 @@
 
 <!-- Chính sách -->
 <section class="policies">
-    <div class="policy">BẢO HÀNH CHÍNH HÃNG</div>
-    <div class="policy">BẢO TRÌ TRỌN ĐỜI</div>
-    <div class="policy">LẮP ĐẶT MIỄN PHÍ</div>
-    <div class="policy">MIỄN PHÍ VẬN CHUYỂN</div>
+    <div class="policy"><i class="fa-solid fa-shield-halved"></i> BẢO HÀNH CHÍNH HÃNG</div>
+    <div class="policy"><i class="fa-solid fa-screwdriver-wrench"></i> BẢO TRÌ TRỌN ĐỜI</div>
+    <div class="policy"><i class="fa-solid fa-truck-fast"></i> LẮP ĐẶT MIỄN PHÍ</div>
+    <div class="policy"><i class="fa-solid fa-box-open"></i> MIỄN PHÍ VẬN CHUYỂN</div>
 </section>
 
 <!-- 1) ĐỒ NỘI THẤT MỚI NHẤT -->
