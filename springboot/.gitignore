@@ -8,5 +8,8 @@ target/
 data/
 
 # log chạy local
-run.log
-run.err.log
+*.log
+
+# SSH private key EC2 — TUYỆT ĐỐI KHÔNG commit
+*.pem
+*.key
