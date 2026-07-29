@@ -1,68 +1,78 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
-<div th:fragment="footer" th:remove="tag">
-    <link rel="stylesheet" type="text/css" th:href="@{/css/footer.css}"/>
+<th:block th:fragment="footer">
+    <footer class="bg-ink-900 text-white font-body">
+        <div class="max-w-6xl mx-auto px-4 py-14">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
 
-    <footer id="footer-frame" class="shop-footer">
-        <div class="footer-container">
-            <div class="footer-grid">
-                <div class="footer-brand">
-                    <h3 class="brand-name">BabyStore</h3>
-                    <p class="brand-desc">Cung cấp linh kiện, laptop chính hãng với giá tốt nhất.</p>
-                    <div class="contact-info">
-                        <p><i class="fa-solid fa-location-dot"></i> 123 Đường ABC, TP. Hồ Chí Minh</p>
-                        <p><i class="fa-solid fa-phone"></i> <a href="tel:0123456789">0123 456 789</a></p>
-                        <p><i class="fa-solid fa-envelope"></i> <a href="mailto:babystore@gmail.com">babystore@gmail.com</a></p>
+                <div>
+                    <h3 class="font-display font-extrabold text-2xl mb-3">
+                        <span class="text-white">Baby</span><span class="text-brand-600">Shop</span>
+                    </h3>
+                    <p class="text-white/70 mb-4 text-sm leading-relaxed">Cung cấp đồ dùng, nội thất và đồ chơi trẻ em chính hãng với giá tốt nhất.</p>
+                    <div class="space-y-2 text-sm text-white/70">
+                        <p class="flex items-center gap-2"><i class="fa-solid fa-location-dot w-4"></i> 123 Đường ABC, TP. Hồ Chí Minh</p>
+                        <p class="flex items-center gap-2"><i class="fa-solid fa-phone w-4"></i> <a href="tel:0123456789" class="text-white hover:underline">0123 456 789</a></p>
+                        <p class="flex items-center gap-2"><i class="fa-solid fa-envelope w-4"></i> <a href="mailto:babystore@gmail.com" class="text-white hover:underline">babystore@gmail.com</a></p>
                     </div>
                 </div>
 
-                <div class="footer-links">
-                    <h4>Hỗ trợ khách hàng</h4>
-                    <ul>
-                        <li><a href="#">Chính sách bảo hành</a></li>
-                        <li><a href="#">Chính sách đổi trả</a></li>
-                        <li><a href="#">Hướng dẫn thanh toán</a></li>
-                        <li><a href="#">Hướng dẫn mua hàng</a></li>
+                <div>
+                    <h4 class="font-display font-bold text-lg mb-4">Hỗ trợ khách hàng</h4>
+                    <ul class="space-y-2 text-sm text-white/70">
+                        <li><a href="#" class="hover:text-white hover:underline">Chính sách bảo hành</a></li>
+                        <li><a href="#" class="hover:text-white hover:underline">Chính sách đổi trả</a></li>
+                        <li><a href="#" class="hover:text-white hover:underline">Hướng dẫn thanh toán</a></li>
+                        <li><a href="#" class="hover:text-white hover:underline">Hướng dẫn mua hàng</a></li>
                     </ul>
                 </div>
 
-                <div class="footer-socials">
-                    <h4>Kết nối với chúng tôi</h4>
-                    <div class="social-icons">
-                        <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
-                        <a href="#"><i class="fa-brands fa-instagram"></i></a>
-                        <a href="#"><i class="fa-brands fa-tiktok"></i></a>
-                        <a href="#"><i class="fa-brands fa-youtube"></i></a>
+                <div>
+                    <h4 class="font-display font-bold text-lg mb-4">Kết nối với chúng tôi</h4>
+                    <div class="flex gap-2.5 mb-6">
+                        <a href="#" aria-label="Facebook" class="w-9 h-9 grid place-items-center rounded-lg bg-white/10 hover:bg-white/20 hover:-translate-y-0.5 transition"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Instagram" class="w-9 h-9 grid place-items-center rounded-lg bg-white/10 hover:bg-white/20 hover:-translate-y-0.5 transition"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#" aria-label="TikTok" class="w-9 h-9 grid place-items-center rounded-lg bg-white/10 hover:bg-white/20 hover:-translate-y-0.5 transition"><i class="fa-brands fa-tiktok"></i></a>
+                        <a href="#" aria-label="YouTube" class="w-9 h-9 grid place-items-center rounded-lg bg-white/10 hover:bg-white/20 hover:-translate-y-0.5 transition"><i class="fa-brands fa-youtube"></i></a>
                     </div>
-                    <h4>Phương thức thanh toán</h4>
-                    <div class="payment-icons">
-                        <img th:src="@{/img/visa.png}" alt="Visa"/>
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Mastercard-logo.png" alt="MasterCard"/>
-                        <img src="https://m.momoshop.com.tw/img/momologo.svg" alt="Momo"/>
-                        <img src="https://thienankids.edu.vn/icon/zaloicon.png" alt="ZaloPay"/>
+                    <h4 class="font-display font-bold text-lg mb-3">Phương thức thanh toán</h4>
+                    <div class="flex flex-wrap gap-2">
+                        <img th:src="@{/img/visa.png}" alt="Visa" class="w-12 h-8 object-contain bg-white rounded p-1">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Mastercard-logo.png" alt="MasterCard" class="w-12 h-8 object-contain bg-white rounded p-1">
+                        <img src="https://m.momoshop.com.tw/img/momologo.svg" alt="Momo" class="w-12 h-8 object-contain bg-white rounded p-1">
+                        <img src="https://thienankids.edu.vn/icon/zaloicon.png" alt="ZaloPay" class="w-12 h-8 object-contain bg-white rounded p-1">
                     </div>
                 </div>
 
-                <div class="footer-newsletter">
-                    <h4>Đăng ký nhận tin</h4>
-                    <p>Nhận thông tin khuyến mãi và sản phẩm mới nhất.</p>
+                <div>
+                    <h4 class="font-display font-bold text-lg mb-4">Đăng ký nhận tin</h4>
+                    <p class="text-white/70 text-sm mb-3">Nhận thông tin khuyến mãi và sản phẩm mới nhất.</p>
+                    <form class="flex flex-col gap-2" onsubmit="return false;">
+                        <label for="footer-newsletter-email" class="sr-only">Email</label>
+                        <input id="footer-newsletter-email" type="email" required placeholder="Email của bạn"
+                               class="w-full rounded-lg px-3 py-2.5 text-sm text-ink-900 outline-none focus:ring-2 focus:ring-brand-100"/>
+                        <button type="submit" class="rounded-lg px-3 py-2.5 text-sm font-semibold bg-white text-ink-900 hover:bg-brand-50 transition">Đăng ký</button>
+                    </form>
                 </div>
             </div>
 
-            <div class="footer-bottom">
-                <p>© <span id="year"></span> BabyStore. All rights reserved.</p>
-                <ul class="legal-links">
-                    <li><a href="#">Điều khoản sử dụng</a></li>
-                    <li><a href="#">Chính sách bảo mật</a></li>
+            <div class="mt-10 pt-6 border-t border-white/15 flex flex-wrap items-center justify-between gap-3 text-sm text-white/70">
+                <p>© <span id="year"></span> BabyShop. All rights reserved.</p>
+                <ul class="flex gap-4">
+                    <li><a href="#" class="hover:text-white hover:underline">Điều khoản sử dụng</a></li>
+                    <li><a href="#" class="hover:text-white hover:underline">Chính sách bảo mật</a></li>
                 </ul>
             </div>
         </div>
     </footer>
 
     <script>
-        document.getElementById("year").textContent = new Date().getFullYear();
+        (function () {
+            var y = document.getElementById("year");
+            if (y) y.textContent = new Date().getFullYear();
+        })();
     </script>
-</div>
+</th:block>
 </body>
 </html>

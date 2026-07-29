@@ -6,3 +6,7 @@ target/
 
 # CA keys + private keys sinh lúc chạy — KHÔNG commit
 data/
+
+# log chạy local
+run.log
+run.err.log

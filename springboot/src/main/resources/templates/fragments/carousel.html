@@ -2,40 +2,38 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 <!--
-  Fragment carousel(cid, items): render 1 carousel Bootstrap, chia items thành các slide 6 sản phẩm.
-  Thay cho logic "st.index % 6" mở/đóng div của JSP bằng 2 vòng lặp lồng nhau (chuẩn Thymeleaf).
+  Fragment carousel(cid, items): render 1 carousel Bootstrap (Tailwind-styled), chia items thành slide 6 sản phẩm.
+  Thay logic "st.index % 6" mở/đóng div của JSP bằng 2 vòng lặp lồng nhau.
 -->
 <div th:fragment="carousel(cid, items)" th:remove="tag">
-    <div th:id="${cid}" class="carousel slide home-bs-carousel" data-bs-ride="false" data-bs-touch="true">
+    <div th:id="${cid}" class="carousel slide" data-bs-ride="false" data-bs-touch="true">
         <div class="carousel-inner">
             <div th:each="slide : ${#numbers.sequence(0, (items.size() - 1) / 6)}"
                  class="carousel-item" th:classappend="${slide == 0} ? 'active'">
-                <div class="row g-3">
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
                     <div th:each="p : ${items.subList(slide * 6, T(java.lang.Math).min(slide * 6 + 6, items.size()))}"
-                         class="col-6 col-md-4 col-lg-3 col-xl-2">
-                        <div class="product-card">
-                            <div class="product-img">
-                                <a th:href="@{/product-detail(product_id=${p.productId})}">
-                                    <img th:src="${p.productImage}" th:alt="${p.productName}"/>
-                                </a>
-                            </div>
+                         class="bg-surface rounded-xl2 p-3 shadow-card hover:shadow-raised transition flex flex-col gap-2">
+                        <a th:href="@{/product-detail(product_id=${p.productId})}"
+                           class="block aspect-square rounded-lg overflow-hidden bg-page">
+                            <img th:src="${p.productImage}" th:alt="${p.productName}" class="w-full h-full object-contain">
+                        </a>
 
-                            <h4 class="product-title" th:text="${p.productName}">Tên sản phẩm</h4>
-                            <p class="price">
-                                <span th:text="${#numbers.formatInteger(p.productPrice, 0, 'POINT')}">0</span>đ
-                            </p>
+                        <h4 class="text-sm font-semibold text-ink-900 line-clamp-2 min-h-[2.5rem]" th:text="${p.productName}">Tên sản phẩm</h4>
+                        <p class="text-brand-600 font-bold">
+                            <span th:text="${#numbers.formatInteger(p.productPrice, 0, 'POINT')}">0</span>đ
+                        </p>
 
-                            <div class="product-actions">
-                                <a class="filter-btn cart-btn"
-                                   th:href="@{/cart(action='add', product_id=${p.productId}, quantity=1, returnUrl='/')}">
-                                    <i class="fa-solid fa-cart-plus"></i></a>
-                                <a class="filter-btn detail-btn"
-                                   th:href="@{/product-detail(product_id=${p.productId})}">
-                                    <i class="fa-solid fa-eye"></i></a>
-                                <a class="filter-btn favor-btn"
-                                   th:href="@{/my-favorite(action='add', product_id=${p.productId})}">
-                                    <i class="fa-solid fa-heart"></i></a>
-                            </div>
+                        <div class="flex gap-1.5 mt-auto">
+                            <a th:href="@{/cart(action='add', product_id=${p.productId}, quantity=1, returnUrl='/')}"
+                               aria-label="Thêm vào giỏ"
+                               class="filter-btn cart-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-cart-plus text-sm"></i></a>
+                            <a th:href="@{/product-detail(product_id=${p.productId})}" aria-label="Xem chi tiết"
+                               class="flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-trust-50 hover:border-trust-700 hover:text-trust-700 transition">
+                                <i class="fa-solid fa-eye text-sm"></i></a>
+                            <a th:href="@{/my-favorite(action='add', product_id=${p.productId})}" aria-label="Yêu thích"
+                               class="filter-btn favor-btn flex-1 h-9 grid place-items-center rounded-lg border border-border text-ink-700 hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 transition">
+                                <i class="fa-solid fa-heart text-sm"></i></a>
                         </div>
                     </div>
                 </div>
@@ -43,13 +41,13 @@
         </div>
 
         <th:block th:if="${items.size() > 6}">
-            <button class="carousel-control-prev" type="button" th:data-bs-target="'#' + ${cid}" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
+            <button type="button" class="carousel-control-prev !w-10 !opacity-100" th:data-bs-target="'#' + ${cid}" data-bs-slide="prev">
+                <span class="w-10 h-10 grid place-items-center rounded-full bg-surface shadow-raised text-ink-900"><i class="fa-solid fa-chevron-left"></i></span>
+                <span class="sr-only">Trước</span>
             </button>
-            <button class="carousel-control-next" type="button" th:data-bs-target="'#' + ${cid}" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
+            <button type="button" class="carousel-control-next !w-10 !opacity-100" th:data-bs-target="'#' + ${cid}" data-bs-slide="next">
+                <span class="w-10 h-10 grid place-items-center rounded-full bg-surface shadow-raised text-ink-900"><i class="fa-solid fa-chevron-right"></i></span>
+                <span class="sr-only">Sau</span>
             </button>
         </th:block>
     </div>
